@@ -1,0 +1,14 @@
+.layout {
+  color: #4096ff;
+  [class="main"]{
+    position: absolute;
+    top: 0;
+    bottom: 22px;
+    left: 0;
+    right: 0;
+    padding: 0px;
+    height: inherit;
+    display: flex;
+    justify-content: center;
+  }
+}

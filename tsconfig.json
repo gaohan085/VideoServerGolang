@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true,
+    "moduleResolution": "Node"
+  },
+  "files": [
+    "web_src/index.tsx"
+  ],
+  "ts-node": {
+    "swc": true
+  },
+  "include": [
+    "./web_src/"
+  ]
+}
