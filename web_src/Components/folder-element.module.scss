@@ -1,0 +1,46 @@
+.folder {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  border-radius: 5px;
+  z-index: 1;
+  transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+  > [class~="name"] {
+    padding: 2px 5px;
+    border-radius: 4px;
+    width: fit-content;
+    cursor: pointer;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    white-space: nowrap;
+    line-height: 14px;
+    user-select: none;
+    transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin: 1px;
+    z-index: 1;
+    scale: 1;
+    &:hover {
+      color: #e85982;
+      background: #1c1838;
+    }
+
+    > span {
+      display: inline-block;
+      vertical-align: text-top;
+      margin-right: 5px;
+      font-size: 16px;
+    }
+
+    &[class~="selected"] {
+      background-color: #e9e9e9;
+      outline: 1px solid #e0e0e0;
+      transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  }
+
+  &[class~="open"] {
+    background: #1c1838;
+    transition: background-color 0.2s ease-in-out;
+  }
+}

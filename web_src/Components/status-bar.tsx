@@ -1,30 +1,73 @@
+import React from "react";
+import styles from "./status-bar.module.scss";
 import useSWR from "swr";
-import React from "react"
+import { FcDataProtection, FcRightUp, FcTreeStructure } from "react-icons/fc";
 
-export const DiskUsage: React.FC = (props) => {
-  const { data, isLoading, error } = useSWR<{}>(...{});
-
-  return (
-
-  )
+type DiskSpace = {
+  diskPath: string;
+  free: number;
+  size: number;
 };
 
-export const GitVerison: React.FC = () =>{
-  const {data, isLoading, error} = useSWR()
-
+const DiskUsage: React.FC = () => {
+  // const { data, isLoading, error } = useSWR<DiskSpace, Error>("/api/disk");
+  const data: DiskSpace = {
+      diskPath: "/",
+      free: 1024,
+      size: 10240,
+    },
+    error: Error = null,
+    isLoading = false;
   return (
+    <p>
+      {error ? (
+        "Error Fetch Data"
+      ) : isLoading ? (
+        "Loading"
+      ) : (
+        <>
+          <FcDataProtection />{" "}
+          <>{`剩余磁盘空间: ${(data.free / (1024 * 1024 * 1024)).toFixed(
+            1
+          )} GB`}</>
+        </>
+      )}
+    </p>
+  );
+};
 
-  )
-}
-
-export const StatusBar: React.FC = () =>{
+const GitCommit: React.FC = () => {
+  const { data, isLoading, error } = useSWR<string, Error>("/api/git");
   return (
-    <div>
+    <>
+      <p>
+        {isLoading ? (
+          <></>
+        ) : error ? (
+          <>{"Error"}</>
+        ) : (
+          <>
+            <FcTreeStructure /> <>{`Git仓库提交版本: ${data}`}</>
+          </>
+        )}
+      </p>
+    </>
+  );
+};
+
+export const StatusBar: React.FC = () => {
+  return (
+    <div className={styles.statusBar}>
       <div>
         <DiskUsage />
-        <GitVerison />
+        <GitCommit />
+        <p>
+          <FcRightUp />{" "}
+          <a href='http://192.168.1.11/qbittorrent' target='_blank'>
+            {"Qbittorrent"}
+          </a>
+        </p>
       </div>
     </div>
-  )
-}
-
+  );
+};

@@ -1,0 +1,42 @@
+.file {
+  width: fit-content;
+  margin-left: 8px;
+  margin-right: 0;
+
+  > [class~="name"] {
+    box-sizing: border-box;
+    padding: 2px 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+    width: fit-content;
+    cursor: pointer;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    white-space: nowrap;
+    user-select: none;
+    transition: background-color 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    margin: 1px;
+
+    &:hover {
+      color: #e85982;
+      transition: background-color 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    > span {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 5px;
+      font-size: 14px;
+      line-height: 14px;
+    }
+
+    &[class~="selected"] {
+      background-color: #e9e9e9;
+      outline: 1px solid #e0e0e0;
+    }
+
+    &[class~="playing"] {
+      outline: 1px solid #d1d1d1;
+    }
+  }
+}

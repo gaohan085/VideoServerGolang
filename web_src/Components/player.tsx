@@ -1,8 +1,8 @@
-import { usePlyr, type APITypes, type PlyrProps } from "plyr-react";
 import "plyr-react/plyr.css";
-import React, { Ref, forwardRef, useRef } from "react";
+import styles from "./player.module.scss";
+import { type APITypes, type PlyrProps, usePlyr } from "plyr-react";
+import React, { forwardRef, Ref, useRef } from "react";
 import { selectPlaySrc, useAppSelector } from "../lib/reduxStore";
-import styles from "./plyr.module.scss";
 
 const Plyr = forwardRef(function Player(props: PlyrProps, ref: Ref<APITypes>) {
   const { source, options = null, ...rest } = props;
@@ -14,7 +14,7 @@ const Plyr = forwardRef(function Player(props: PlyrProps, ref: Ref<APITypes>) {
   return <video ref={raptorRef} className='plyr-react plyr' {...rest} />;
 });
 
-export default function Player() {
+export function Player() {
   const ref = useRef<APITypes>(null);
   const playSrc = useAppSelector(selectPlaySrc);
   return (
@@ -50,6 +50,8 @@ export default function Player() {
           blankVideo: "",
           keyboard: { focused: false, global: true },
         }} //Set initinal player status as pause
+
+        style={{borderRadius: "20px"}}
       />
       <p>
         {playSrc === "" && "没有正在播放"}

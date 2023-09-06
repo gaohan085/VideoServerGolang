@@ -3,6 +3,8 @@ package main
 import (
 	"embed"
 	"flag"
+	"fmt"
+	"io"
 	"net/http"
 	"os"
 
@@ -44,6 +46,22 @@ func main() {
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Render("dist/index", fiber.Map{})
+	})
+
+	app.Group("/api", func(c *fiber.Ctx) error {
+		resp, err := http.Get("http://192.168.1.11" + c.Path())
+		if err != nil {
+			return err
+		}
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil
+		}
+
+		fmt.Println(string(body))
+		return c.JSON(string(body))
+
 	})
 
 	app.Listen(":3000")

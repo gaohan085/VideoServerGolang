@@ -6,7 +6,12 @@
     "module": "es6",
     "target": "es5",
     "allowJs": true,
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ]
   },
   "files": [
     "web_src/index.tsx"
@@ -15,6 +20,6 @@
     "swc": true
   },
   "include": [
-    "./web_src/"
+    "./web_src/",
   ]
 }

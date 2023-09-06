@@ -1,18 +1,22 @@
+import * as Components from "./Components";
+import styles from "./App.module.scss";
 import React, { useEffect } from "react";
 import { selectPlaySrc, useAppSelector } from "./lib/reduxStore";
-import styles from "./App.module.scss";
 
 export const App = () => {
   const playSrc = useAppSelector(selectPlaySrc);
 
-  useEffect(()=>{
+  useEffect(() => {
     document.title = playSrc;
-  }, [playSrc])
+  }, [playSrc]);
 
   return (
     <div className={styles.layout}>
-      <div className="main">
+      <div className='main'>
+        <Components.Player />
+        <Components.SideBar />
       </div>
+      <Components.StatusBar  />
     </div>
   );
 };

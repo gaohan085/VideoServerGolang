@@ -1,0 +1,30 @@
+.statusBar {
+  position: absolute;
+  height: 22px;
+  bottom: 0;
+  width: 100%;
+  font-size: 12px;
+  background-color: #1c1838;
+  div {
+    height: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+
+    p {
+      padding-left: 15px;
+      padding-right: 15px;
+      margin-block-start: 0em;
+      margin-block-end: 0em;
+      user-select: none;
+      line-height: 12px;
+
+      svg {
+        display: inline-block;
+        vertical-align: sub;
+        font-size: 15px;
+        line-height: normal;
+      }
+    }
+  }
+}

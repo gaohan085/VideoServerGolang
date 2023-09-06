@@ -13,14 +13,21 @@ const stylesHandler = isProduction
 const config = {
   entry: "./web_src/index.tsx",
   output: {
-    clean: true,
+    clean: false,
     filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
+    assetModuleFilename: "[name][contenthash][query]",
   },
   devServer: {
-    open: true,
+    open: false,
     host: "localhost",
     port: 3333,
+    static: {
+      directory: path.join(__dirname, ""),
+    },
+    allowedHosts:[
+      "http://192.168.1.11"
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -44,11 +51,21 @@ const config = {
       },
       {
         test: /\.css$/i,
-        use: [stylesHandler, "css-loader"],
+        type: "asset/resource",
+        
       },
       {
-        test: /\.s[ac]ss$/i,
-        use: [stylesHandler, "css-loader", "sass-loader"],
+        test: /\.(s[ac]ss)$/i,
+        use: [
+          stylesHandler,
+          {
+            loader: "css-loader",
+            options: {
+              modules: { localIdentName: "[path][name]-[hash:base64:5]" },
+            },
+          },
+          "sass-loader",
+        ],
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
