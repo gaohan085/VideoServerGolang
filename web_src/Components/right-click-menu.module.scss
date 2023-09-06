@@ -2,9 +2,8 @@
   position: absolute;
   z-index: 10;
   background-color: #f3f3f3;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  box-shadow: 1px 2px 5px rgba($color: #000000, $alpha: 0.2);
+  border-radius: 6px;
+  box-shadow: 1px 2px 5px rgba($color: #ffffff, $alpha: 0.2);
   width: 120px;
   > ul {
     list-style: none;
@@ -12,14 +11,15 @@
     margin-block-end: 0em;
     padding-inline-start: 0px;
     padding-inline-end: 0px;
+    background-color: #2f285e;
     li + li {
-      border-top: 1px solid #e0e0e0;
+      border-top: 1px solid #1c1838;
     }
     > li {
       display: block;
       padding-left: 5px;
       &:hover {
-        background: #e0e0e0;
+        color: #e85982;
       }
 
       > p {
@@ -49,9 +49,9 @@
 .ctx-dialog {
   position: absolute;
   z-index: 10;
-  background-color: #f3f3f3;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
+  background-color: #2f285e;
+  border-radius: 6px;
+  border: 1px solid #1c1838;
   box-shadow: 1px 1px 5px rgba($color: #000000, $alpha: 0.2);
   width: 120px;
   font-size: 14px;
@@ -62,7 +62,7 @@
     margin: 0;
     padding: 0.4em;
     text-align: center;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #1c1838;
   }
 
   > div {
@@ -71,11 +71,11 @@
     flex-direction: row;
     align-items: stretch;
     p + p {
-      border-left: 1px solid #e0e0e0;
-      color: red;
+      border-left: 1px solid #1c1838;
+      color: #e85982;
       &:hover {
         border-bottom-right-radius: 4px;
-        background-color: red;
+        background-color: #e85982;
         color: #f3f3f3;
       }
     }
@@ -86,7 +86,7 @@
       text-align: center;
       padding: 0.4em;
       &:hover {
-        background-color: #e0e0e0;
+        color: #f3f3f3;;
       }
     }
   }
