@@ -1,4 +1,5 @@
 import { Context } from "./sidebar";
+import isVideo from "../lib/is-video";
 import { motion } from "framer-motion";
 import styles from "./file-element.module.scss";
 import useSWR from "swr";
@@ -80,7 +81,7 @@ const FileElem: React.FC<
             ? "name playing"
             : "name"
         }>
-        <span>{props.extName ? <FcVideoFile /> : <FcFile />}</span>
+        <span>{isVideo(props.extName) ? <FcVideoFile /> : <FcFile />}</span>
         {props.name.replace("_", "-")}
       </p>
     </motion.div>
