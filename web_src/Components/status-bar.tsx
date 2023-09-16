@@ -1,23 +1,23 @@
 import React from "react";
 import styles from "./status-bar.module.scss";
 import useSWR from "swr";
-import { FcDataProtection, FcRightUp, FcTreeStructure } from "react-icons/fc";
+import { FcDataProtection, FcRightUp } from "react-icons/fc";
 
 type DiskSpace = {
-  diskPath: string;
+  path: string;
+  fstype: string;
+  total: number;
   free: number;
-  size: number;
+  used: number;
+  usedPercent: number;
+  inodesTotal: number;
+  inodesUsed: number;
+  inodesFree: number;
+  inodesUsedPercent: number;
 };
 
 const DiskUsage: React.FC = () => {
-  // const { data, isLoading, error } = useSWR<DiskSpace, Error>("/api/disk");
-  const data: DiskSpace = {
-      diskPath: "/",
-      free: 1024,
-      size: 10240,
-    },
-    error: Error = null,
-    isLoading = false;
+  const { data, isLoading, error } = useSWR<DiskSpace, Error>("/api/disk");
   return (
     <p>
       {error ? (
@@ -36,31 +36,11 @@ const DiskUsage: React.FC = () => {
   );
 };
 
-const GitCommit: React.FC = () => {
-  const { data, isLoading, error } = useSWR<string, Error>("/api/git");
-  return (
-    <>
-      <p>
-        {isLoading ? (
-          <></>
-        ) : error ? (
-          <>{"Error"}</>
-        ) : (
-          <>
-            <FcTreeStructure /> <>{`Git仓库提交版本: ${data}`}</>
-          </>
-        )}
-      </p>
-    </>
-  );
-};
-
 export const StatusBar: React.FC = () => {
   return (
     <div className={styles.statusBar}>
       <div>
         <DiskUsage />
-        <GitCommit />
         <p>
           <FcRightUp />{" "}
           <a href='http://192.168.1.11/qbittorrent' target='_blank'>

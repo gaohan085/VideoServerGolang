@@ -66,7 +66,7 @@ export const SideBar: React.FC = () => {
             {error && <div>Error Get Data</div>}
             {data && (
               <OpenFolderContainer
-                elems={JSON.parse(data).childElem}
+                elems={data.childElem}
                 mutateFunc={mutate}
               />
             )}

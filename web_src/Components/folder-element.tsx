@@ -16,7 +16,11 @@ export const FolderElem: React.FC<
   const [rightClicked, setRightClicked] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { data, isLoading, error, mutate } = useSWR(
-    isOpen ? "/api/" + props.currentPath + props.name : null
+    isOpen
+      ? "/api/" +
+          (props.currentPath === "/" ? "" : props.currentPath) +
+          props.name
+      : null
   );
 
   const {
@@ -118,7 +122,7 @@ export const FolderElem: React.FC<
                 opacity: 0,
               }}
               transition={{ duration: 0.2, ease: "easeInOut" }}>
-              <OpenFolderContainer elems={JSON.parse(data).childElem} mutateFunc={mutate} />
+              <OpenFolderContainer elems={data.childElem} mutateFunc={mutate} />
             </motion.div>
           )}
         </AnimatePresence>

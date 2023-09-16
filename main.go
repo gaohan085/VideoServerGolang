@@ -3,8 +3,7 @@ package main
 import (
 	"embed"
 	"flag"
-	"fmt"
-	"io"
+	"log"
 	"net/http"
 	"os"
 
@@ -12,13 +11,15 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/html/v2"
+
+	"go-fiber-react-ts/handlers"
 )
 
 //go:embed dist/*
 var content embed.FS
 
 func main() {
-	env := flag.String("env", "development", "environment")
+	env := flag.String("env", "production", "environment")
 	flag.Parse()
 	os.Setenv("ENV", *env)
 
@@ -32,11 +33,27 @@ func main() {
 		},
 	)
 
-	app.Use(logger.New(logger.Config{
-		Format:     "[DEBUG] | PID:${pid} | [${time}] | ${status} | ${latency} | ${method} | ${path}\n",
-		TimeFormat: "2006/Jan/02 Monday 15:04:05",
-		TimeZone:   "Asia/Shanghai",
-	}))
+	switch *env {
+	case "production":
+		file, err := os.OpenFile("./access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalf("error opening file: %v", err)
+		}
+		// defer file.Close()
+		app.Use(logger.New(logger.Config{
+			Format:     "[${time}]${status}-${latency}${method}${path} - ${ua}\n",
+			TimeFormat: "2006/Jan/02 Monday 15:04:05",
+			TimeZone:   "Asia/Shanghai",
+			Output:     file,
+		}))
+
+	default:
+		app.Use(logger.New(logger.Config{
+			Format:     "[DEBUG] | PID:${pid} | [${time}] | ${status} | ${latency} | ${method} | ${path}\n",
+			TimeFormat: "2006/Jan/02 Monday 15:04:05",
+			TimeZone:   "Asia/Shanghai",
+		}))
+	}
 
 	app.Use("/dist", filesystem.New(filesystem.Config{
 		Root:       http.FS(content),
@@ -44,25 +61,12 @@ func main() {
 		Browse:     true,
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Render("dist/index", fiber.Map{})
-	})
+	app.Get("/", handlers.IndexHandler)
 
-	app.Group("/api", func(c *fiber.Ctx) error {
-		resp, err := http.Get("http://192.168.1.11" + c.Path())
-		if err != nil {
-			return err
-		}
+	api := app.Group("/api")
 
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return nil
-		}
-
-		fmt.Println(string(body))
-		return c.JSON(string(body))
-
-	})
+	api.Get("/disk", handlers.DiskUsageHandler)
+	api.Get("/*", handlers.FileReaderHandlers)
 
 	app.Listen(":3000")
 }
