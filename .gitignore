@@ -1,7 +1,10 @@
 node_modules/
 *.code-workspace
 .air.toml
+*.log
 tmp/
-dist/
+dist/*
 go-fiber-react-ts
 .env
+!dist/plyr.css
+!dist/Roboto-Regular.ttf
