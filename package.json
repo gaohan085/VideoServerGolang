@@ -75,10 +75,7 @@
     },
     "parserOptions": {
       "ecmaVersion": "latest",
-      "sourceType": "module",
-      "project": [
-        "./tsconfig.json"
-      ]
+      "sourceType": "module"
     },
     "rules": {
       "quotes": [
@@ -117,7 +114,8 @@
       "**/test/**",
       "/coverage/",
       "/coverage-ts/",
-      "**/stress-test/**"
+      "**/stress-test/**",
+      "webpack.config.js"
     ]
   }
 }
