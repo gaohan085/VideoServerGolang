@@ -6,5 +6,5 @@ tmp/
 dist/*
 go-fiber-react-ts
 .env
-!dist/plyr.css
+!dist/favicon.ico
 !dist/Roboto-Regular.ttf

@@ -3,6 +3,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -14,8 +15,8 @@ const config = {
   entry: "./web_src/index.tsx",
   output: {
     clean: false,
-    filename: "[name].js",
     path: path.resolve(__dirname, "dist"),
+    filename: "[name].js",
     assetModuleFilename: "[name][contenthash][query]",
   },
   devServer: {
@@ -25,21 +26,45 @@ const config = {
     static: {
       directory: path.join(__dirname, ""),
     },
-    allowedHosts:[
-      "http://192.168.1.11"
-    ]
+    allowedHosts: ["http://192.168.1.11"],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./web_src/index.html",
       filename: "index.html",
       publicPath: isProduction ? "dist" : "auto",
-      hash: isProduction ? true : false,
+      hash: true,
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "./node_modules/plyr-react/plyr.css",
+          to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
+        },
+      ],
     }),
   ],
   optimization: {
     splitChunks: {
-      chunks: "all",
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name(module, chunks, cacheGroupKey) {
+            const moduleFileName = module
+              .identifier()
+              .split("/")
+              .reduceRight((item) => item);
+            return `${cacheGroupKey}.${moduleFileName.slice(
+              0,
+              moduleFileName.indexOf(".")
+            )}`;
+          },
+          chunks: "all",
+        },
+      },
     },
   },
   module: {
@@ -52,7 +77,6 @@ const config = {
       {
         test: /\.css$/i,
         type: "asset/resource",
-        
       },
       {
         test: /\.(s[ac]ss)$/i,
