@@ -16,7 +16,7 @@ export const App = () => {
         <Components.Player />
         <Components.SideBar />
       </div>
-      <Components.StatusBar  />
+      <Components.StatusBar />
     </div>
   );
 };

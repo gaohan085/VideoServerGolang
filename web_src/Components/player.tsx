@@ -50,14 +50,14 @@ export function Player() {
           blankVideo: "",
           keyboard: { focused: false, global: true },
         }} //Set initinal player status as pause
-
-        style={{borderRadius: "20px"}}
+        style={{ borderRadius: "20px" }}
       />
       <p>
         {playSrc === "" && "没有正在播放"}
         {playSrc !== "" &&
           `正在播放: ${playSrc.slice(playSrc.lastIndexOf("/") + 1)}`}
       </p>
+      <p>{"gaohan"}</p>
     </div>
   );
 }

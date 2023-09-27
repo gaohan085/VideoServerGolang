@@ -4,6 +4,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -17,15 +18,12 @@ const config = {
     clean: false,
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
-    assetModuleFilename: "[name][contenthash][query]",
   },
   devServer: {
     open: false,
     host: "localhost",
     port: 3333,
-    static: {
-      directory: path.join(__dirname, ""),
-    },
+    hot: true,
     allowedHosts: ["http://192.168.1.11"],
   },
   plugins: [
@@ -33,7 +31,7 @@ const config = {
       template: "./web_src/index.html",
       filename: "index.html",
       publicPath: isProduction ? "dist" : "auto",
-      hash: true,
+      hash: isProduction ? true : false,
     }),
     new MiniCssExtractPlugin({
       filename: "[name].css",
@@ -46,7 +44,8 @@ const config = {
         },
       ],
     }),
-  ],
+    !isProduction && new ReactRefreshWebpackPlugin(),
+  ].filter(Boolean),
   optimization: {
     splitChunks: {
       cacheGroups: {
@@ -70,9 +69,28 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.(ts|tsx)$/i,
-        loader: "swc-loader",
+        test: /\.([jt]s|[jt]sx)$/i,
         exclude: ["/node_modules/"],
+        use: [
+          {
+            loader: require.resolve("swc-loader"),
+            options: {
+              jsc: {
+                parser: {
+                  syntax: "typescript",
+                  tsx: true,
+                  dynamicImport: true,
+                },
+                transform: {
+                  react: {
+                    runtime: "automatic",
+                    refresh: !isProduction,
+                  },
+                },
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.css$/i,
