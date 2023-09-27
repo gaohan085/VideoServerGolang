@@ -57,7 +57,6 @@ export function Player() {
         {playSrc !== "" &&
           `正在播放: ${playSrc.slice(playSrc.lastIndexOf("/") + 1)}`}
       </p>
-      <p>{"gaohan"}</p>
     </div>
   );
 }
