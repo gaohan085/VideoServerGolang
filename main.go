@@ -41,7 +41,7 @@ func main() {
 		}
 		// defer file.Close()
 		app.Use(logger.New(logger.Config{
-			Format:     "[${time}]${status}-${latency}${method}${path} - ${ua}\n",
+			Format:     "[${time}] ${status} ${latency} ${method} ${path} - ${ua}\n",
 			TimeFormat: "2006/Jan/02 Monday 15:04:05",
 			TimeZone:   "Asia/Shanghai",
 			Output:     file,
