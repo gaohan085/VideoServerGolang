@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const webpack = require("webpack")
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -13,6 +14,7 @@ const stylesHandler = isProduction
   : "style-loader";
 
 const config = {
+  devtool:"source-map",
   entry: "./web_src/index.tsx",
   output: {
     clean: false,
@@ -42,9 +44,14 @@ const config = {
           from: "./node_modules/plyr-react/plyr.css",
           to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
         },
+        {
+          from: "./web_src/index.css",
+          to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
+        },
       ],
     }),
     !isProduction && new ReactRefreshWebpackPlugin(),
+    new webpack.SourceMapDevToolPlugin({}),
   ].filter(Boolean),
   optimization: {
     splitChunks: {

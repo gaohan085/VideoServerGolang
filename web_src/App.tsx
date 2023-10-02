@@ -13,7 +13,6 @@ export const App = () => {
   return (
     <div className={styles.layout}>
       <div className='main'>
-        <Components.Player />
         <Components.SideBar />
       </div>
       <Components.StatusBar />
