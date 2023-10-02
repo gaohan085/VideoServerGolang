@@ -40,18 +40,12 @@ createRoot(statusbar).render(
   </StrictMode>
 );
 
-let src: string = "aaaa";
-const render = () => {
-  src = store.getState().redux.playSource;
-  // console.log(src);
-  // console.log(plyr.source.sources[0].src);
-};
 
 const videoNode = document.getElementById("plyr");
 const plyr = new Plyr(videoNode, {
   enabled: true,
   debug: true,
-  autoplay: true,
+  autoplay: false,
   clickToPlay: true,
   controls: [
     "play-large",
@@ -72,17 +66,16 @@ const plyr = new Plyr(videoNode, {
   keyboard: { focused: false, global: true },
 });
 
-plyr.source = {
-  type: "video",
-  sources: [
-    {
-      src: src,
-    },
-  ],
-};
-
 plyr.on("ready", (e) => {
-  console.log(e.detail.plyr);
-  render();
-  store.subscribe(render);
+  const player = e.detail.plyr;
+  store.subscribe(() => {
+    player.source = {
+      type: "video",
+      sources: [
+        {
+          src: store.getState().redux.playSource,
+        },
+      ],
+    };
+  });
 });
