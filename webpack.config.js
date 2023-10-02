@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-const webpack = require("webpack")
+const webpack = require("webpack");
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -14,7 +14,7 @@ const stylesHandler = isProduction
   : "style-loader";
 
 const config = {
-  devtool:"source-map",
+  devtool: "source-map",
   entry: "./web_src/index.tsx",
   output: {
     clean: false,
@@ -80,8 +80,9 @@ const config = {
         exclude: ["/node_modules/"],
         use: [
           {
-            loader: require.resolve("swc-loader"),
+            loader: "swc-loader",
             options: {
+              parseMap: true,
               jsc: {
                 parser: {
                   syntax: "typescript",
