@@ -6,6 +6,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -52,6 +54,8 @@ const config = {
     }),
     !isProduction && new ReactRefreshWebpackPlugin(),
     new webpack.SourceMapDevToolPlugin({}),
+    new webpack.EnvironmentPlugin(),
+    new BundleAnalyzerPlugin({}),
   ].filter(Boolean),
   optimization: {
     splitChunks: {
@@ -129,6 +133,16 @@ const config = {
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
   },
+  externals: [
+    {
+      react: "React",
+    },
+    {
+      "react-dom": "ReactDOM",
+    },
+    { plyr: "Plyr" },
+    { axios: "axios" },
+  ],
 };
 
 module.exports = () => {

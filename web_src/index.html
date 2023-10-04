@@ -4,9 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="/dist/plyr.css" />
     <link rel="stylesheet" href="/dist/index.css" />
     <link rel="icon" type="image/x-icon" href="/dist/favicon.ico" />
+    <% if (process.env.NODE_ENV === "production") { %>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"
+      integrity="sha256-IXWO0ITNDjfnNXIu5POVfqlgYoop36bDzhodR6LW5Pc="
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.css"
+      rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.5.1/dist/axios.min.js"></script>
+    <% } else { %>
+    <link rel="stylesheet" href="/dist/plyr.css" />
+    <% } %>
   </head>
   <body>
     <div id="layout" class="layout">
