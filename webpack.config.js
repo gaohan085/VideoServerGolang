@@ -55,7 +55,6 @@ const config = {
     !isProduction && new ReactRefreshWebpackPlugin(),
     new webpack.SourceMapDevToolPlugin({}),
     new webpack.EnvironmentPlugin(),
-    new BundleAnalyzerPlugin({}),
   ].filter(Boolean),
   optimization: {
     splitChunks: {
