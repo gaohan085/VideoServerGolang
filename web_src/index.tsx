@@ -43,9 +43,7 @@ createRoot(statusbar).render(
 
 const videoNode = document.getElementById("plyr");
 const plyr = new Plyr(videoNode, {
-  enabled: true,
-  debug: true,
-  autoplay: false,
+  autoplay: true,
   clickToPlay: true,
   controls: [
     "play-large",
