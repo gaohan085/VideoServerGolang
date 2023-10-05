@@ -55,6 +55,7 @@ const config = {
     !isProduction && new ReactRefreshWebpackPlugin(),
     new webpack.SourceMapDevToolPlugin({}),
     new webpack.EnvironmentPlugin(),
+    !isProduction && new BundleAnalyzerPlugin({}),
   ].filter(Boolean),
   optimization: {
     splitChunks: {
@@ -133,14 +134,13 @@ const config = {
     extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
   },
   externals: [
-    {
-      react: "React",
-    },
-    {
-      "react-dom": "ReactDOM",
-    },
+    { react: "React" },
+    { "react-dom": "ReactDOM" },
     { plyr: "Plyr" },
     { axios: "axios" },
+    { redux: "Redux" },
+    { "react-redux": "ReactRedux" },
+    { "@reduxjs/toolkit": "window RTK" },
   ],
 };
 
