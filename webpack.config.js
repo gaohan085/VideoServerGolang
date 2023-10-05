@@ -133,15 +133,6 @@ const config = {
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
   },
-  externals: [
-    { react: "React" },
-    { "react-dom": "ReactDOM" },
-    { plyr: "Plyr" },
-    { axios: "axios" },
-    { redux: "Redux" },
-    { "react-redux": "ReactRedux" },
-    { "@reduxjs/toolkit": "window RTK" },
-  ],
 };
 
 module.exports = () => {
@@ -149,6 +140,15 @@ module.exports = () => {
     config.mode = "production";
 
     config.plugins.push(new MiniCssExtractPlugin());
+    config.external = [
+      { react: "React" },
+      { "react-dom": "ReactDOM" },
+      { plyr: "Plyr" },
+      { axios: "axios" },
+      { redux: "Redux" },
+      { "react-redux": "ReactRedux" },
+      { "@reduxjs/toolkit": "window RTK" },
+    ];
   } else {
     config.mode = "development";
   }
