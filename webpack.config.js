@@ -16,12 +16,11 @@ const stylesHandler = isProduction
   : "style-loader";
 
 const config = {
-  devtool: "source-map",
   entry: "./web_src/index.tsx",
   output: {
     clean: false,
     path: path.resolve(__dirname, "dist"),
-    filename: "[name].js",
+    filename: "[contenthash].js",
   },
   devServer: {
     open: false,
@@ -41,19 +40,30 @@ const config = {
       filename: "[name].css",
     }),
     new CopyPlugin({
-      patterns: [
-        {
-          from: "./node_modules/plyr-react/plyr.css",
-          to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
-        },
-        {
-          from: "./web_src/index.css",
-          to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
-        },
-      ],
+      patterns: isProduction
+        ? [
+            {
+              from: "./web_src/index.css",
+              to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
+            },
+          ]
+        : [
+            {
+              from: "./node_modules/plyr/dist/plyr.css",
+              to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
+            },
+            {
+              from: "./web_src/index.css",
+              to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
+            },
+          ],
     }),
     !isProduction && new ReactRefreshWebpackPlugin(),
-    new webpack.SourceMapDevToolPlugin({}),
+    new webpack.SourceMapDevToolPlugin({
+      filename: "[contenthash].js.map",
+      append: false,
+      noSources: isProduction ? true : false,
+    }),
     new webpack.EnvironmentPlugin(),
     !isProduction && new BundleAnalyzerPlugin({}),
   ].filter(Boolean),
@@ -140,7 +150,7 @@ module.exports = () => {
     config.mode = "production";
 
     config.plugins.push(new MiniCssExtractPlugin());
-    config.external = [
+    config.externals = [
       { react: "React" },
       { "react-dom": "ReactDOM" },
       { plyr: "Plyr" },
