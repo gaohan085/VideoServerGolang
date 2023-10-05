@@ -5,8 +5,8 @@ import Plyr from "plyr";
 import { Provider } from "react-redux";
 import store from "./lib/reduxStore";
 import { SWRConfig } from "swr";
+import type { Unsubscribe } from "redux";
 import React, { StrictMode } from "react";
-
 const app = document.getElementById("app");
 
 createRoot(app).render(
@@ -40,11 +40,9 @@ createRoot(statusbar).render(
   </StrictMode>
 );
 
-
 const videoNode = document.getElementById("plyr");
 const plyr = new Plyr(videoNode, {
   autoplay: true,
-  clickToPlay: true,
   controls: [
     "play-large",
     "play",
@@ -64,16 +62,38 @@ const plyr = new Plyr(videoNode, {
   keyboard: { focused: false, global: true },
 });
 
-plyr.on("ready", (e) => {
+let unSubscriber: Unsubscribe = null;
+
+plyr.once("ready", (e) => {
   const player = e.detail.plyr;
-  store.subscribe(() => {
+  unSubscriber = store.subscribe(() => {
+    const reduxPlaySrc = store.getState().redux.playSource;
     player.source = {
       type: "video",
       sources: [
         {
-          src: store.getState().redux.playSource,
+          src: reduxPlaySrc,
         },
       ],
     };
+  });
+});
+
+plyr.on("playing", (e) => {
+  const player = e.detail.plyr;
+  unSubscriber();
+  store.subscribe(() => {
+    const reduxPlaySrc = store.getState().redux.playSource;
+    const currPlaySrc = player.source as unknown as string;
+    if (encodeURI(reduxPlaySrc) !== currPlaySrc) {
+      player.source = {
+        type: "video",
+        sources: [
+          {
+            src: reduxPlaySrc,
+          },
+        ],
+      };
+    }
   });
 });
