@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
+const { SourceMapDevToolPlugin } = require("webpack");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
@@ -36,9 +37,6 @@ const config = {
       publicPath: isProduction ? "dist" : "auto",
       hash: isProduction ? true : false,
     }),
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-    }),
     new CopyPlugin({
       patterns: isProduction
         ? [
@@ -59,13 +57,7 @@ const config = {
           ],
     }),
     !isProduction && new ReactRefreshWebpackPlugin(),
-    new webpack.SourceMapDevToolPlugin({
-      filename: "[contenthash].js.map",
-      append: false,
-      noSources: isProduction ? true : false,
-    }),
     new webpack.EnvironmentPlugin(),
-    !isProduction && new BundleAnalyzerPlugin({}),
   ].filter(Boolean),
   optimization: {
     splitChunks: {
@@ -96,7 +88,7 @@ const config = {
           {
             loader: "swc-loader",
             options: {
-              parseMap: true,
+              parseMap: !isProduction ? true : false,
               jsc: {
                 parser: {
                   syntax: "typescript",
@@ -149,7 +141,11 @@ module.exports = () => {
   if (isProduction) {
     config.mode = "production";
 
-    config.plugins.push(new MiniCssExtractPlugin());
+    config.plugins.push(
+      new MiniCssExtractPlugin({
+        filename: "[contenthash].css",
+      })
+    );
     config.externals = [
       { react: "React" },
       { "react-dom": "ReactDOM" },
@@ -161,6 +157,7 @@ module.exports = () => {
     ];
   } else {
     config.mode = "development";
+    config.devtool = "source-map";
   }
   return config;
 };
