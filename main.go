@@ -41,7 +41,7 @@ func main() {
 		}
 		// defer file.Close()
 		app.Use(logger.New(logger.Config{
-			Format:     "[${time}] ${status} ${latency} ${method} ${path} - ${ua}\n",
+			Format:     "[${time}] ${ip} ${status} ${latency} ${method} ${path} - ${ua}\n",
 			TimeFormat: "2006/Jan/02 Monday 15:04:05",
 			TimeZone:   "Asia/Shanghai",
 			Output:     file,
@@ -49,7 +49,7 @@ func main() {
 
 	default:
 		app.Use(logger.New(logger.Config{
-			Format:     "[DEBUG] | PID:${pid} | [${time}] | ${status} | ${latency} | ${method} | ${path}\n",
+			Format:     "[DEBUG] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
 			TimeFormat: "2006/Jan/02 Monday 15:04:05",
 			TimeZone:   "Asia/Shanghai",
 		}))
@@ -66,6 +66,7 @@ func main() {
 	api := app.Group("/api")
 
 	api.Get("/disk", handlers.DiskUsageHandler)
+	api.Post("/delete", handlers.DeleteHandler)
 	api.Get("/*", handlers.FileReaderHandlers)
 
 	app.Listen(":3000")
