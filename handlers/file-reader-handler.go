@@ -16,7 +16,7 @@ import (
 type Folder struct {
 	ParentFolder string         `json:"parentFolder"`
 	CurrentPath  string         `json:"currentPath"`
-	ChildElem    []DirChildElem `json:"childElem"`
+	ChildElem    []DirChildElem `json:"childElements"`
 }
 
 type DirChildElem struct {
@@ -78,7 +78,7 @@ func FileReaderHandlers(c *fiber.Ctx) error {
 			ChildElem:    elems,
 		})
 	default:
-		return proxy.Do(c, "http://192.168.1.11/api/"+path)
+		return proxy.Do(c, "http://192.168.1.11/api/"+url.PathEscape(path))
 	}
 
 }
