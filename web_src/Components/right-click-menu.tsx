@@ -28,15 +28,15 @@ export const RightClickMenu: React.FC = () => {
       {onDel && (
         <div
           className={styles["ctx-dialog"]}
-          style={{ top: position.pageY, left: position.pageX }}>
+          style={{ top: position?.pageY, left: position?.pageX }}>
           <p>{"确认删除"}</p>
           <div>
-            <p onClick={() => setClicked(true)}>{"取消"}</p>
+            <p onClick={() => setClicked && setClicked(true)}>{"取消"}</p>
             <p
               onClick={() => {
-                setClicked(true);
-                axios.post("/api/delete", rightClickElem).then(() => {
-                  mutateFunc();
+                setClicked && setClicked(true);
+                void axios.post("/api/delete", rightClickElem).then(() => {
+                  mutateFunc && void mutateFunc();
                 });
               }}>
               {"确认"}
@@ -47,18 +47,18 @@ export const RightClickMenu: React.FC = () => {
       {!onDel && (
         <div
           className={styles.ctx}
-          style={{ top: position.pageY, left: position.pageX }}
+          style={{ top: position?.pageY, left: position?.pageX }}
           onContextMenu={(e) => {
             e.preventDefault();
           }}>
           <ul>
-            {rightClickElem.isFile /**&& isVideo(rightClickElem.extName) */ && (
+            {rightClickElem?.isFile /**&& isVideo(rightClickElem.extName) */ && (
               <>
                 {rightClickElem.extName === ".mp4" && (
                   <li
                     onClick={() => {
-                      setClicked(true);
-                      dispatch(setPlaySource(rightClickElem.playSrc));
+                      setClicked && setClicked(true);
+                      dispatch(setPlaySource(rightClickElem.playSrc!));
                     }}>
                     <p>
                       <span>
@@ -70,7 +70,7 @@ export const RightClickMenu: React.FC = () => {
                 )}
                 <li
                   onClick={() => {
-                    setClicked(true);
+                    setClicked && setClicked(true);
                     //TODO covert video backend point
                     return;
                   }}>
@@ -83,16 +83,17 @@ export const RightClickMenu: React.FC = () => {
                 </li>
               </>
             )}
-            {rightClickElem.isFolder &&
-              !openFolder.includes(
+            {rightClickElem?.isFolder &&
+              !openFolder?.includes(
                 rightClickElem.currentPath + rightClickElem.name
               ) && (
                 <li
                   onClick={() => {
-                    setOpenFolder(
-                      rightClickElem.currentPath + rightClickElem.name
-                    );
-                    setClicked(true);
+                    setOpenFolder &&
+                      setOpenFolder(
+                        rightClickElem.currentPath + rightClickElem.name
+                      );
+                    setClicked && setClicked(true);
                   }}>
                   <p>
                     <span>
@@ -102,14 +103,14 @@ export const RightClickMenu: React.FC = () => {
                   </p>
                 </li>
               )}
-            {rightClickElem.isFolder &&
-              openFolder.includes(
+            {rightClickElem?.isFolder &&
+              openFolder?.includes(
                 rightClickElem.currentPath + rightClickElem.name
               ) && (
                 <li
                   onClick={() => {
-                    setOpenFolder(rightClickElem.currentPath);
-                    setClicked(true);
+                    setOpenFolder && setOpenFolder(rightClickElem.currentPath);
+                    setClicked && setClicked(true);
                   }}>
                   <p>
                     <span>
@@ -127,7 +128,7 @@ export const RightClickMenu: React.FC = () => {
                 <span>
                   <FcEmptyTrash />
                 </span>
-                {rightClickElem.isFolder ? "删除文件夹" : "删除文件"}
+                {rightClickElem?.isFolder ? "删除文件夹" : "删除文件"}
               </p>
             </li>
           </ul>

@@ -9,7 +9,7 @@ import type { Unsubscribe } from "redux";
 import React, { StrictMode } from "react";
 const app = document.getElementById("app");
 
-createRoot(app).render(
+createRoot(app!).render(
   <StrictMode>
     <SWRConfig
       value={{
@@ -25,7 +25,7 @@ createRoot(app).render(
 );
 
 const statusbar = document.getElementById("statusbar");
-createRoot(statusbar).render(
+createRoot(statusbar!).render(
   <StrictMode>
     <SWRConfig
       value={{
@@ -41,7 +41,7 @@ createRoot(statusbar).render(
 );
 
 const videoNode = document.getElementById("plyr");
-const plyr = new Plyr(videoNode, {
+const plyr = new Plyr(videoNode!, {
   autoplay: true,
   controls: [
     "play-large",
@@ -62,7 +62,7 @@ const plyr = new Plyr(videoNode, {
   keyboard: { focused: false, global: true },
 });
 
-let unSubscriber: Unsubscribe = null;
+let unSubscriber: Unsubscribe | undefined = undefined;
 
 plyr.once("ready", (e) => {
   const player = e.detail.plyr;
@@ -81,7 +81,7 @@ plyr.once("ready", (e) => {
 
 plyr.on("playing", (e) => {
   const player = e.detail.plyr;
-  unSubscriber();
+  unSubscriber && unSubscriber();
   store.subscribe(() => {
     const reduxPlaySrc = store.getState().redux.playSource;
     const currPlaySrc = player.source as unknown as string;

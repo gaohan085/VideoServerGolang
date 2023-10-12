@@ -23,7 +23,7 @@ export interface DirChildElem {
 export interface Folder {
   parentFolder: string; //relative path
   currentPath: string; //relative path
-  childElem: DirChildElem[];
+  childElements: DirChildElem[];
 }
 
 const FileElem: React.FC<
@@ -65,13 +65,13 @@ const FileElem: React.FC<
       transition={{ duration: 0.2, ease: "easeIn" }}>
       <p
         onClick={() => {
-          if (props.extName === ".mp4") dispatch(setPlaySource(props.playSrc));
+          if (props.extName === ".mp4") dispatch(setPlaySource(props.playSrc!));
         }}
         onContextMenu={(e) => {
-          if (clicked) setClicked(false);
-          setPosition({ pageX: e.pageX, pageY: e.pageY });
-          setMutateFunc(() => props.mutateFunc);
-          setRightClickElem(props);
+          if (clicked) setClicked && setClicked(false);
+          setPosition && setPosition({ pageX: e.pageX, pageY: e.pageY });
+          setMutateFunc && setMutateFunc(() => props.mutateFunc);
+          setRightClickElem && setRightClickElem(props);
         }}
         title={props.name}
         className={
