@@ -3,7 +3,7 @@ import styles from "./status-bar.module.scss";
 import useSWR from "swr";
 import { FcDataProtection, FcRightUp } from "react-icons/fc";
 
-type DiskSpace = {
+interface DiskSpace {
   path: string;
   fstype: string;
   total: number;
@@ -14,7 +14,7 @@ type DiskSpace = {
   inodesUsed: number;
   inodesFree: number;
   inodesUsedPercent: number;
-};
+}
 
 const DiskUsage: React.FC = () => {
   const { data, isLoading, error } = useSWR<DiskSpace, Error>("/api/disk");
@@ -27,9 +27,13 @@ const DiskUsage: React.FC = () => {
       ) : (
         <>
           <FcDataProtection />{" "}
-          <>{`剩余磁盘空间: ${(data.free / (1024 * 1024 * 1024)).toFixed(
-            1
-          )} GB`}</>
+          <>
+            {data && (
+              <>{`剩余磁盘空间: ${(data.free / (1024 * 1024 * 1024)).toFixed(
+                1
+              )} GB`}</>
+            )}
+          </>
         </>
       )}
     </p>

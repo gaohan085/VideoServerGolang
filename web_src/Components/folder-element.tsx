@@ -15,7 +15,7 @@ export const FolderElem: React.FC<
 > = (props) => {
   const [rightClicked, setRightClicked] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { data, isLoading, error, mutate } = useSWR(
+  const { data, isLoading, error, mutate } = useSWR<Folder, Error>(
     isOpen
       ? "/api/" +
           (props.currentPath === "/" ? "" : props.currentPath) +
@@ -38,7 +38,7 @@ export const FolderElem: React.FC<
   useEffect(() => {
     if (openFolder === props.currentPath + props.name && !isOpen)
       setIsOpen(true);
-    else if (openFolder.includes(props.name) && isOpen) setIsOpen(true);
+    else if (openFolder?.includes(props.name) && isOpen) setIsOpen(true);
     else if (openFolder !== props.currentPath + props.name && isOpen)
       setIsOpen(false);
     return;
@@ -59,14 +59,14 @@ export const FolderElem: React.FC<
   }, [rightClickElem, setRightClicked, props]);
 
   const handleClick = (): void => {
-    setClicked(true);
+    setClicked && setClicked(true);
     if (!isOpen) {
       setIsOpen(true);
-      setOpenFolder(props.currentPath + props.name);
+      setOpenFolder && setOpenFolder(props.currentPath + props.name);
     }
     if (isOpen) {
       setIsOpen(false);
-      setOpenFolder(props.currentPath);
+      setOpenFolder && setOpenFolder(props.currentPath);
     }
   };
 
@@ -80,10 +80,10 @@ export const FolderElem: React.FC<
       <p
         onClick={handleClick}
         onContextMenu={(e) => {
-          if (clicked) setClicked(false);
-          setPosition({ pageX: e.pageX, pageY: e.pageY });
-          setMutateFunc(() => props.mutateFunc);
-          setRightClickElem(props);
+          if (clicked) setClicked && setClicked(false);
+          setPosition && setPosition({ pageX: e.pageX, pageY: e.pageY });
+          setMutateFunc && setMutateFunc(() => props.mutateFunc);
+          setRightClickElem && setRightClickElem(props);
         }}
         title={isOpen ? "关闭文件夹" : "打开文件夹"}
         // style={
@@ -122,7 +122,10 @@ export const FolderElem: React.FC<
                 opacity: 0,
               }}
               transition={{ duration: 0.2, ease: "easeInOut" }}>
-              <OpenFolderContainer elems={data.childElem} mutateFunc={mutate} />
+              <OpenFolderContainer
+                elems={data.childElements}
+                mutateFunc={mutate}
+              />
             </motion.div>
           )}
         </AnimatePresence>
