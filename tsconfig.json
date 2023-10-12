@@ -8,6 +8,7 @@
     "allowJs": true,
     "moduleResolution": "Node",
     "sourceMap": true,
+    "strictNullChecks": true,
     "lib": [
       "DOM",
       "DOM.Iterable",
