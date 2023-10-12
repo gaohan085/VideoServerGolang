@@ -16,7 +16,7 @@ import (
 type Folder struct {
 	ParentFolder string         `json:"parentFolder"`
 	CurrentPath  string         `json:"currentPath"`
-	ChildElem    []DirChildElem `json:"childElem"`
+	ChildElem    []DirChildElem `json:"childElements"`
 }
 
 type DirChildElem struct {
