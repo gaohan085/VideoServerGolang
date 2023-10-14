@@ -16,12 +16,12 @@ const stylesHandler = isProduction
 const config = {
   entry: "./web_src/index.tsx",
   output: {
-    clean: false,
+    clean: true,
     path: path.resolve(__dirname, "dist"),
     filename: "[contenthash].js",
   },
   devServer: {
-    open: true,
+    open: false,
     host: "localhost",
     port: 3333,
     hot: true,
