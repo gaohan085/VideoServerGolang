@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -20,7 +21,7 @@ const config = {
     filename: "[contenthash].js",
   },
   devServer: {
-    open: false,
+    open: true,
     host: "localhost",
     port: 3333,
     hot: true,
@@ -121,6 +122,14 @@ module.exports = () => {
     config.plugins.push(
       new MiniCssExtractPlugin({
         filename: "[contenthash].css",
+      }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: "./assets/favicon.ico",
+            to: path.resolve(__dirname, "dist/"),
+          },
+        ],
       })
     );
     config.externals = [
@@ -135,6 +144,13 @@ module.exports = () => {
   } else {
     config.mode = "development";
     config.devtool = "source-map";
+    config.plugins.push(
+      new CopyPlugin({
+        patterns: [
+          { from: "./node_modules/plyr/dist/plyr.css", to: "./dist/" },
+        ],
+      })
+    );
   }
   return config;
 };
