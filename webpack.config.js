@@ -3,12 +3,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
-const { SourceMapDevToolPlugin } = require("webpack");
-const BundleAnalyzerPlugin =
-  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -36,25 +32,6 @@ const config = {
       filename: "index.html",
       publicPath: isProduction ? "dist" : "auto",
       hash: isProduction ? true : false,
-    }),
-    new CopyPlugin({
-      patterns: isProduction
-        ? [
-            {
-              from: "./web_src/index.css",
-              to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
-            },
-          ]
-        : [
-            {
-              from: "./node_modules/plyr/dist/plyr.css",
-              to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
-            },
-            {
-              from: "./web_src/index.css",
-              to: isProduction ? path.resolve(__dirname, "dist") : "./dist/",
-            },
-          ],
     }),
     !isProduction && new ReactRefreshWebpackPlugin(),
     new webpack.EnvironmentPlugin(),
@@ -108,7 +85,7 @@ const config = {
       },
       {
         test: /\.css$/i,
-        type: "asset/resource",
+        use: [stylesHandler, "css-loader"],
       },
       {
         test: /\.(s[ac]ss)$/i,
@@ -117,7 +94,7 @@ const config = {
           {
             loader: "css-loader",
             options: {
-              modules: { localIdentName: "[path][name]-[hash:base64:5]" },
+              modules: { localIdentName: "[name]-[hash:base64:5]" },
             },
           },
           "sass-loader",

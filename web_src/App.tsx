@@ -13,7 +13,7 @@ export const App = () => {
   return (
     <div className={styles.layout}>
       <div className='main'>
-        <Components.SideBar />
+        <Components.InteractiveComponents.InteractiveSidebar />
       </div>
       <Components.StatusBar />
     </div>
