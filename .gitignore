@@ -3,6 +3,6 @@ node_modules/
 .air.toml
 *.log
 tmp/
-dist/*
+dist/
 go-fiber-react-ts
 .env
