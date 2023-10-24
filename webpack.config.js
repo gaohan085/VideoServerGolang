@@ -14,7 +14,7 @@ const stylesHandler = isProduction
   : "style-loader";
 
 const config = {
-  entry: "./web_src/index.tsx",
+  entry: "./web_src/index.ts",
   output: {
     clean: true,
     path: path.resolve(__dirname, "dist"),
@@ -34,8 +34,8 @@ const config = {
       publicPath: isProduction ? "dist" : "auto",
       hash: isProduction ? true : false,
     }),
-    !isProduction && new ReactRefreshWebpackPlugin(),
     new webpack.EnvironmentPlugin(),
+    !isProduction && new ReactRefreshWebpackPlugin({ overlay: false }),
   ].filter(Boolean),
   optimization: {
     splitChunks: {
@@ -49,7 +49,7 @@ const config = {
               .reduceRight((item) => item);
             return `${cacheGroupKey}.${moduleFileName.slice(
               0,
-              moduleFileName.indexOf(".")
+              moduleFileName.indexOf("."),
             )}`;
           },
           chunks: "all",
@@ -67,6 +67,7 @@ const config = {
             loader: "swc-loader",
             options: {
               parseMap: !isProduction ? true : false,
+              env: { mode: "entry" },
               jsc: {
                 parser: {
                   syntax: "typescript",
@@ -130,7 +131,7 @@ module.exports = () => {
             to: path.resolve(__dirname, "dist/"),
           },
         ],
-      })
+      }),
     );
     config.externals = [
       { react: "React" },
@@ -148,8 +149,9 @@ module.exports = () => {
       new CopyPlugin({
         patterns: [
           { from: "./node_modules/plyr/dist/plyr.css", to: "./dist/" },
+          { from: "./assets/favicon.ico", to: "./dist/" },
         ],
-      })
+      }),
     );
   }
   return config;

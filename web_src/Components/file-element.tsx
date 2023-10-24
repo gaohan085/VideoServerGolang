@@ -1,18 +1,15 @@
-import { Context } from "./sidebar";
-import isVideo from "../lib/is-video";
 import { motion } from "framer-motion";
-import styles from "./file-element.module.scss";
-import useSWR from "swr";
+import React, { useContext } from "react";
 import { FcFile, FcVideoFile } from "react-icons/fc";
-import React, { useContext, useEffect, useState } from "react";
-import {
-  selectPlaySrc,
-  setPlaySource,
-  useAppDispatch,
-  useAppSelector,
-} from "../lib/reduxStore";
+import useSWR from "swr";
 
-export interface DirChildElem {
+import * as lib from "../lib";
+
+import styles from "./file-element.module.scss";
+
+import { Context, DirectoryProp } from ".";
+
+export interface DirElement {
   name: string;
   isFile: boolean;
   isFolder: boolean;
@@ -20,72 +17,64 @@ export interface DirChildElem {
   playSrc?: string;
   currentPath: string; //relative path
 }
-export interface Folder {
-  parentFolder: string; //relative path
-  currentPath: string; //relative path
-  childElements: DirChildElem[];
-}
 
-const FileElem: React.FC<
-  DirChildElem & {
-    mutateFunc: ReturnType<typeof useSWR<Folder, Error>>["mutate"];
+const FileElement: React.FC<
+  Pick<DirElement, "name" | "extName"> & {
+    handleClick: React.MouseEventHandler;
+    handleCtxMenu: React.MouseEventHandler;
+    isSelected?: boolean;
+    isPlaying?: boolean;
   }
 > = (props) => {
-  const dispatch = useAppDispatch();
-  const [rightClicked, setRightClicked] = useState<boolean>(false);
-  const {
-    clicked,
-    setClicked,
-    setPosition,
-    setMutateFunc,
-    rightClickElem,
-    setRightClickElem,
-  } = useContext(Context);
-  const currPlaySrc = useAppSelector(selectPlaySrc);
-
-  // Listen context right clicked element and change this component rightClicked status
-  useEffect(() => {
-    if (
-      rightClickElem &&
-      rightClickElem.currentPath === props.currentPath &&
-      rightClickElem.name === props.name
-    ) {
-      setRightClicked(true);
-    } else {
-      setRightClicked(false);
-    }
-  }, [rightClickElem, setRightClicked, props]);
+  const { name, extName, handleClick, handleCtxMenu } = props;
 
   return (
     <motion.div
       className={styles.file}
-      initial={{ paddingLeft: 10 }}
+      initial={{ paddingLeft: 15 }}
       animate={{ paddingLeft: 0 }}
-      exit={{ paddingLeft: 10 }}
-      transition={{ duration: 0.2, ease: "easeIn" }}>
+      exit={{ paddingLeft: 15 }}
+      transition={{ duration: 0.2, ease: "easeIn" }}
+    >
       <p
-        onClick={() => {
-          if (props.extName === ".mp4") dispatch(setPlaySource(props.playSrc!));
-        }}
-        onContextMenu={(e) => {
-          if (clicked) setClicked && setClicked(false);
-          setPosition && setPosition({ pageX: e.pageX, pageY: e.pageY });
-          setMutateFunc && setMutateFunc(() => props.mutateFunc);
-          setRightClickElem && setRightClickElem(props);
-        }}
-        title={props.name}
-        className={
-          rightClicked
-            ? "name selected"
-            : currPlaySrc === props.playSrc && props.playSrc !== ""
-            ? "name playing"
-            : "name"
-        }>
-        <span>{isVideo(props.extName) ? <FcVideoFile /> : <FcFile />}</span>
-        {props.name.replace("_", "-")}
+        onClick={handleClick}
+        onContextMenu={handleCtxMenu}
+        title={lib.isVideo(extName) ? "播放视频" : undefined}
+        className="file-element"
+      >
+        <span>{lib.isVideo(extName) ? <FcVideoFile /> : <FcFile />}</span>
+        {name.replace("_", "-")}
       </p>
     </motion.div>
   );
 };
 
-export default FileElem;
+export const InteractiveFileElement: React.FC<{
+  elem: DirElement;
+  mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
+}> = (props) => {
+  const { clicked, setClicked, setRightClickElem, setMutateFunc, setPosition } =
+    useContext(Context);
+  const dispatch = lib.redux.useAppDispatch();
+
+  const { elem, mutateFunc } = props;
+
+  const handleClick: React.MouseEventHandler = () => {
+    if (elem.extName === ".mp4")
+      dispatch(lib.redux.setPlaySource(elem.playSrc!));
+  };
+  const handleCtxMenu: React.MouseEventHandler = (e) => {
+    setPosition && setPosition({ ...e });
+    clicked && setClicked && setClicked(false);
+    setRightClickElem && setRightClickElem(elem);
+    setMutateFunc && setMutateFunc(() => mutateFunc);
+  };
+
+  return (
+    <FileElement
+      {...elem}
+      handleClick={handleClick}
+      handleCtxMenu={handleCtxMenu}
+    />
+  );
+};

@@ -1,21 +1,43 @@
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { SWRConfig } from "swr";
+
 import * as Components from "./Components";
-import styles from "./App.module.scss";
-import React, { useEffect } from "react";
-import { selectPlaySrc, useAppSelector } from "./lib/reduxStore";
+import * as lib from "./lib";
 
-export const App = () => {
-  const playSrc = useAppSelector(selectPlaySrc);
+export const renderSidebar = (app: HTMLElement) => {
+  createRoot(app).render(
+    <StrictMode>
+      <SWRConfig
+        value={{
+          refreshInterval: 50000,
+          fetcher: lib.fetcher,
+          revalidateOnFocus: true,
+        }}
+      >
+        <Provider store={lib.redux.store}>
+          <Components.InteractiveSidebar />
+        </Provider>
+      </SWRConfig>
+    </StrictMode>,
+  );
+};
 
-  useEffect(() => {
-    document.title = playSrc;
-  }, [playSrc]);
-
-  return (
-    <div className={styles.layout}>
-      <div className='main'>
-        <Components.InteractiveComponents.InteractiveSidebar />
-      </div>
-      <Components.StatusBar />
-    </div>
+export const renderStatusbar = (statusbar: HTMLElement) => {
+  createRoot(statusbar).render(
+    <StrictMode>
+      <SWRConfig
+        value={{
+          refreshInterval: 50000,
+          fetcher: lib.fetcher,
+          revalidateOnFocus: true,
+        }}
+      >
+        <Provider store={lib.redux.store}>
+          <Components.StatusBar />
+        </Provider>
+      </SWRConfig>
+    </StrictMode>,
   );
 };

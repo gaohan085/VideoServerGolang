@@ -1,7 +1,8 @@
 import React from "react";
-import styles from "./status-bar.module.scss";
 import useSWR from "swr";
 import { FcDataProtection, FcRightUp } from "react-icons/fc";
+
+import styles from "./status-bar.module.scss";
 
 interface DiskSpace {
   path: string;
@@ -30,7 +31,7 @@ const DiskUsage: React.FC = () => {
           <>
             {data && (
               <>{`剩余磁盘空间: ${(data.free / (1024 * 1024 * 1024)).toFixed(
-                1
+                1,
               )} GB`}</>
             )}
           </>
@@ -47,7 +48,7 @@ export const StatusBar: React.FC = () => {
         <DiskUsage />
         <p>
           <FcRightUp />{" "}
-          <a href='http://192.168.1.11/qbittorrent' target='_blank'>
+          <a href="http://192.168.1.11/qbittorrent" target="_blank">
             {"Qbittorrent"}
           </a>
         </p>

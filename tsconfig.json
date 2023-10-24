@@ -16,11 +16,8 @@
     ]
   },
   "files": [
-    "web_src/index.tsx"
+    "web_src/index.ts"
   ],
-  "ts-node": {
-    "swc": true
-  },
   "include": [
     "./web_src/",
   ]

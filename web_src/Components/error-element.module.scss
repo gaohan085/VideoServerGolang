@@ -1,0 +1,16 @@
+.error-element {
+  padding: 2px 0px;
+  border-radius: 4px;
+  width: fit-content;
+  cursor: not-allowed;
+  margin-block-start: 0.05em;
+  margin-block-end: 0.05em;
+  white-space: nowrap;
+  user-select: none;
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+    font-size: 17px;
+  }
+}

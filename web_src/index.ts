@@ -1,44 +1,19 @@
-import * as Components from "./Components";
-import { createRoot } from "react-dom/client";
-import { fetcher } from "./lib/fetcher";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import Plyr from "plyr";
-import { Provider } from "react-redux";
-import store from "./lib/reduxStore";
-import { SWRConfig } from "swr";
-import type { Unsubscribe } from "redux";
-import React, { StrictMode } from "react";
-const app = document.getElementById("app");
+import "./index.css";
 
-createRoot(app!).render(
-  <StrictMode>
-    <SWRConfig
-      value={{
-        refreshInterval: 50000,
-        fetcher: fetcher,
-        revalidateOnFocus: true,
-      }}>
-      <Provider store={store}>
-        <Components.SideBar />
-      </Provider>
-    </SWRConfig>
-  </StrictMode>
-);
+import * as App from "./App";
+import * as lib from "./lib";
+
+import type { Unsubscribe } from "redux";
+
+const app = document.getElementById("app");
+App.renderSidebar(app!);
 
 const statusbar = document.getElementById("statusbar");
-createRoot(statusbar!).render(
-  <StrictMode>
-    <SWRConfig
-      value={{
-        refreshInterval: 50000,
-        fetcher: fetcher,
-        revalidateOnFocus: true,
-      }}>
-      <Provider store={store}>
-        <Components.StatusBar />
-      </Provider>
-    </SWRConfig>
-  </StrictMode>
-);
+App.renderStatusbar(statusbar!);
 
 const videoNode = document.getElementById("plyr");
 const plyr = new Plyr(videoNode!, {
@@ -66,8 +41,8 @@ let unSubscriber: Unsubscribe | undefined = undefined;
 
 plyr.once("ready", (e) => {
   const player = e.detail.plyr;
-  unSubscriber = store.subscribe(() => {
-    const reduxPlaySrc = store.getState().redux.playSource;
+  unSubscriber = lib.redux.store.subscribe(() => {
+    const reduxPlaySrc = lib.redux.store.getState().redux.playSource;
     player.source = {
       type: "video",
       sources: [
@@ -82,8 +57,8 @@ plyr.once("ready", (e) => {
 plyr.on("playing", (e) => {
   const player = e.detail.plyr;
   unSubscriber && unSubscriber();
-  store.subscribe(() => {
-    const reduxPlaySrc = store.getState().redux.playSource;
+  lib.redux.store.subscribe(() => {
+    const reduxPlaySrc = lib.redux.store.getState().redux.playSource;
     const currPlaySrc = player.source as unknown as string;
     if (encodeURI(reduxPlaySrc) !== currPlaySrc) {
       player.source = {
@@ -97,3 +72,7 @@ plyr.on("playing", (e) => {
     }
   });
 });
+
+if ((module as any).hot) {
+  (module as any).hot.accept("./App.tsx");
+}

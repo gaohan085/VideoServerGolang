@@ -1,0 +1,27 @@
+.sidebar {
+  position: relative;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #b8babc;
+  padding-top: 18px;
+  padding-left: 10px;
+  height: 100%;
+  border-left: 1px solid #2c2842;
+  margin-right: 80px;
+
+  > [class~="file-system"] {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 70px;
+    font-size: 12px;
+    min-height: 400px;
+  }
+
+  > [class~="file-system"] > div {
+    border-left: none;
+  }
+}

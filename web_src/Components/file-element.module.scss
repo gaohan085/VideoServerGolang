@@ -1,43 +1,29 @@
 .file {
-  width: fit-content;
+  display: flex;
+  flex-direction: column;
   margin-left: 8px;
-  margin-right: 0;
-
-  > [class~="name"] {
-    box-sizing: border-box;
-    padding: 2px 5px;
-    padding-right: 5px;
+  border-radius: 5px;
+  z-index: 1;
+  transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  > [class~="file-element"] {
+    padding: 2px 0px;
     border-radius: 4px;
     width: fit-content;
     cursor: pointer;
-    margin-block-start: 0em;
-    margin-block-end: 0em;
+    margin-block-start: 0.05em;
+    margin-block-end: 0.05em;
     white-space: nowrap;
     user-select: none;
-    transition: background-color 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
-    margin: 1px;
+    transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 
     &:hover {
       color: #e85982;
-      transition: background-color 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
     }
-
-    > span {
-      display: inline-block;
-      vertical-align: middle;
-      margin-right: 5px;
-      font-size: 14px;
-      line-height: 14px;
-    }
-
-    &[class~="selected"] {
-      color: #e85982;
-      background: #1c1838;
-      transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
-    }
-
-    &[class~="playing"] {
-      outline: 1px solid #d1d1d1;
-    }
+  }
+  > [class~="file-element"] > span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 5px;
+    font-size: 17px;
   }
 }

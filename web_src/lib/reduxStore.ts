@@ -43,7 +43,7 @@ export function makeStore() {
   });
 }
 
-const store = makeStore();
+export const store = makeStore();
 
 export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
@@ -53,4 +53,3 @@ export const selectPlaySrc = (state: AppState) => state.redux.playSource;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
-export default store;

@@ -1,37 +1,111 @@
-import { Context } from "./sidebar";
-import { OpenFolderContainer } from "./open-folder-container";
-import { Spinner } from "./spinner";
-import styles from "./folder-element.module.scss";
-import useSWR from "swr";
 import { AnimatePresence, motion } from "framer-motion";
-import { DirChildElem, Folder } from "./file-element";
-import { FcFolder, FcOpenedFolder } from "react-icons/fc";
 import React, { useContext, useEffect, useState } from "react";
+import { FcFolder, FcOpenedFolder } from "react-icons/fc";
+import useSWR from "swr";
 
-export const FolderElem: React.FC<
-  DirChildElem & {
-    mutateFunc: ReturnType<typeof useSWR<Folder, Error>>["mutate"];
+import styles from "./folder-element.module.scss";
+
+import {
+  Context,
+  ErrorElement,
+  type DirElement,
+  InteractiveOpenFolderContainer,
+  Spinner,
+} from ".";
+
+export interface DirectoryProp {
+  parentFolder: string; //relative path
+  currentPath: string; //relative path
+  childElements: DirElement[];
+}
+
+const FolderElement: React.FC<
+  Pick<DirElement, "name"> & {
+    isLoading: boolean | undefined;
+    isOpen: boolean | undefined;
+    isError: boolean | undefined;
+    handleClick: React.MouseEventHandler | undefined;
+    handleCtxMenu: React.MouseEventHandler | undefined;
+    subDirectoryData: DirectoryProp | undefined;
+    mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
   }
 > = (props) => {
-  const [rightClicked, setRightClicked] = useState<boolean>(false);
+  const {
+    name,
+    isLoading,
+    isOpen,
+    isError,
+    handleClick,
+    handleCtxMenu,
+    subDirectoryData,
+    mutateFunc,
+  } = props;
+
+  const ConditionalFolderIcon = (
+    <>{isLoading ? <Spinner /> : isOpen ? <FcOpenedFolder /> : <FcFolder />}</>
+  );
+
+  return (
+    <motion.div
+      className={!isOpen ? `${styles.folder}` : `${styles.folder} open`}
+      initial={{ paddingLeft: 12 }}
+      animate={{ paddingLeft: 0 }}
+      exit={{ paddingLeft: 12 }}
+      transition={{ duration: 0.2, ease: "easeIn" }}
+    >
+      <p
+        onClick={handleClick}
+        onContextMenu={handleCtxMenu}
+        className="folder-element"
+      >
+        <span>{ConditionalFolderIcon}</span>
+        {name}
+      </p>
+      {isError && <ErrorElement />}
+      <AnimatePresence>
+        {isOpen && subDirectoryData && (
+          <motion.div
+            initial={{ opacity: 0, maxHeight: 0 }}
+            animate={{ maxHeight: 5000, opacity: 1 }}
+            exit={{ maxHeight: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            style={{ borderLeft: "1px solid #2c2842", marginLeft: "8px" }}
+          >
+            <InteractiveOpenFolderContainer
+              data={subDirectoryData}
+              mutateFunc={mutateFunc}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
+export const InteractiveFolderElement: React.FC<
+  DirElement & {
+    mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
+  }
+> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { data, isLoading, error, mutate } = useSWR<Folder, Error>(
+  const { data, isLoading, error, mutate } = useSWR<DirectoryProp, Error>(
     isOpen
-      ? "/api/" +
-          (props.currentPath === "/" ? "" : props.currentPath) +
-          props.name
-      : null
+      ? encodeURI(
+          "/api/" +
+            (props.currentPath === "/" ? "" : props.currentPath) +
+            props.name,
+        )
+      : null,
   );
 
   const {
-    clicked,
-    setClicked,
-    setPosition,
     openFolder,
     setOpenFolder,
-    setMutateFunc,
-    rightClickElem,
+    setPosition,
+    clicked,
+    setClicked,
     setRightClickElem,
+    setMutateFunc,
   } = useContext(Context);
 
   //TO listen context open folder and change this component isOpen status
@@ -44,21 +118,7 @@ export const FolderElem: React.FC<
     return;
   }, [openFolder, props, isOpen, setIsOpen]);
 
-  // Listen context right clicked element and change this component rightClicked status
-  useEffect(() => {
-    if (
-      rightClickElem &&
-      rightClickElem.currentPath === props.currentPath &&
-      rightClickElem.name === props.name
-    ) {
-      setRightClicked(true);
-    } else {
-      setRightClicked(false);
-    }
-    return;
-  }, [rightClickElem, setRightClicked, props]);
-
-  const handleClick = (): void => {
+  const handleClick: React.MouseEventHandler = (): void => {
     setClicked && setClicked(true);
     if (!isOpen) {
       setIsOpen(true);
@@ -70,66 +130,23 @@ export const FolderElem: React.FC<
     }
   };
 
+  const handleCtxMenu: React.MouseEventHandler = (e): void => {
+    setPosition && setPosition({ ...e });
+    clicked && setClicked && setClicked(false);
+    setRightClickElem && setRightClickElem(props);
+    setMutateFunc && setMutateFunc(() => props.mutateFunc);
+  };
+
   return (
-    <motion.div
-      className={!isOpen ? `${styles.folder}` : `${styles.folder} open`}
-      initial={{ paddingLeft: 10 }}
-      animate={{ paddingLeft: 0 }}
-      exit={{ paddingLeft: 10 }}
-      transition={{ duration: 0.2, ease: "easeIn" }}>
-      <p
-        onClick={handleClick}
-        onContextMenu={(e) => {
-          if (clicked) setClicked && setClicked(false);
-          setPosition && setPosition({ pageX: e.pageX, pageY: e.pageY });
-          setMutateFunc && setMutateFunc(() => props.mutateFunc);
-          setRightClickElem && setRightClickElem(props);
-        }}
-        title={isOpen ? "关闭文件夹" : "打开文件夹"}
-        // style={
-        //   rightClicked
-        //     ? { backgroundColor: "#e9e9e9", outline: "1px solid #e0e0e0" }
-        //     : {}
-        // }
-        className={!rightClicked ? "name" : "name selected"}>
-        {isLoading ? (
-          <span>
-            <Spinner />
-          </span>
-        ) : (
-          <span>
-            {isOpen && <FcOpenedFolder />}
-            {!isOpen && <FcFolder />}
-          </span>
-        )}
-        {props.name}
-      </p>
-      {error && isOpen && <>{"Error Fetch Data"}</>}
-      {
-        <AnimatePresence>
-          {data && isOpen && (
-            <motion.div
-              initial={{
-                opacity: 0,
-                maxHeight: 0,
-              }}
-              animate={{
-                maxHeight: 5000,
-                opacity: 1,
-              }}
-              exit={{
-                maxHeight: 0,
-                opacity: 0,
-              }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}>
-              <OpenFolderContainer
-                elems={data.childElements}
-                mutateFunc={mutate}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      }
-    </motion.div>
+    <FolderElement
+      {...props}
+      isError={error ? true : false}
+      isLoading={isLoading}
+      isOpen={isOpen}
+      handleClick={handleClick}
+      handleCtxMenu={handleCtxMenu}
+      subDirectoryData={data}
+      mutateFunc={mutate}
+    />
   );
 };
