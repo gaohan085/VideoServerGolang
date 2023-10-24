@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 
 import { ErrorElement } from "./error-element";
 import { type DirectoryProp } from "./folder-element";
@@ -79,7 +79,9 @@ export const InteractiveSidebar: React.FC = () => {
   const [mutateFunc, setMutateFunc] =
     useState<ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"]>();
 
-  const { data, isLoading, error } = useSWR<DirectoryProp, Error>("/api/");
+  const { data, isLoading, error, mutate } = useSWR<DirectoryProp, Error>(
+    "/api/",
+  );
 
   const handleClick: React.MouseEventHandler = () => {
     return;
@@ -87,10 +89,6 @@ export const InteractiveSidebar: React.FC = () => {
   const handleCtxMenu: React.MouseEventHandler = (e) => {
     e.preventDefault();
   };
-
-  useEffect(() => {
-    console.log(position);
-  }, [position]);
 
   return (
     <Context.Provider
