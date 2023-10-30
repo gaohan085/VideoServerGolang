@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 import useSWR from "swr";
 
 import { ErrorElement } from "./error-element";
@@ -84,7 +84,7 @@ export const InteractiveSidebar: React.FC = () => {
   );
 
   const handleClick: React.MouseEventHandler = () => {
-    return;
+    setClicked && setClicked(true);
   };
   const handleCtxMenu: React.MouseEventHandler = (e) => {
     e.preventDefault();

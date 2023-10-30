@@ -7,6 +7,7 @@
   box-shadow: 1px 1px 5px rgba($color: #000000, $alpha: 0.2);
   width: 120px;
   font-size: 14px;
+  user-select: none;
 
   > p {
     cursor: default;
@@ -51,6 +52,7 @@
   border-radius: 6px;
   box-shadow: 1px 2px 5px rgba($color: #ffffff, $alpha: 0.2);
   width: 120px;
+  user-select: none;
   > ul {
     list-style: none;
     margin-block-start: 0em;
@@ -82,7 +84,7 @@
 
         span {
           display: inline-block;
-          vertical-align: middle;
+          vertical-align: sub;
           font-size: 17px;
           margin-right: 3px;
           line-height: 14px;

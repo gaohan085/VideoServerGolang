@@ -189,6 +189,7 @@ export const InteractiveCtxMenu: React.FC = () => {
     dispatch(
       lib.redux.setPlaySource(rightClickElem ? rightClickElem.playSrc! : ""),
     );
+    setClicked && setClicked(true);
   };
 
   const handleCancelDel: React.MouseEventHandler = () => {
@@ -203,6 +204,12 @@ export const InteractiveCtxMenu: React.FC = () => {
     });
   };
 
+  const handleConvertVideo : React.MouseEventHandler = () =>{
+    setClicked && setClicked(true)
+
+    //TODO POST Convert video
+  }
+
   return (
     <>
       {!delConfirm && (
@@ -213,7 +220,7 @@ export const InteractiveCtxMenu: React.FC = () => {
           handleCloseFolder={handleCloseFolder}
           handleDelete={handleDelete}
           handlePlayVideo={handlePlayVideo}
-          // handleConverVideo={handleConvertVideo}
+          handleConverVideo={handleConvertVideo}
           openFolder={openFolder!}
         />
       )}
