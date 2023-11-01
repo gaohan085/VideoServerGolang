@@ -1,0 +1,29 @@
+$main-color: #e85982;
+
+%element {
+  margin-left: 8px;
+  border-radius: 1px;
+  transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+@mixin name($curosr: none) {
+  cursor: $curosr;
+  padding: 2px 0px;
+  border-radius: 4px;
+  width: fit-content;
+  margin-block-start: 0.05em;
+  margin-block-end: 0.05em;
+  white-space: nowrap;
+  user-select: none;
+
+  &:hover {
+    color: $main-color;
+  }
+}
+
+@mixin icon($fontSize: 17px) {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+  font-size: $fontSize;
+}
