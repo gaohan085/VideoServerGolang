@@ -17,7 +17,7 @@ interface DiskSpace {
   inodesUsedPercent: number;
 }
 
-const DiskUsage: React.FC = () => {
+export const DiskUsage: React.FC = () => {
   const { data, isLoading, error } = useSWR<DiskSpace, Error>("/api/disk");
   return (
     <p>

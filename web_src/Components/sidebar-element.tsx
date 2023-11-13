@@ -1,5 +1,8 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { FcPrevious } from "react-icons/fc";
 import useSWR from "swr";
+
+import { useWindowDimension } from "../lib";
 
 import { ErrorElement } from "./error-element";
 import { type DirectoryProp } from "./folder-element";
@@ -7,6 +10,7 @@ import styles from "./sidebar-element.module.scss";
 
 import {
   DirElement,
+  DiskUsage,
   InteractiveCtxMenu,
   InteractiveOpenFolderContainer,
   Spinner,
@@ -19,9 +23,21 @@ export const Sidebar: React.FC<{
   handleClick: React.MouseEventHandler;
   handleCtxMenu: React.MouseEventHandler;
   mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
+  isActive: boolean | undefined;
+  toggleActive: React.MouseEventHandler;
+  width: number;
 }> = (props) => {
-  const { data, isLoading, isError, handleClick, handleCtxMenu, mutateFunc } =
-    props;
+  const {
+    data,
+    isLoading,
+    isError,
+    handleClick,
+    handleCtxMenu,
+    mutateFunc,
+    isActive,
+    toggleActive,
+    width,
+  } = props;
 
   const conditionalElem = (
     <>
@@ -39,11 +55,21 @@ export const Sidebar: React.FC<{
 
   return (
     <div
-      className={styles.sidebar}
+      className={!isActive ? styles.sidebar : `${styles.sidebar} active`}
       onClick={handleClick}
       onContextMenu={handleCtxMenu}
     >
-      <div className={"file-system"}>{conditionalElem}</div>
+      <span onClick={toggleActive} className="arrow">
+        <FcPrevious />
+      </span>
+      {isActive ? (
+        <>
+          <div className={"file-system"}>{conditionalElem}</div>
+          {width <= 992 ? <DiskUsage /> : <></>}
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
@@ -90,6 +116,15 @@ export const InteractiveSidebar: React.FC = () => {
     e.preventDefault();
   };
 
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const toggleActive: React.MouseEventHandler = () => setIsActive(!isActive);
+
+  const { width } = useWindowDimension();
+
+  useEffect(() => {
+    if (width >= 992) setIsActive(true);
+  }, [width, isActive, setIsActive]);
+
   return (
     <Context.Provider
       value={{
@@ -112,6 +147,9 @@ export const InteractiveSidebar: React.FC = () => {
         isLoading={isLoading}
         isError={error ? true : false}
         mutateFunc={mutate}
+        isActive={isActive}
+        toggleActive={toggleActive}
+        width={width}
       />
       {!clicked && <InteractiveCtxMenu />}
     </Context.Provider>

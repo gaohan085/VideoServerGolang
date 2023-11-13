@@ -204,11 +204,11 @@ export const InteractiveCtxMenu: React.FC = () => {
     });
   };
 
-  const handleConvertVideo : React.MouseEventHandler = () =>{
-    setClicked && setClicked(true)
+  const handleConvertVideo: React.MouseEventHandler = () => {
+    setClicked && setClicked(true);
 
     //TODO POST Convert video
-  }
+  };
 
   return (
     <>

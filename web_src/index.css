@@ -62,15 +62,38 @@ body * {
   background-color: #090812;
 }
 .player {
-  width: 1129px;
-  margin: 20px;
-  margin-right: 5px;
-  padding: 20px;
   padding-top: 0px;
   --plyr-color-main: #e85982;
+  transition: all 0.2s ease-in-out;
 }
 .player > p {
   color: #edeeef;
   font-size: 17px;
   font-weight: 800;
+}
+
+@media (width <= 992px) {
+  .main {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .player {
+    margin: 0px;
+  }
+}
+
+@media (width > 992px) {
+  .player {
+    width: 1120px;
+    padding: 18px;
+  }
+}
+
+@media (height < 512px) {
+  .player {
+    width: 754px;
+    margin: auto;
+  }
 }

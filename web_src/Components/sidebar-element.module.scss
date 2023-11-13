@@ -1,27 +1,85 @@
 .sidebar {
   position: relative;
-  width: 250px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   color: #b8babc;
-  padding-top: 18px;
-  padding-left: 10px;
+  padding-top: 10px;
   height: 100%;
+  width: 5px;
+  justify-content: flex-start;
+  transition: all 0.25s ease-in-out;
   border-left: 1px solid #2c2842;
-  margin-right: 80px;
 
   > [class~="file-system"] {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-    margin-bottom: 70px;
     font-size: 12px;
-    min-height: 400px;
   }
 
   > [class~="file-system"] > div {
     border-left: none;
+  }
+
+  @media (width <= 992px) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #1c1838;
+    z-index: 10;
+    width: 0px;
+    flex-direction: column;
+    border-left: none;
+
+    > [class~="file-system"] {
+      border: 1px solid #2c2842;
+      margin: 5px 0;
+      border-radius: 8px;
+    }
+  }
+
+  [class="arrow"] {
+    height: fit-content;
+    vertical-align: middle;
+    font-size: 18px;
+    margin-left: -20px;
+    transition: all 0.25s ease-in-out;
+    @media (width >= 992px) {
+      display: none;
+    }
+    > svg {
+      transform: rotate(0deg);
+      transition: all 0.5s ease-in-out;
+    }
+  }
+
+  &[class~="active"] {
+    width: 220px;
+
+    > [class="arrow"] {
+      margin-left: 4px;
+      > svg {
+        transform: rotate(180deg);
+        transition: all 0.5s ease-in-out;
+      }
+    }
+  }
+
+  > p {
+    margin-left: 8px;
+    margin-top: auto;
+    user-select: none;
+    line-height: 12px;
+    font-size: 12px;
+    white-space: nowrap;
+
+    svg {
+      display: inline-block;
+      vertical-align: sub;
+      font-size: 15px;
+      line-height: normal;
+    }
   }
 }

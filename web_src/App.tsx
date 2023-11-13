@@ -6,7 +6,7 @@ import { SWRConfig } from "swr";
 import * as Components from "./Components";
 import * as lib from "./lib";
 
-export const renderSidebar = (app: HTMLElement) => {
+export const renderSidebar = (app: HTMLElement): void => {
   createRoot(app).render(
     <StrictMode>
       <SWRConfig
@@ -24,7 +24,7 @@ export const renderSidebar = (app: HTMLElement) => {
   );
 };
 
-export const renderStatusbar = (statusbar: HTMLElement) => {
+export const renderStatusbar = (statusbar: HTMLElement): void => {
   createRoot(statusbar).render(
     <StrictMode>
       <SWRConfig

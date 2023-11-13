@@ -27,4 +27,9 @@
       }
     }
   }
+
+  @media (width <= 992px) {
+    background-color: #090812;
+    display: none;
+  }
 }
