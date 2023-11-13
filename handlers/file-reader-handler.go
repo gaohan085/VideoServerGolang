@@ -78,7 +78,7 @@ func FileReaderHandlers(c *fiber.Ctx) error {
 			ChildElem:    elems,
 		})
 	default:
-		return proxy.Do(c, "http://192.168.1.11/api/"+path)
+		return proxy.Do(c, "http://192.168.1.31/api/"+path)
 	}
 
 }
