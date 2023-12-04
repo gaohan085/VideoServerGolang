@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -26,7 +25,6 @@ func RenameHandler(c *fiber.Ctx) error {
 	}
 
 	rootDir /** 包含路径末尾斜杠 */ := os.Getenv("ROOT_DIR")
-	fmt.Printf("%v\n", renameBody)
 
 	if renameBody.CurrentPath == "/" {
 		err := os.Rename(rootDir+renameBody.Name, rootDir+renameBody.NewName)
