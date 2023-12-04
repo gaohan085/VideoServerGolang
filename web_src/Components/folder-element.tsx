@@ -58,9 +58,7 @@ const FolderElement: React.FC<{
       >
         <span>{ConditionalFolderIcon}</span>
         {!isRename && elem.name}
-        {isRename && (
-          <InteractiveRenameComponent {...elem} />
-        )}
+        {isRename && <InteractiveRenameComponent {...elem} />}
       </a>
       {isError && <ErrorElement />}
       <AnimatePresence>
@@ -92,10 +90,10 @@ export const InteractiveFolderElement: React.FC<{
   const { data, isLoading, error, mutate } = useSWR<DirectoryProp, Error>(
     isOpen
       ? encodeURI(
-        "/api/" +
-        (elem.currentPath === "/" ? "" : elem.currentPath) +
-        elem.name,
-      )
+          "/api/" +
+            (elem.currentPath === "/" ? "" : elem.currentPath) +
+            elem.name,
+        )
       : null,
   );
 
@@ -108,6 +106,7 @@ export const InteractiveFolderElement: React.FC<{
     setRightClickElem,
     setMutateFunc,
     renameElement,
+    setRenameElement,
   } = useContext(Context);
 
   //TO listen context open folder and change this component isOpen status
@@ -130,6 +129,8 @@ export const InteractiveFolderElement: React.FC<{
         setIsOpen(false);
         setOpenFolder!(elem.currentPath);
       }
+      //取消其他正在重命名的元素
+      setRenameElement!(undefined);
     }
   };
 
@@ -145,6 +146,8 @@ export const InteractiveFolderElement: React.FC<{
       clicked && setClicked!(false);
       setRightClickElem!(elem);
       setMutateFunc!(() => mutateFunc);
+      //取消其他正在重命名的元素
+      setRenameElement!(undefined);
     }
   };
 

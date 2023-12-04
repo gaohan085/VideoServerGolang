@@ -35,7 +35,6 @@ body {
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
   --background-color: #090812;
-  
 }
 body a {
   color: inherit;

@@ -57,7 +57,9 @@
   }
 
   &[class~="active"] {
-    width: 220px;
+    width: 250px;
+    padding-left: 3px;
+    padding-right: 5px;
 
     > [class="arrow"] {
       margin-left: 4px;

@@ -5,6 +5,8 @@
   > [class~="file-element"] {
     @include base.name(pointer);
     transition: color 0.2s ease-in-out;
+    text-overflow: ellipsis;
+    padding-right: 10px;
   }
   > [class~="file-element"] {
     > span {

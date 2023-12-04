@@ -34,14 +34,12 @@ const FileElement: React.FC<{
       <a
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
-        title={lib.isVideo(elem.extName) ? "播放视频" : undefined}
+        title={lib.isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
         className="file-element"
       >
         <span>{lib.isVideo(elem.extName) ? <FcVideoFile /> : <FcFile />}</span>
-        {!isRename && <>{elem.name.replace("_", "-").toLowerCase()}</>}
-        {isRename && (
-          <InteractiveRenameComponent {...elem} />
-        )}
+        {!isRename && <>{elem.name}</>}
+        {isRename && <InteractiveRenameComponent {...elem} />}
       </a>
     </motion.div>
   );
@@ -58,14 +56,19 @@ export const InteractiveFileElement: React.FC<{
     setMutateFunc,
     setPosition,
     renameElement,
+    setRenameElement,
   } = useContext(Context);
   const dispatch = lib.redux.useAppDispatch();
   const { elem, mutateFunc } = props;
   const [isRename, setIsRename] = useState<boolean>(false);
 
   const handleClick: React.MouseEventHandler = () => {
-    if (!isRename && elem.extName === ".mp4")
-      dispatch(lib.redux.setPlaySource(elem.playSrc!));
+    if (!isRename) {
+      elem.extName === ".mp4" &&
+        dispatch(lib.redux.setPlaySource(elem.playSrc!));
+      //取消其他正在重命名的元素
+      setRenameElement!(undefined);
+    }
   };
   const handleCtxMenu: React.MouseEventHandler = (e) => {
     if (!isRename) {
@@ -73,6 +76,8 @@ export const InteractiveFileElement: React.FC<{
       setPosition!({ ...e });
       setRightClickElem!(elem);
       setMutateFunc!(() => mutateFunc);
+      //取消其他正在重命名的元素
+      setRenameElement!(undefined);
     }
   };
 
