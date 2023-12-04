@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import {
-  FcClapperboard,
   FcEmptyTrash,
   FcFolder,
   FcOpenedFolder,
   FcProcess,
+  FcServices,
+  FcStart,
 } from "react-icons/fc";
 
 import * as lib from "../lib";
@@ -18,7 +19,7 @@ const PlayVideo: React.FC = () => {
   return (
     <p>
       <span>
-        <FcClapperboard />
+        <FcStart />
       </span>
       {"播放视频"}
     </p>
@@ -70,6 +71,17 @@ const Delete: React.FC<{ isFile: boolean }> = (props) => {
   );
 };
 
+const Rename: React.FC = () => {
+  return (
+    <p>
+      <span>
+        <FcServices />
+      </span>
+      {"重命名"}
+    </p>
+  );
+};
+
 const DeleteConfirm: React.FC<{
   elem: DirElement;
   handleConfirmDel: React.MouseEventHandler;
@@ -102,6 +114,7 @@ const CtxMenu: React.FC<{
   handleDelete: React.MouseEventHandler;
   handlePlayVideo: React.MouseEventHandler;
   position: { pageX: number; pageY: number };
+  handleRename: React.MouseEventHandler;
 }> = (props) => {
   const {
     elem,
@@ -112,6 +125,7 @@ const CtxMenu: React.FC<{
     handleConverVideo,
     handlePlayVideo,
     position,
+    handleRename,
   } = props;
 
   return (
@@ -145,6 +159,11 @@ const CtxMenu: React.FC<{
           </li>
         )}
 
+        {/* RENAME */}
+        <li onClick={handleRename}>
+          <Rename />
+        </li>
+
         {/* Last list */}
         <li onClick={handleDelete}>
           <Delete isFile={elem.isFile} />
@@ -163,22 +182,20 @@ export const InteractiveCtxMenu: React.FC = () => {
     setClicked,
     openFolder,
     mutateFunc,
+    setRenameElement,
   } = useContext(Context);
 
   const dispatch = lib.redux.useAppDispatch();
 
   const handleOpenFolder: React.MouseEventHandler = () => {
-    setOpenFolder &&
-      setOpenFolder(
-        rightClickElem && rightClickElem.currentPath + rightClickElem.name,
-      );
-    setClicked && setClicked(true);
+    setOpenFolder!(
+      rightClickElem && rightClickElem.currentPath + rightClickElem.name,
+    );
+    setClicked!(true);
   };
   const handleCloseFolder: React.MouseEventHandler = () => {
-    setOpenFolder &&
-      setOpenFolder(rightClickElem ? rightClickElem.currentPath : "");
-
-    setClicked && setClicked(true);
+    setOpenFolder!(rightClickElem ? rightClickElem.currentPath : "");
+    setClicked!(true);
   };
 
   const handleDelete: React.MouseEventHandler = () => {
@@ -189,25 +206,30 @@ export const InteractiveCtxMenu: React.FC = () => {
     dispatch(
       lib.redux.setPlaySource(rightClickElem ? rightClickElem.playSrc! : ""),
     );
-    setClicked && setClicked(true);
+    setClicked!(true);
   };
 
   const handleCancelDel: React.MouseEventHandler = () => {
     setDelConfirm(false);
-    setClicked && setClicked(true);
+    setClicked!(true);
   };
 
   const handleConfirmDel: React.MouseEventHandler = () => {
     void axios.post("/api/delete", rightClickElem).then(() => {
-      mutateFunc && void mutateFunc();
-      setClicked && setClicked(true);
+      void mutateFunc!();
+      setClicked!(true);
     });
   };
 
   const handleConvertVideo: React.MouseEventHandler = () => {
-    setClicked && setClicked(true);
+    setClicked!(true);
 
     //TODO POST Convert video
+  };
+
+  const handleRename: React.MouseEventHandler = () => {
+    setClicked!(true);
+    setRenameElement!(rightClickElem);
   };
 
   return (
@@ -222,6 +244,7 @@ export const InteractiveCtxMenu: React.FC = () => {
           handlePlayVideo={handlePlayVideo}
           handleConverVideo={handleConvertVideo}
           openFolder={openFolder!}
+          handleRename={handleRename}
         />
       )}
       {delConfirm && (

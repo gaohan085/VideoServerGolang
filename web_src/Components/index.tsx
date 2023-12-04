@@ -6,3 +6,5 @@ export * from "./status-bar";
 export * from "./sidebar-element";
 export * from "./error-element";
 export * from "./right-click-context-menu";
+export * from "./rename-element";
+export * from "./types.d";

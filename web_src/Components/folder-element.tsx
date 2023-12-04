@@ -8,30 +8,27 @@ import styles from "./folder-element.module.scss";
 import {
   Context,
   ErrorElement,
-  type DirElement,
   InteractiveOpenFolderContainer,
+  InteractiveRenameComponent,
   Spinner,
+  type DirElement,
+  type DirectoryProp,
+  type InterfaceMutateFunc,
 } from ".";
 
-export interface DirectoryProp {
-  parentFolder: string; //relative path
-  currentPath: string; //relative path
-  childElements: DirElement[];
-}
-
-const FolderElement: React.FC<
-  Pick<DirElement, "name"> & {
-    isLoading: boolean | undefined;
-    isOpen: boolean | undefined;
-    isError: boolean | undefined;
-    handleClick: React.MouseEventHandler | undefined;
-    handleCtxMenu: React.MouseEventHandler | undefined;
-    subDirectoryData: DirectoryProp | undefined;
-    mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
-  }
-> = (props) => {
+const FolderElement: React.FC<{
+  elem: DirElement;
+  isLoading: boolean | undefined;
+  isOpen: boolean | undefined;
+  isError: boolean | undefined;
+  handleClick: React.MouseEventHandler | undefined;
+  handleCtxMenu: React.MouseEventHandler | undefined;
+  subDirectoryData: DirectoryProp | undefined;
+  mutateFunc: InterfaceMutateFunc;
+  isRename: boolean;
+}> = (props) => {
   const {
-    name,
+    elem,
     isLoading,
     isOpen,
     isError,
@@ -39,6 +36,7 @@ const FolderElement: React.FC<
     handleCtxMenu,
     subDirectoryData,
     mutateFunc,
+    isRename,
   } = props;
 
   const ConditionalFolderIcon = (
@@ -53,14 +51,17 @@ const FolderElement: React.FC<
       exit={{ paddingLeft: 12 }}
       transition={{ duration: 0.2, ease: "easeIn" }}
     >
-      <p
+      <a
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
         className="folder-element"
       >
         <span>{ConditionalFolderIcon}</span>
-        {name}
-      </p>
+        {!isRename && elem.name}
+        {isRename && (
+          <InteractiveRenameComponent {...elem} />
+        )}
+      </a>
       {isError && <ErrorElement />}
       <AnimatePresence>
         {isOpen && subDirectoryData && (
@@ -82,19 +83,19 @@ const FolderElement: React.FC<
   );
 };
 
-export const InteractiveFolderElement: React.FC<
-  DirElement & {
-    mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
-  }
-> = (props) => {
+export const InteractiveFolderElement: React.FC<{
+  elem: DirElement;
+  mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
+}> = (props) => {
+  const { elem, mutateFunc } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { data, isLoading, error, mutate } = useSWR<DirectoryProp, Error>(
     isOpen
       ? encodeURI(
-          "/api/" +
-            (props.currentPath === "/" ? "" : props.currentPath) +
-            props.name,
-        )
+        "/api/" +
+        (elem.currentPath === "/" ? "" : elem.currentPath) +
+        elem.name,
+      )
       : null,
   );
 
@@ -106,40 +107,50 @@ export const InteractiveFolderElement: React.FC<
     setClicked,
     setRightClickElem,
     setMutateFunc,
+    renameElement,
   } = useContext(Context);
 
   //TO listen context open folder and change this component isOpen status
   useEffect(() => {
-    if (openFolder === props.currentPath + props.name && !isOpen)
-      setIsOpen(true);
-    else if (openFolder?.includes(props.name) && isOpen) setIsOpen(true);
-    else if (openFolder !== props.currentPath + props.name && isOpen)
+    if (openFolder === elem.currentPath + elem.name && !isOpen) setIsOpen(true);
+    else if (openFolder?.includes(elem.name) && isOpen) setIsOpen(true);
+    else if (openFolder !== elem.currentPath + elem.name && isOpen)
       setIsOpen(false);
     return;
   }, [openFolder, props, isOpen, setIsOpen]);
 
   const handleClick: React.MouseEventHandler = (): void => {
-    setClicked && setClicked(true);
-    if (!isOpen) {
-      setIsOpen(true);
-      setOpenFolder && setOpenFolder(props.currentPath + props.name);
-    }
-    if (isOpen) {
-      setIsOpen(false);
-      setOpenFolder && setOpenFolder(props.currentPath);
+    setClicked!(true);
+    if (!isRename) {
+      if (!isOpen) {
+        setIsOpen(true);
+        setOpenFolder!(elem.currentPath + elem.name);
+      }
+      if (isOpen) {
+        setIsOpen(false);
+        setOpenFolder!(elem.currentPath);
+      }
     }
   };
 
+  const [isRename, setIsRename] = useState<boolean>(false);
+  useEffect(() => {
+    elem === renameElement ? setIsRename(true) : setIsRename(false);
+    return;
+  }, [elem, renameElement, setIsRename]);
+
   const handleCtxMenu: React.MouseEventHandler = (e): void => {
-    setPosition && setPosition({ ...e });
-    clicked && setClicked && setClicked(false);
-    setRightClickElem && setRightClickElem(props);
-    setMutateFunc && setMutateFunc(() => props.mutateFunc);
+    if (!isRename) {
+      setPosition!({ ...e });
+      clicked && setClicked!(false);
+      setRightClickElem!(elem);
+      setMutateFunc!(() => mutateFunc);
+    }
   };
 
   return (
     <FolderElement
-      {...props}
+      elem={elem}
       isError={error ? true : false}
       isLoading={isLoading}
       isOpen={isOpen}
@@ -147,6 +158,7 @@ export const InteractiveFolderElement: React.FC<
       handleCtxMenu={handleCtxMenu}
       subDirectoryData={data}
       mutateFunc={mutate}
+      isRename={isRename}
     />
   );
 };

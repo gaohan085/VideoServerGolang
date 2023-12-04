@@ -67,6 +67,7 @@ func main() {
 
 	api.Get("/disk", handlers.DiskUsageHandler)
 	api.Post("/delete", handlers.DeleteHandler)
+	api.Post("/rename", handlers.RenameHandler)
 	api.Get("/*", handlers.FileReaderHandlers)
 
 	app.Listen(":3000")

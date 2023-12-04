@@ -30,7 +30,7 @@ const OpenFolderContainer: React.FC<{
           ) : (
             <InteractiveFolderElement
               key={index}
-              {...elem}
+              elem={elem}
               mutateFunc={mutateFunc}
             />
           );

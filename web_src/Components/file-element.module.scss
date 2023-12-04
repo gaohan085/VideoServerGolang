@@ -6,7 +6,9 @@
     @include base.name(pointer);
     transition: color 0.2s ease-in-out;
   }
-  > [class~="file-element"] > span {
-    @include base.icon(17px);
+  > [class~="file-element"] {
+    > span {
+      @include base.icon(17px);
+    }
   }
 }

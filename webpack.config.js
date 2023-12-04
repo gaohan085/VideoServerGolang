@@ -25,7 +25,7 @@ const config = {
     host: "localhost",
     port: 3333,
     hot: true,
-    allowedHosts: ["http://192.168.1.11"],
+    allowedHosts: ["http://192.168.1.31"],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -96,7 +96,11 @@ const config = {
           {
             loader: "css-loader",
             options: {
-              modules: { localIdentName: "[name]-[hash:base64:5]" },
+              modules: {
+                localIdentName: isProduction
+                  ? "[local]"
+                  : "[path][name]__[local]--[hash:base64:5]",
+              },
             },
           },
           "sass-loader",
@@ -132,6 +136,7 @@ module.exports = () => {
           },
         ],
       }),
+      new webpack.ProgressPlugin({}),
     );
     config.externals = [
       { react: "React" },
@@ -152,7 +157,20 @@ module.exports = () => {
           { from: "./assets/favicon.ico", to: "./dist/" },
         ],
       }),
+      new TimerLoggerPlugin(),
     );
   }
   return config;
 };
+
+//TimerLoggerPlugin=============================================================
+const PluginName = "TimerLoggerPlugin";
+class TimerLoggerPlugin {
+  apply(compiler) {
+    compiler.hooks.watchRun.tap(PluginName, (compiler) => {
+      const logger = compiler.getInfrastructureLogger(PluginName);
+      logger.warn(`Compilation Done at ${new Date().toLocaleString()}`);
+    });
+  }
+}
+//==============================================================================

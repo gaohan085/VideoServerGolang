@@ -1,0 +1,60 @@
+@use "../base" as base;
+.form {
+  display: inline-block;
+  height: 20px;
+
+  > input {
+    display: inline-block;
+    border: none;
+    border-radius: 2px;
+    background-color: base.$backgrdColor;
+    color: #b8babc;
+    padding: 0;
+    padding: 0px 2px;
+    height: inherit;
+    font-size: 12px;
+    font-family: inherit;
+    line-height: 20px;
+    text-align: justify;
+    outline: 1px solid lighten(base.$mainColor, 20%);
+
+    &:focus-visible {
+      line-height: 20px;
+    }
+
+    &[type="text" i] {
+      padding-block: 0;
+      padding-inline: 0;
+    }
+    &::selection {
+      background: lighten(base.$backgrdColor, 45%);
+      color: lighten(base.$mainColor, 5%);
+    }
+  }
+
+  > button {
+    display: inline-block;
+    margin-left: 5px;
+    color: base.$backgrdColor;
+    appearance: none;
+    cursor: pointer;
+    background-color: inherit;
+    border: 0;
+    font-size: 18px;
+    padding-block: 0;
+    padding-inline: 0;
+    width: 30px;
+    height: 20px;
+    vertical-align: sub;
+
+    > svg {
+      vertical-align: baseline;
+    }
+
+    &:hover {
+      background: lighten(#090812, 30%);
+      border-radius: 5px;
+      outline: 1px solid lighten(#090812, 35%);
+    }
+  }
+}

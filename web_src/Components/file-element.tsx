@@ -1,32 +1,27 @@
 import { motion } from "framer-motion";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FcFile, FcVideoFile } from "react-icons/fc";
-import useSWR from "swr";
 
 import * as lib from "../lib";
 
 import styles from "./file-element.module.scss";
 
-import { Context, DirectoryProp } from ".";
+import {
+  Context,
+  InteractiveRenameComponent,
+  type DirElement,
+  type InterfaceMutateFunc,
+} from ".";
 
-export interface DirElement {
-  name: string;
-  isFile: boolean;
-  isFolder: boolean;
-  extName: string;
-  playSrc?: string;
-  currentPath: string; //relative path
-}
-
-const FileElement: React.FC<
-  Pick<DirElement, "name" | "extName"> & {
-    handleClick: React.MouseEventHandler;
-    handleCtxMenu: React.MouseEventHandler;
-    isSelected?: boolean;
-    isPlaying?: boolean;
-  }
-> = (props) => {
-  const { name, extName, handleClick, handleCtxMenu } = props;
+const FileElement: React.FC<{
+  elem: DirElement;
+  handleClick: React.MouseEventHandler;
+  handleCtxMenu: React.MouseEventHandler;
+  isSelected?: boolean;
+  isPlaying?: boolean;
+  isRename?: boolean;
+}> = (props) => {
+  const { elem, handleClick, handleCtxMenu, isRename } = props;
 
   return (
     <motion.div
@@ -36,45 +31,62 @@ const FileElement: React.FC<
       exit={{ paddingLeft: 15 }}
       transition={{ duration: 0.2, ease: "easeIn" }}
     >
-      <p
+      <a
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
-        title={lib.isVideo(extName) ? "播放视频" : undefined}
+        title={lib.isVideo(elem.extName) ? "播放视频" : undefined}
         className="file-element"
       >
-        <span>{lib.isVideo(extName) ? <FcVideoFile /> : <FcFile />}</span>
-        {name.replace("_", "-")}
-      </p>
+        <span>{lib.isVideo(elem.extName) ? <FcVideoFile /> : <FcFile />}</span>
+        {!isRename && <>{elem.name.replace("_", "-").toLowerCase()}</>}
+        {isRename && (
+          <InteractiveRenameComponent {...elem} />
+        )}
+      </a>
     </motion.div>
   );
 };
 
 export const InteractiveFileElement: React.FC<{
   elem: DirElement;
-  mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
+  mutateFunc: InterfaceMutateFunc;
 }> = (props) => {
-  const { clicked, setClicked, setRightClickElem, setMutateFunc, setPosition } =
-    useContext(Context);
+  const {
+    clicked,
+    setClicked,
+    setRightClickElem,
+    setMutateFunc,
+    setPosition,
+    renameElement,
+  } = useContext(Context);
   const dispatch = lib.redux.useAppDispatch();
-
   const { elem, mutateFunc } = props;
+  const [isRename, setIsRename] = useState<boolean>(false);
 
   const handleClick: React.MouseEventHandler = () => {
-    if (elem.extName === ".mp4")
+    if (!isRename && elem.extName === ".mp4")
       dispatch(lib.redux.setPlaySource(elem.playSrc!));
   };
   const handleCtxMenu: React.MouseEventHandler = (e) => {
-    setPosition && setPosition({ ...e });
-    clicked && setClicked && setClicked(false);
-    setRightClickElem && setRightClickElem(elem);
-    setMutateFunc && setMutateFunc(() => mutateFunc);
+    if (!isRename) {
+      clicked && setClicked!(false);
+      setPosition!({ ...e });
+      setRightClickElem!(elem);
+      setMutateFunc!(() => mutateFunc);
+    }
   };
+
+  useEffect(() => {
+    elem === renameElement ? setIsRename(true) : setIsRename(false);
+    return;
+  }, [elem, renameElement, setIsRename]);
 
   return (
     <FileElement
-      {...elem}
+      elem={elem}
       handleClick={handleClick}
       handleCtxMenu={handleCtxMenu}
+      isRename={isRename}
     />
   );
 };

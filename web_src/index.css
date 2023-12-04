@@ -34,6 +34,8 @@ body {
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
+  --background-color: #090812;
+  
 }
 body a {
   color: inherit;
@@ -59,7 +61,7 @@ body * {
   height: inherit;
   display: flex;
   justify-content: center;
-  background-color: #090812;
+  background-color: var(--background-color);
 }
 .player {
   padding-top: 0px;
@@ -91,9 +93,9 @@ body * {
   }
 }
 
-@media (height < 512px) {
+@media (height < 576px) {
   .player {
-    width: 754px;
+    width: 75vw;
     margin: auto;
   }
 }

@@ -1,4 +1,5 @@
-$main-color: #e85982;
+$mainColor: #e85982;
+$backgrdColor:#090812;
 
 %element {
   margin-left: 8px;
@@ -10,14 +11,15 @@ $main-color: #e85982;
   cursor: $curosr;
   padding: 2px 0px;
   border-radius: 4px;
-  width: fit-content;
-  margin-block-start: 0.05em;
-  margin-block-end: 0.05em;
   white-space: nowrap;
   user-select: none;
+  font-size: 12px;
+  line-height: 20px;
+  display: block;
+  width: 100%;
 
   &:hover {
-    color: $main-color;
+    color: $mainColor;
   }
 }
 

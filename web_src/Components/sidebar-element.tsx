@@ -4,16 +4,18 @@ import useSWR from "swr";
 
 import { useWindowDimension } from "../lib";
 
-import { ErrorElement } from "./error-element";
-import { type DirectoryProp } from "./folder-element";
 import styles from "./sidebar-element.module.scss";
 
 import {
   DirElement,
   DiskUsage,
+  ErrorElement,
   InteractiveCtxMenu,
   InteractiveOpenFolderContainer,
   Spinner,
+  UseStateReturnType,
+  type DirectoryProp,
+  type InterfaceMutateFunc,
 } from ".";
 
 export const Sidebar: React.FC<{
@@ -75,22 +77,18 @@ export const Sidebar: React.FC<{
 };
 
 export const Context = createContext<{
-  clicked?: ReturnType<typeof useState<boolean>>[0];
-  setClicked?: ReturnType<typeof useState<boolean>>[1];
-  position?: ReturnType<typeof useState<{ pageX: number; pageY: number }>>[0];
-  setPosition?: ReturnType<
-    typeof useState<{ pageX: number; pageY: number }>
-  >[1];
-  openFolder?: ReturnType<typeof useState<string>>[0];
-  setOpenFolder?: ReturnType<typeof useState<string>>[1];
-  mutateFunc?: ReturnType<
-    typeof useState<ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"]>
-  >[0];
-  setMutateFunc?: ReturnType<
-    typeof useState<ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"]>
-  >[1];
-  rightClickElem?: ReturnType<typeof useState<DirElement>>[0];
-  setRightClickElem?: ReturnType<typeof useState<DirElement>>[1];
+  clicked?: UseStateReturnType<boolean>[0];
+  setClicked?: UseStateReturnType<boolean>[1];
+  position?: UseStateReturnType<{ pageX: number; pageY: number }>[0];
+  setPosition?: UseStateReturnType<{ pageX: number; pageY: number }>[1];
+  openFolder?: UseStateReturnType<string>[0];
+  setOpenFolder?: UseStateReturnType<string>[1];
+  mutateFunc?: UseStateReturnType<InterfaceMutateFunc>[0];
+  setMutateFunc?: UseStateReturnType<InterfaceMutateFunc>[1];
+  rightClickElem?: UseStateReturnType<DirElement>[0];
+  setRightClickElem?: UseStateReturnType<DirElement>[1];
+  renameElement?: UseStateReturnType<DirElement>[0];
+  setRenameElement?: UseStateReturnType<DirElement>[1];
 }>({});
 
 export const InteractiveSidebar: React.FC = () => {
@@ -110,7 +108,7 @@ export const InteractiveSidebar: React.FC = () => {
   );
 
   const handleClick: React.MouseEventHandler = () => {
-    setClicked && setClicked(true);
+    setClicked(true);
   };
   const handleCtxMenu: React.MouseEventHandler = (e) => {
     e.preventDefault();
@@ -121,9 +119,14 @@ export const InteractiveSidebar: React.FC = () => {
 
   const { width } = useWindowDimension();
 
+  //监听窗口宽度
   useEffect(() => {
     if (width >= 992) setIsActive(true);
   }, [width, isActive, setIsActive]);
+
+  const [renameElement, setRenameElement] = useState<DirElement | undefined>(
+    undefined,
+  );
 
   return (
     <Context.Provider
@@ -138,6 +141,8 @@ export const InteractiveSidebar: React.FC = () => {
         setOpenFolder,
         mutateFunc,
         setMutateFunc,
+        renameElement,
+        setRenameElement,
       }}
     >
       <Sidebar

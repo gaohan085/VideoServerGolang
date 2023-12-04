@@ -44,7 +44,7 @@ export const mountPlyr = (node: HTMLElement) => {
 
   plyr.on("playing", (e) => {
     const player = e.detail.plyr;
-    unSubscriber && unSubscriber();
+    unSubscriber!();
     lib.redux.store.subscribe(() => {
       const reduxPlaySrc = lib.redux.store.getState().redux.playSource;
       const currPlaySrc = player.source as unknown as string;
