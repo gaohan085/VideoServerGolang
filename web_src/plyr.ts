@@ -49,7 +49,6 @@ export const mountPlyr = (node: HTMLElement) => {
       const reduxPlaySrc = lib.redux.store.getState().redux.playSource;
       const currPlaySrc = player.source as unknown as string;
       if (encodeURI(reduxPlaySrc) !== currPlaySrc) {
-        console.log(player.currentTime);
         player.source = {
           type: "video",
           sources: [
