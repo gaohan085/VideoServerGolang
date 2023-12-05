@@ -6,3 +6,4 @@ tmp/
 dist/
 go-fiber-react-ts
 .env
+.out
