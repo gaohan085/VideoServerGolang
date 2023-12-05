@@ -134,6 +134,10 @@ module.exports = () => {
             from: "./assets/favicon.ico",
             to: path.resolve(__dirname, "dist/"),
           },
+          {
+            from: "./node_modules/plyr/dist/plyr.svg",
+            to: path.resolve(__dirname, "dist/"),
+          },
         ],
       }),
       new webpack.ProgressPlugin({}),
@@ -145,7 +149,7 @@ module.exports = () => {
       { axios: "axios" },
       { redux: "Redux" },
       { "react-redux": "ReactRedux" },
-      { "@reduxjs/toolkit": "window RTK" },
+      // { "@reduxjs/toolkit": "window RTK" },
     ];
   } else {
     config.mode = "development";
@@ -154,6 +158,7 @@ module.exports = () => {
       new CopyPlugin({
         patterns: [
           { from: "./node_modules/plyr/dist/plyr.css", to: "./dist/" },
+          { from: "./node_modules/plyr/dist/plyr.svg", to: "./dist/" },
           { from: "./assets/favicon.ico", to: "./dist/" },
         ],
       }),

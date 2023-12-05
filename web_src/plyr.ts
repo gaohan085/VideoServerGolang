@@ -23,6 +23,8 @@ export const mountPlyr = (node: HTMLElement) => {
     seekTime: 3,
     blankVideo: "",
     keyboard: { focused: false, global: true },
+    loadSprite: false,
+    iconUrl: "/dist/plyr.svg",
   });
 
   let unSubscriber: Unsubscribe | undefined = undefined;
