@@ -21,7 +21,7 @@ const FileElement: React.FC<{
   isPlaying?: boolean;
   isRename?: boolean;
 }> = (props) => {
-  const { elem, handleClick, handleCtxMenu, isRename } = props;
+  const { elem, handleClick, handleCtxMenu, isRename, isPlaying } = props;
 
   return (
     <motion.div
@@ -35,7 +35,7 @@ const FileElement: React.FC<{
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
         title={lib.isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
-        className="file-element"
+        className={isPlaying ? "file-element playing" : "file-element"}
       >
         <span>{lib.isVideo(elem.extName) ? <FcVideoFile /> : <FcFile />}</span>
         {!isRename && <>{elem.name}</>}
@@ -86,12 +86,21 @@ export const InteractiveFileElement: React.FC<{
     return;
   }, [elem, renameElement, setIsRename]);
 
+  //监听正在播放
+  const currentPlaySrc = lib.redux.useAppSelector(lib.redux.selectPlaySrc)
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
+  useEffect(() => {
+    currentPlaySrc !== "" && currentPlaySrc === elem.playSrc && setIsPlaying(true);
+    return () => setIsPlaying(false);
+  }, [currentPlaySrc, elem, setIsPlaying])
+
   return (
     <FileElement
       elem={elem}
       handleClick={handleClick}
       handleCtxMenu={handleCtxMenu}
       isRename={isRename}
+      isPlaying={isPlaying}
     />
   );
 };
