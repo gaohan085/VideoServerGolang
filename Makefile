@@ -6,7 +6,7 @@ installDep:
 	go get -u github.com/shirou/gopsutil/v3@latest
 	pnpm install
 
-build: install
+build: installDep
 	rm .out/* -r
 	pnpm build
 	GOOS=linux GOACH=amd64 go build -o .out/videoserver-linux-amd64 main.go
