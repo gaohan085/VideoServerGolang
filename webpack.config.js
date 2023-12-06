@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
+// const BundleAnalyzer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -141,15 +142,15 @@ module.exports = () => {
         ],
       }),
       new webpack.ProgressPlugin({}),
+      // new BundleAnalyzer({ analyzerPort: 3000 }),
     );
     config.externals = [
       { react: "React" },
       { "react-dom": "ReactDOM" },
       { plyr: "Plyr" },
       { axios: "axios" },
-      { redux: "Redux" },
-      { "react-redux": "ReactRedux" },
-      // { "@reduxjs/toolkit": "window RTK" },
+      // { redux: "redux" },
+      // { "react-redux": "react-redux" },
     ];
   } else {
     config.mode = "development";
@@ -174,7 +175,7 @@ class TimerLoggerPlugin {
   apply(compiler) {
     compiler.hooks.watchRun.tap(PluginName, (compiler) => {
       const logger = compiler.getInfrastructureLogger(PluginName);
-      logger.warn(`Compilation Done at ${new Date().toLocaleString()}`);
+      logger.warn(`Compilation Done at ${new Date().toLocaleString()}\n`);
     });
   }
 }
