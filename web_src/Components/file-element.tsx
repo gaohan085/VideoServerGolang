@@ -18,8 +18,8 @@ const FileElement: React.FC<{
   handleClick: React.MouseEventHandler;
   handleCtxMenu: React.MouseEventHandler;
   isSelected?: boolean;
-  isPlaying?: boolean;
-  isRename?: boolean;
+  isPlaying: boolean;
+  isRename: boolean;
 }> = (props) => {
   const { elem, handleClick, handleCtxMenu, isRename, isPlaying } = props;
 
