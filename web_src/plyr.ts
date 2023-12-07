@@ -1,5 +1,6 @@
 import Plyr from "plyr";
 import { Unsubscribe } from "redux";
+import "plyr/dist/plyr.css";
 
 import * as lib from "./lib";
 

@@ -158,7 +158,6 @@ module.exports = () => {
     config.plugins.push(
       new CopyPlugin({
         patterns: [
-          { from: "./node_modules/plyr/dist/plyr.css", to: "./dist/" },
           { from: "./node_modules/plyr/dist/plyr.svg", to: "./dist/" },
           { from: "./assets/favicon.ico", to: "./dist/" },
         ],
