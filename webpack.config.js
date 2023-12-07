@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
 const CopyPlugin = require("copy-webpack-plugin");
-// const BundleAnalyzer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const BundleAnalyzer = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
 const isProduction = process.env.NODE_ENV == "production";
 
@@ -19,7 +19,7 @@ const config = {
   output: {
     clean: true,
     path: path.resolve(__dirname, "dist"),
-    filename: "[contenthash].js",
+    filename: "[name]-[contenthash].js",
   },
   devServer: {
     open: false,
@@ -135,31 +135,22 @@ module.exports = () => {
             from: "./assets/favicon.ico",
             to: path.resolve(__dirname, "dist/"),
           },
-          {
-            from: "./node_modules/plyr/dist/plyr.svg",
-            to: path.resolve(__dirname, "dist/"),
-          },
         ],
       }),
       new webpack.ProgressPlugin({}),
-      // new BundleAnalyzer({ analyzerPort: 3000 }),
+      new BundleAnalyzer({ analyzerPort: 3000 }),
     );
     config.externals = [
       { react: "React" },
       { "react-dom": "ReactDOM" },
-      { plyr: "Plyr" },
       { axios: "axios" },
-      // { redux: "redux" },
-      // { "react-redux": "react-redux" },
     ];
   } else {
     config.mode = "development";
     config.devtool = "source-map";
     config.plugins.push(
       new CopyPlugin({
-        patterns: [
-          { from: "./assets/favicon.ico", to: "./dist/" },
-        ],
+        patterns: [{ from: "./assets/favicon.ico", to: "./dist/" }],
       }),
       new TimerLoggerPlugin(),
     );
