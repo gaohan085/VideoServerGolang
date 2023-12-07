@@ -1,0 +1,36 @@
+.player-box {
+  width: 1120px;
+  padding: 18px;
+
+  @media (width<= 992px) {
+    padding: 5px;
+    width: 100vw;
+  }
+
+  @media (height <= 768px) {
+    padding: 0;
+  }
+
+  > a {
+    padding-top: 0.5em;
+    font-size: 20px;
+    font-weight: bold;
+  }
+}
+
+.player {
+  --brand-color: #f5f5f5;
+  --focus-color: #4e9cf6;
+
+  --audio-brand: var(--brand-color);
+  --audio-focus-ring-color: var(--focus-color);
+  --audio-border-radius: 2px;
+
+  --video-brand: var(--brand-color);
+  --video-focus-ring-color: var(--focus-color);
+  --video-border-radius: 2px;
+
+  @media (height <= 768px) {
+    height: 90vh;
+  }
+}

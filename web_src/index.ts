@@ -2,21 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import "./index.css";
+import { renderApp } from "./App";
 
-import { mountPlyr } from "./plyr";
-import * as App from "./App";
-
-const app = document.getElementById("app");
-App.renderSidebar(app!);
-
-const statusbar = document.getElementById("statusbar");
-App.renderStatusbar(statusbar!);
-
-const videoNode = document.getElementById("plyr");
-
-void mountPlyr(videoNode!);
+const app = document.getElementById("app")!;
+void renderApp(app);
 
 if ((module as any).hot) {
   (module as any).hot.accept("./App.tsx");
-  (module as any).hot.accept("./plyr.ts");
 }

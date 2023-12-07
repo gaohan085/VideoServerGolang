@@ -3,10 +3,13 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
 
+import "./index.css"
+
 import * as Components from "./Components";
 import * as lib from "./lib";
+import {Player} from "./player"
 
-export const renderSidebar = (app: HTMLElement): void => {
+export const renderApp = (app: HTMLElement): void => {
   createRoot(app).render(
     <StrictMode>
       <SWRConfig
@@ -17,27 +20,11 @@ export const renderSidebar = (app: HTMLElement): void => {
         }}
       >
         <Provider store={lib.redux.store}>
+          <Player />
           <Components.InteractiveSidebar />
-        </Provider>
-      </SWRConfig>
-    </StrictMode>,
-  );
-};
-
-export const renderStatusbar = (statusbar: HTMLElement): void => {
-  createRoot(statusbar).render(
-    <StrictMode>
-      <SWRConfig
-        value={{
-          refreshInterval: 50000,
-          fetcher: lib.fetcher,
-          revalidateOnFocus: true,
-        }}
-      >
-        <Provider store={lib.redux.store}>
           <Components.StatusBar />
         </Provider>
       </SWRConfig>
     </StrictMode>,
-  );
-};
+  )
+}
