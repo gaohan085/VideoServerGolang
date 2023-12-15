@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
-export const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+export const fetcher = <T>(url: string) =>
+  axios.get<AxiosResponse<T>>(url).then((res) => res.data);
