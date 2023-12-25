@@ -10,7 +10,7 @@ declare interface DirElement {
   isFile: boolean;
   isFolder: boolean;
   extName: string;
-  playSrc?: string;
+  playSrc: string;
   currentPath: string; //relative path
 }
 

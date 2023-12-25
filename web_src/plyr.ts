@@ -1,5 +1,5 @@
 import Plyr from "plyr";
-import { Unsubscribe } from "redux";
+import { type Unsubscribe } from "redux";
 import "plyr/dist/plyr.css";
 
 import * as lib from "./lib";
@@ -33,34 +33,44 @@ export const mountPlyr = (node: HTMLElement) => {
   plyr.once("ready", (e) => {
     const player = e.detail.plyr;
     unSubscriber = lib.redux.store.subscribe(() => {
-      const reduxPlaySrc = lib.redux.store.getState().redux.playSource;
+      const videoPlaying = lib.redux.store.getState().redux.playingVideo;
       player.source = {
         type: "video",
         sources: [
           {
-            src: reduxPlaySrc,
+            src: videoPlaying!.playSrc,
           },
         ],
       };
     });
-  });
 
-  plyr.on("playing", (e) => {
-    const player = e.detail.plyr;
-    unSubscriber!();
+    plyr.on("playing", (e) => {
+      const player = e.detail.plyr;
+      unSubscriber!();
+      lib.redux.store.subscribe(() => {
+        const videoPlaying = lib.redux.store.getState().redux.playingVideo;
+        const currPlaySrc = player.source as unknown as string;
+        if (encodeURI(videoPlaying!.playSrc) !== currPlaySrc) {
+          player.source = {
+            type: "video",
+            sources: [
+              {
+                src: videoPlaying!.playSrc,
+              },
+            ],
+          };
+          player.pause();
+        }
+      });
+    });
+
     lib.redux.store.subscribe(() => {
-      const reduxPlaySrc = lib.redux.store.getState().redux.playSource;
-      const currPlaySrc = player.source as unknown as string;
-      if (encodeURI(reduxPlaySrc) !== currPlaySrc) {
-        player.source = {
-          type: "video",
-          sources: [
-            {
-              src: reduxPlaySrc,
-            },
-          ],
-        };
-      }
+      const videoPlaying = lib.redux.store.getState().redux.playingVideo;
+      document.getElementById("title")!.textContent = videoPlaying
+        ? `正在播放 ${videoPlaying.name
+            .slice(0, videoPlaying.name.lastIndexOf("."))
+            .toLocaleUpperCase()}`
+        : "没有正在播放";
     });
   });
 

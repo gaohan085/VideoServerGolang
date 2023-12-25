@@ -11,29 +11,31 @@ import {
   useSelector,
 } from "react-redux";
 
-export interface ReduxState {
-  playSource: string;
+import { type DirElement } from "../Components";
+
+declare interface PlayingVideo {
+  playingVideo: DirElement | undefined;
 }
 
-const initialState: ReduxState = {
-  playSource: "",
+const initialState: PlayingVideo = {
+  playingVideo: undefined,
 };
 
 export const Slice = createSlice({
   name: "redux",
   initialState,
   reducers: {
-    setPlaySource(state, action: PayloadAction<string>) {
-      state.playSource = action.payload;
+    setVideoPlaying(state, action: PayloadAction<DirElement>) {
+      state.playingVideo = action.payload;
     },
 
-    unSetPlaySource(state) {
-      state.playSource = "";
+    unSetVideoPlaying(state) {
+      state.playingVideo = undefined;
     },
   },
 });
 
-export const { setPlaySource, unSetPlaySource } = Slice.actions;
+export const { setVideoPlaying, unSetVideoPlaying } = Slice.actions;
 
 export function makeStore() {
   return configureStore({
@@ -49,7 +51,7 @@ export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export type AppThunk = ThunkAction<void, AppState, unknown, Action<string>>;
 
-export const selectPlaySrc = (state: AppState) => state.redux.playSource;
+export const selectVideoPlaying = (state: AppState) => state.redux.playingVideo;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;

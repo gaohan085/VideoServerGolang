@@ -40,7 +40,7 @@ const FolderElement: React.FC<{
   } = props;
 
   const ConditionalFolderIcon = (
-    <>{isLoading ? <Spinner /> : isOpen ? <FcOpenedFolder /> : <FcFolder />}</>
+    <>{isLoading ? <Spinner /> : <span>{isOpen ? <FcOpenedFolder /> : <FcFolder />}</span>}</>
   );
 
   return (
@@ -56,7 +56,7 @@ const FolderElement: React.FC<{
         onContextMenu={handleCtxMenu}
         className="folder-element"
       >
-        <span>{ConditionalFolderIcon}</span>
+        {ConditionalFolderIcon}
         {!isRename && elem.name}
         {isRename && <InteractiveRenameComponent {...elem} />}
       </a>
@@ -90,10 +90,10 @@ export const InteractiveFolderElement: React.FC<{
   const { data, isLoading, error, mutate } = useSWR<DirectoryProp, Error>(
     isOpen
       ? encodeURI(
-          "/api/" +
-            (elem.currentPath === "/" ? "" : elem.currentPath) +
-            elem.name,
-        )
+        "/api/" +
+        (elem.currentPath === "/" ? "" : elem.currentPath) +
+        elem.name,
+      )
       : null,
   );
 

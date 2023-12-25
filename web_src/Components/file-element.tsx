@@ -65,7 +65,7 @@ export const InteractiveFileElement: React.FC<{
   const handleClick: React.MouseEventHandler = () => {
     if (!isRename) {
       elem.extName === ".mp4" &&
-        dispatch(lib.redux.setPlaySource(elem.playSrc!));
+        dispatch(lib.redux.setVideoPlaying(elem));
       //取消其他正在重命名的元素
       setRenameElement!(undefined);
     }
@@ -87,12 +87,12 @@ export const InteractiveFileElement: React.FC<{
   }, [elem, renameElement, setIsRename]);
 
   //监听正在播放
-  const currentPlaySrc = lib.redux.useAppSelector(lib.redux.selectPlaySrc)
+  const currentPlayVideo = lib.redux.useAppSelector(lib.redux.selectVideoPlaying)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   useEffect(() => {
-    currentPlaySrc !== "" && currentPlaySrc === elem.playSrc && setIsPlaying(true);
+    currentPlayVideo?.playSrc !== "" && currentPlayVideo?.playSrc === elem.playSrc && setIsPlaying(true);
     return () => setIsPlaying(false);
-  }, [currentPlaySrc, elem, setIsPlaying])
+  }, [currentPlayVideo?.playSrc, elem, setIsPlaying])
 
   return (
     <FileElement

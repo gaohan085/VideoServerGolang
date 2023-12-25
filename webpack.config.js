@@ -36,7 +36,7 @@ const config = {
       hash: isProduction ? true : false,
     }),
     new webpack.EnvironmentPlugin(),
-    !isProduction && new ReactRefreshWebpackPlugin({ overlay: false }),
+    !isProduction && new ReactRefreshWebpackPlugin({ overlay: true }),
   ].filter(Boolean),
   optimization: {
     splitChunks: {
