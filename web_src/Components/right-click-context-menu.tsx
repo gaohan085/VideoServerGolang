@@ -203,9 +203,7 @@ export const InteractiveCtxMenu: React.FC = () => {
   };
 
   const handlePlayVideo: React.MouseEventHandler = () => {
-    dispatch(
-      lib.redux.setVideoPlaying(rightClickElem!),
-    );
+    dispatch(lib.redux.setVideoPlaying(rightClickElem!));
     setClicked!(true);
   };
 
