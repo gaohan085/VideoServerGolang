@@ -43,35 +43,35 @@ export const mountPlyr = (node: HTMLElement) => {
         ],
       };
     });
+  });
 
-    plyr.on("playing", (e) => {
-      const player = e.detail.plyr;
-      unSubscriber!();
-      lib.redux.store.subscribe(() => {
-        const videoPlaying = lib.redux.store.getState().redux.playingVideo;
-        const currPlaySrc = player.source as unknown as string;
-        if (encodeURI(videoPlaying!.playSrc) !== currPlaySrc) {
-          player.source = {
-            type: "video",
-            sources: [
-              {
-                src: videoPlaying!.playSrc,
-              },
-            ],
-          };
-          player.pause();
-        }
-      });
-    });
-
+  plyr.on("playing", (e) => {
+    const player = e.detail.plyr;
+    unSubscriber!();
     lib.redux.store.subscribe(() => {
       const videoPlaying = lib.redux.store.getState().redux.playingVideo;
-      document.getElementById("title")!.textContent = videoPlaying
-        ? `正在播放 ${videoPlaying.name
-            .slice(0, videoPlaying.name.lastIndexOf("."))
-            .toLocaleUpperCase()}`
-        : "没有正在播放";
+      const currPlaySrc = player.source as unknown as string;
+      if (encodeURI(videoPlaying!.playSrc) !== currPlaySrc) {
+        player.source = {
+          type: "video",
+          sources: [
+            {
+              src: videoPlaying!.playSrc,
+            },
+          ],
+        };
+        player.pause();
+      }
     });
+  });
+
+  lib.redux.store.subscribe(() => {
+    const videoPlaying = lib.redux.store.getState().redux.playingVideo;
+    document.getElementById("title")!.textContent = videoPlaying
+      ? `正在播放 ${videoPlaying.name
+          .slice(0, videoPlaying.name.lastIndexOf("."))
+          .toLocaleUpperCase()}`
+      : "没有正在播放";
   });
 
   return plyr;
