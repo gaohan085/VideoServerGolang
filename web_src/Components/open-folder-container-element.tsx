@@ -1,18 +1,18 @@
 import React from "react";
-import useSWR from "swr";
 
 import * as lib from "../lib";
 
 import {
   InteractiveFileElement,
   InteractiveFolderElement,
+  InterfaceMutateFunc,
   type DirElement,
   type DirectoryProp,
 } from ".";
 
 const OpenFolderContainer: React.FC<{
   elems: DirElement[];
-  mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
+  mutateFunc: InterfaceMutateFunc;
 }> = (props) => {
   const { elems, mutateFunc } = props;
 
@@ -41,7 +41,7 @@ const OpenFolderContainer: React.FC<{
 
 export const InteractiveOpenFolderContainer: React.FC<{
   data: DirectoryProp;
-  mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
+  mutateFunc: InterfaceMutateFunc;
 }> = (props) => {
   return (
     <OpenFolderContainer

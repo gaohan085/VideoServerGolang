@@ -89,17 +89,17 @@ const FolderElement: React.FC<{
 
 export const InteractiveFolderElement: React.FC<{
   elem: DirElement;
-  mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
+  mutateFunc: InterfaceMutateFunc;
 }> = (props) => {
   const { elem, mutateFunc } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { data, isLoading, error, mutate } = useSWR<DirectoryProp, Error>(
+  const { data, isLoading, error, mutate } = useSWR<{ statusCode: number, data: DirectoryProp }, Error>(
     isOpen
       ? encodeURI(
-          "/api/" +
-            (elem.currentPath === "/" ? "" : elem.currentPath) +
-            elem.name,
-        )
+        "/api/" +
+        (elem.currentPath === "/" ? "" : elem.currentPath) +
+        elem.name,
+      )
       : null,
   );
 
@@ -165,7 +165,7 @@ export const InteractiveFolderElement: React.FC<{
       isOpen={isOpen}
       handleClick={handleClick}
       handleCtxMenu={handleCtxMenu}
-      subDirectoryData={data}
+      subDirectoryData={data?.data}
       mutateFunc={mutate}
       isRename={isRename}
     />

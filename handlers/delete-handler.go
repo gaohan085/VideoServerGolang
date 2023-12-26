@@ -16,8 +16,14 @@ func DeleteHandler(c *fiber.Ctx) error {
 	err := os.RemoveAll(rootDir + fileinfo.CurrentPath + fileinfo.Name)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
+			StatusCode: 500,
+			Data:       err.Error(),
+		})
 	}
 
-	return c.SendStatus(fiber.StatusOK)
+	return c.Status(fiber.StatusOK).JSON(&RespBody{
+		StatusCode: 200,
+		Data:       "ok",
+	})
 }

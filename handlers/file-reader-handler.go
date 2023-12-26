@@ -35,11 +35,17 @@ func FileReaderHandlers(c *fiber.Ctx) error {
 		rootDir := os.Getenv("ROOT_DIR")
 		nginxServAddr := os.Getenv("NGINX_SERVE_ADDRESS")
 		if err != nil {
-			return c.Status(fiber.StatusNotFound).SendString(err.Error())
+			return c.Status(fiber.StatusNotFound).JSON(&RespBody{
+				StatusCode: 404,
+				Data:       err.Error(),
+			})
 		}
 		entries, err := os.ReadDir(rootDir + path)
 		if err != nil {
-			return c.Status(fiber.StatusNotFound).SendString(err.Error() + "ERROR OPEN" + " " + rootDir + c.Params("*"))
+			return c.Status(fiber.StatusNotFound).JSON(&RespBody{
+				StatusCode: 404,
+				Data:       err.Error() + "ERROR OPEN" + " " + rootDir + c.Params("*"),
+			})
 		}
 
 		var elems = make([]DirChildElem, len(entries))
@@ -72,10 +78,13 @@ func FileReaderHandlers(c *fiber.Ctx) error {
 		}
 
 		time.Sleep(250 * time.Millisecond)
-		return c.Status(fiber.StatusOK).JSON(&Folder{
-			ParentFolder: parentFolder,
-			CurrentPath:  currentPath,
-			ChildElem:    elems,
+		return c.Status(fiber.StatusOK).JSON(&RespBody{
+			StatusCode: 200,
+			Data: &Folder{
+				ParentFolder: parentFolder,
+				CurrentPath:  currentPath,
+				ChildElem:    elems,
+			},
 		})
 	default:
 		return proxy.Do(c, "http://192.168.1.31/api/"+path)

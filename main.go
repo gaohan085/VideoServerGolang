@@ -2,7 +2,9 @@ package main
 
 import (
 	"embed"
+	"errors"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -30,6 +32,18 @@ func main() {
 			Views:        engine,
 			Prefork:      true,
 			ServerHeader: "Fiber",
+			ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+				fmt.Printf("Path:%v\n", ctx.Path())
+
+				var e *fiber.Error
+				if errors.As(err, &e) {
+					return ctx.Status(e.Code).JSON(&handlers.RespBody{
+						StatusCode: e.Code,
+						Data:       e.Error(),
+					})
+				}
+				return nil
+			},
 		},
 	)
 
@@ -70,5 +84,5 @@ func main() {
 	api.Post("/rename", handlers.RenameHandler)
 	api.Get("/*", handlers.FileReaderHandlers)
 
-	app.Listen(":3000")
+	app.Listen("127.0.0.1:3000")
 }

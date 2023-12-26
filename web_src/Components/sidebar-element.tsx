@@ -24,7 +24,7 @@ export const Sidebar: React.FC<{
   isError: boolean | undefined;
   handleClick: React.MouseEventHandler;
   handleCtxMenu: React.MouseEventHandler;
-  mutateFunc: ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"];
+  mutateFunc: InterfaceMutateFunc;
   isActive: boolean | undefined;
   toggleActive: React.MouseEventHandler;
   width: number;
@@ -101,9 +101,9 @@ export const InteractiveSidebar: React.FC = () => {
   >(undefined);
   const [openFolder, setOpenFolder] = useState<string>("/");
   const [mutateFunc, setMutateFunc] =
-    useState<ReturnType<typeof useSWR<DirectoryProp, Error>>["mutate"]>();
+    useState<ReturnType<typeof useSWR<{ statusCode: number, data: DirectoryProp }, Error>>["mutate"]>();
 
-  const { data, isLoading, error, mutate } = useSWR<DirectoryProp, Error>(
+  const { data, isLoading, error, mutate } = useSWR<{ statusCode: number, data: DirectoryProp }, Error>(
     "/api/",
   );
 
@@ -148,7 +148,7 @@ export const InteractiveSidebar: React.FC = () => {
       <Sidebar
         handleClick={handleClick}
         handleCtxMenu={handleCtxMenu}
-        data={data}
+        data={data?.data}
         isLoading={isLoading}
         isError={error ? true : false}
         mutateFunc={mutate}

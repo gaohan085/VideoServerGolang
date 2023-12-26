@@ -2,7 +2,7 @@ import { useState } from "react";
 import useSWR from "swr";
 
 export declare type InterfaceMutateFunc = ReturnType<
-  typeof useSWR<DirectoryProp | Error>
+  typeof useSWR<{ statusCode: number; data: DirectoryProp } | Error>
 >["mutate"];
 
 declare interface DirElement {
