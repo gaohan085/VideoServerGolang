@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/url"
 	"os"
 	"strings"
@@ -30,21 +31,22 @@ type DirChildElem struct {
 
 func FileReaderHandlers(c *fiber.Ctx) error {
 	path, err := url.QueryUnescape(c.Params("*"))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
+			StatusCode: 500,
+			Data:       err.Error(),
+		})
+	}
 	switch os.Getenv("ENV") {
 	case "production":
 		rootDir := os.Getenv("ROOT_DIR")
 		nginxServAddr := os.Getenv("NGINX_SERVE_ADDRESS")
+		entries, err := os.ReadDir(rootDir + path)
 		if err != nil {
+			fmt.Printf("Path:%v\n", path)
 			return c.Status(fiber.StatusNotFound).JSON(&RespBody{
 				StatusCode: 404,
 				Data:       err.Error(),
-			})
-		}
-		entries, err := os.ReadDir(rootDir + path)
-		if err != nil {
-			return c.Status(fiber.StatusNotFound).JSON(&RespBody{
-				StatusCode: 404,
-				Data:       err.Error() + "ERROR OPEN" + " " + rootDir + c.Params("*"),
 			})
 		}
 
@@ -87,7 +89,6 @@ func FileReaderHandlers(c *fiber.Ctx) error {
 			},
 		})
 	default:
-		return proxy.Do(c, "http://192.168.1.31/api/"+path)
+		return proxy.Do(c, "http://192.168.1.31/api/"+c.Params("*"))
 	}
-
 }
