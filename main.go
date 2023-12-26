@@ -4,7 +4,6 @@ import (
 	"embed"
 	"errors"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -33,8 +32,6 @@ func main() {
 			Prefork:      true,
 			ServerHeader: "Fiber",
 			ErrorHandler: func(ctx *fiber.Ctx, err error) error {
-				fmt.Printf("Path:%v\n", ctx.Path())
-
 				var e *fiber.Error
 				if errors.As(err, &e) {
 					return ctx.Status(e.Code).JSON(&handlers.RespBody{

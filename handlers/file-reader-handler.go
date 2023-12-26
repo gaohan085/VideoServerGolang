@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/url"
 	"os"
 	"strings"
@@ -43,7 +42,6 @@ func FileReaderHandlers(c *fiber.Ctx) error {
 		nginxServAddr := os.Getenv("NGINX_SERVE_ADDRESS")
 		entries, err := os.ReadDir(rootDir + path)
 		if err != nil {
-			fmt.Printf("Path:%v\n", path)
 			return c.Status(fiber.StatusNotFound).JSON(&RespBody{
 				StatusCode: 404,
 				Data:       err.Error(),
