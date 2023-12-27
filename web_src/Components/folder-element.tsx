@@ -93,13 +93,16 @@ export const InteractiveFolderElement: React.FC<{
 }> = (props) => {
   const { elem, mutateFunc } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { data, isLoading, error, mutate } = useSWR<{ statusCode: number, data: DirectoryProp }, Error>(
+  const { data, isLoading, error, mutate } = useSWR<
+    { statusCode: number; data: DirectoryProp },
+    Error
+  >(
     isOpen
       ? encodeURI(
-        "/api/" +
-        (elem.currentPath === "/" ? "" : elem.currentPath) +
-        elem.name,
-      )
+          "/api/" +
+            (elem.currentPath === "/" ? "" : elem.currentPath) +
+            elem.name,
+        )
       : null,
   );
 

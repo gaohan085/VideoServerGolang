@@ -18,25 +18,26 @@ interface DiskSpace {
 }
 
 export const DiskUsage: React.FC = () => {
-  const { data, isLoading, error } = useSWR<{ statusCode: number, data: DiskSpace }, Error>("/api/disk");
+  const { data, isLoading, error } = useSWR<
+    { statusCode: number; data: DiskSpace },
+    Error
+  >("/api/disk");
 
-  if (error) return <>{"Error Fetch Data"}</>
-  if (isLoading) return <>{"Loading"}</>
+  if (error) return <>{"Error Fetch Data"}</>;
+  if (isLoading) return <>{"Loading"}</>;
   if (data) {
-    const { data: diskspace } = data
+    const { data: diskspace } = data;
     return (
-      <>
+      <p>
         <FcDataProtection />{" "}
         {data && (
           <>{`剩余磁盘空间: ${(diskspace.free / (1024 * 1024 * 1024)).toFixed(
             1,
           )} GB`}</>
         )}
-
-      </>
-    )
+      </p>
+    );
   }
-
 };
 
 export const StatusBar: React.FC = () => {

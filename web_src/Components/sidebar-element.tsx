@@ -101,11 +101,16 @@ export const InteractiveSidebar: React.FC = () => {
   >(undefined);
   const [openFolder, setOpenFolder] = useState<string>("/");
   const [mutateFunc, setMutateFunc] =
-    useState<ReturnType<typeof useSWR<{ statusCode: number, data: DirectoryProp }, Error>>["mutate"]>();
+    useState<
+      ReturnType<
+        typeof useSWR<{ statusCode: number; data: DirectoryProp }, Error>
+      >["mutate"]
+    >();
 
-  const { data, isLoading, error, mutate } = useSWR<{ statusCode: number, data: DirectoryProp }, Error>(
-    "/api/",
-  );
+  const { data, isLoading, error, mutate } = useSWR<
+    { statusCode: number; data: DirectoryProp },
+    Error
+  >("/api/");
 
   const handleClick: React.MouseEventHandler = () => {
     setClicked(true);
