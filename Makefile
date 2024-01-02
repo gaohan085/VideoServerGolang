@@ -1,9 +1,9 @@
 install_dep:
-	@echo "Make Installation"
-	go get -u github.com/gofiber/fiber/v2@latest
-	go get -u github.com/gofiber/template/html/v2@latest
-	go get -u github.com/joho/godotenv@latest
-	go get -u github.com/shirou/gopsutil/v3@latest
+	echo "go install"
+	@go get -u github.com/gofiber/fiber/v2@latest
+	@go get -u github.com/gofiber/template/html/v2@latest
+	@go get -u github.com/joho/godotenv@latest
+	@go get -u github.com/shirou/gopsutil/v3@latest
 	@pnpm install
 
 build: install_dep

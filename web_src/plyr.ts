@@ -1,6 +1,7 @@
 import Plyr from "plyr";
 import { type Unsubscribe } from "redux";
 import "plyr/dist/plyr.css";
+import svg from "plyr/dist/plyr.svg";
 
 import * as lib from "./lib";
 
@@ -25,7 +26,7 @@ export const mountPlyr = (node: HTMLElement) => {
     blankVideo: "",
     keyboard: { focused: false, global: true },
     loadSprite: false,
-    iconUrl: "/dist/plyr.svg",
+    iconUrl: svg,
   });
 
   let unSubscriber: Unsubscribe | undefined = undefined;

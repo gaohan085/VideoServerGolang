@@ -3,7 +3,7 @@
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
-    "module": "ES2015",
+    "module": "ESNext",
     "target": "es5",
     "allowJs": true,
     "moduleResolution": "Node",

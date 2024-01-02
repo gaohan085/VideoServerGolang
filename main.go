@@ -81,5 +81,5 @@ func main() {
 	api.Post("/rename", handlers.RenameHandler)
 	api.Get("/*", handlers.FileReaderHandlers)
 
-	app.Listen("127.0.0.1:3000")
+	app.Listen(":3000")
 }

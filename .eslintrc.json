@@ -74,6 +74,7 @@
     "/coverage/",
     "/coverage-ts/",
     "**/stress-test/**",
-    "webpack.config.js"
+    "webpack.config.js",
+    "vite.config.js"
   ]
 }
