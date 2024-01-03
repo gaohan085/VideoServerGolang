@@ -12,6 +12,21 @@ export default defineConfig({
     strictPort: true,
   },
   plugins: [react()],
+  css: {
+    modules: {
+      localsConvention: "camelCase",
+      generateScopedName: isProduction
+        ? (name) => name
+        : (name, filename, css) => {
+            let componentName = filename
+              .replace(/\.\w+$/, "")
+              .replace(".", "-")
+              .split("/")
+              .pop();
+            return `${componentName}-${name}`;
+          },
+    },
+  },
   build: {
     emptyOutDir: true,
     outDir: "../dist",
