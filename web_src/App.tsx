@@ -11,9 +11,9 @@ export const renderSidebar = (app: HTMLElement): void => {
     <StrictMode>
       <SWRConfig
         value={{
-          refreshInterval: 50000,
+          refreshInterval: 120000,
           fetcher: lib.fetcher,
-          revalidateOnFocus: true,
+          revalidateOnFocus: false,
         }}
       >
         <Provider store={lib.redux.store}>
@@ -29,9 +29,9 @@ export const renderStatusbar = (statusbar: HTMLElement): void => {
     <StrictMode>
       <SWRConfig
         value={{
-          refreshInterval: 50000,
+          refreshInterval: 120000,
           fetcher: lib.fetcher,
-          revalidateOnFocus: true,
+          revalidateOnFocus: false,
         }}
       >
         <Provider store={lib.redux.store}>
