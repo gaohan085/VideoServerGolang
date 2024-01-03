@@ -73,6 +73,12 @@ export const mountPlyr = (node: HTMLElement) => {
           .slice(0, videoPlaying.name.lastIndexOf("."))
           .toLocaleUpperCase()}`
       : "没有正在播放";
+
+    document.title = videoPlaying
+      ? `正在播放 ${videoPlaying.name
+          .slice(0, videoPlaying.name.lastIndexOf("."))
+          .toLocaleUpperCase()}`
+      : "没有正在播放";
   });
 
   return plyr;
