@@ -8,7 +8,8 @@
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked"
+    "plugin:@typescript-eslint/stylistic-type-checked",
+    "plugin:react/recommended"
   ],
   "settings": {
     "import/parser": {
@@ -20,6 +21,9 @@
     "import/resolver": {
       "typescript": true,
       "node": true
+    },
+    "react":{
+      "version":"detect"
     }
   },
   "parser": "@typescript-eslint/parser",

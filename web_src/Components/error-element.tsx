@@ -7,16 +7,16 @@ import styles from "./error-element.module.scss";
 export const ErrorElement: React.FC = () => {
   return (
     <motion.p
-      className={styles["error-element"]}
-      initial={{ paddingLeft: 8 }}
       animate={{ paddingLeft: 0 }}
+      className={styles["error-element"]}
       exit={{ paddingLeft: 8 }}
+      initial={{ paddingLeft: 8 }}
       transition={{ duration: 0.2, ease: "easeIn" }}
     >
       <span>
         <FcCancel />
       </span>
-      {"Error Fetch Data"}
+      Error Fetch Data
     </motion.p>
   );
 };

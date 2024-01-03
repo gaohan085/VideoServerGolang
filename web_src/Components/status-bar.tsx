@@ -23,18 +23,20 @@ export const DiskUsage: React.FC = () => {
     Error
   >("/api/disk");
 
-  if (error) return <>{"Error Fetch Data"}</>;
-  if (isLoading) return <>{"Loading"}</>;
+  if (error) return <>Error Fetch Data</>;
+  if (isLoading) return <>Loading</>;
   if (data) {
     const { data: diskspace } = data;
     return (
       <p>
         <FcDataProtection />{" "}
-        {data && (
-          <>{`剩余磁盘空间: ${(diskspace.free / (1024 * 1024 * 1024)).toFixed(
-            1,
-          )} GB`}</>
-        )}
+        {data ? (
+          <>
+            {`剩余磁盘空间: ${(diskspace.free / (1024 * 1024 * 1024)).toFixed(
+              1,
+            )} GB`}
+          </>
+        ) : null}
       </p>
     );
   }
@@ -45,10 +47,15 @@ export const StatusBar: React.FC = () => {
     <div className={styles.statusBar}>
       <div>
         <DiskUsage />
+
         <p>
           <FcRightUp />{" "}
-          <a href="http://192.168.1.11/qbittorrent" target="_blank">
-            {"Qbittorrent"}
+          <a
+            href="http://192.168.1.11/qbittorrent"
+            rel="noreferrer"
+            target="_blank"
+          >
+            Qbittorrent
           </a>
         </p>
       </div>

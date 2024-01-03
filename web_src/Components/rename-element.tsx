@@ -15,27 +15,29 @@ interface RenameForm extends HTMLFormElement {
 }
 
 const RenameComponent: React.FC<{
-  elem: DirElement;
-  handleSubmit: React.FormEventHandler<RenameForm>;
-  handleCancelRename: React.MouseEventHandler;
+  readonly elem: DirElement;
+  readonly handleSubmit: React.FormEventHandler<RenameForm>;
+  readonly handleCancelRename: React.MouseEventHandler;
 }> = (props) => {
   const { elem, handleSubmit, handleCancelRename } = props;
   return (
-    <form method="post" onSubmit={handleSubmit} className={styles.form}>
+    <form className={styles.form} method="post" onSubmit={handleSubmit}>
       <input
-        type="text"
-        name="name"
-        id="name"
-        placeholder={elem.name}
-        defaultValue={elem.name}
-        style={{ width: `${Math.min(elem.name.length * 10 + 30, 135)}px` }}
-        required
         autoFocus
+        defaultValue={elem.name}
+        id="name"
+        name="name"
         onFocus={(e) => e.target.select()}
+        placeholder={elem.name}
+        required
+        style={{ width: `${Math.min(elem.name.length * 10 + 30, 135)}px` }}
+        type="text"
       />
-      <button type="submit" title="确认重命名">
+
+      <button title="确认重命名" type="submit">
         <FcCheckmark />
       </button>
+
       <button onClick={handleCancelRename} title="取消重命名">
         <FcCancel />
       </button>
@@ -67,9 +69,9 @@ export const InteractiveRenameComponent: React.FC<DirElement> = (props) => {
 
   return (
     <RenameComponent
-      handleSubmit={handleSubmit}
       elem={props}
       handleCancelRename={handleCancelRename}
+      handleSubmit={handleSubmit}
     />
   );
 };

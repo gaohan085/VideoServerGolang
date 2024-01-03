@@ -19,15 +19,15 @@ import {
 } from ".";
 
 export const Sidebar: React.FC<{
-  data: DirectoryProp | undefined;
-  isLoading: boolean | undefined;
-  isError: boolean | undefined;
-  handleClick: React.MouseEventHandler;
-  handleCtxMenu: React.MouseEventHandler;
-  mutateFunc: InterfaceMutateFunc;
-  isActive: boolean | undefined;
-  toggleActive: React.MouseEventHandler;
-  width: number;
+  readonly data: DirectoryProp | undefined;
+  readonly isLoading: boolean | undefined;
+  readonly isError: boolean | undefined;
+  readonly handleClick: React.MouseEventHandler;
+  readonly handleCtxMenu: React.MouseEventHandler;
+  readonly mutateFunc: InterfaceMutateFunc;
+  readonly isActive: boolean | undefined;
+  readonly toggleActive: React.MouseEventHandler;
+  readonly width: number;
 }> = (props) => {
   const {
     data,
@@ -61,12 +61,14 @@ export const Sidebar: React.FC<{
       onClick={handleClick}
       onContextMenu={handleCtxMenu}
     >
-      <span onClick={toggleActive} className="arrow">
+      <span className="arrow" onClick={toggleActive}>
         <FcPrevious />
       </span>
+
       {isActive ? (
         <>
-          <div className={"file-system"}>{conditionalElem}</div>
+          <div className="file-system">{conditionalElem}</div>
+
           {width <= 992 ? <DiskUsage /> : <></>}
         </>
       ) : (
@@ -151,16 +153,17 @@ export const InteractiveSidebar: React.FC = () => {
       }}
     >
       <Sidebar
+        data={data?.data}
         handleClick={handleClick}
         handleCtxMenu={handleCtxMenu}
-        data={data?.data}
-        isLoading={isLoading}
-        isError={error ? true : false}
-        mutateFunc={mutate}
         isActive={isActive}
+        isError={error ? true : false}
+        isLoading={isLoading}
+        mutateFunc={mutate}
         toggleActive={toggleActive}
         width={width}
       />
+
       {!clicked && <InteractiveCtxMenu />}
     </Context.Provider>
   );

@@ -21,7 +21,7 @@ const PlayVideo: React.FC = () => {
       <span>
         <FcStart />
       </span>
-      {"播放视频"}
+      播放视频
     </p>
   );
 };
@@ -32,7 +32,7 @@ const OpenFolder: React.FC = () => {
       <span>
         <FcOpenedFolder />
       </span>
-      {"打开文件夹"}
+      打开文件夹
     </p>
   );
 };
@@ -43,7 +43,7 @@ const CloseFolder: React.FC = () => {
       <span>
         <FcFolder />
       </span>
-      {"收起文件夹"}
+      收起文件夹
     </p>
   );
 };
@@ -54,18 +54,19 @@ const ProcessVideo: React.FC = () => {
       <span>
         <FcProcess />
       </span>
-      {"转换视频"}
+      转换视频
     </p>
   );
 };
 
-const Delete: React.FC<{ isFile: boolean }> = (props) => {
+const Delete: React.FC<{ readonly isFile: boolean }> = (props) => {
   const { isFile } = props;
   return (
     <p>
       <span>
         <FcEmptyTrash />
       </span>
+
       {isFile ? "删除文件" : "删除文件夹"}
     </p>
   );
@@ -77,16 +78,16 @@ const Rename: React.FC = () => {
       <span>
         <FcServices />
       </span>
-      {"重命名"}
+      重命名
     </p>
   );
 };
 
 const DeleteConfirm: React.FC<{
-  elem: DirElement;
-  handleConfirmDel: React.MouseEventHandler;
-  handleCancelDel: React.MouseEventHandler;
-  position: { pageX: number; pageY: number };
+  readonly elem: DirElement;
+  readonly handleConfirmDel: React.MouseEventHandler;
+  readonly handleCancelDel: React.MouseEventHandler;
+  readonly position: { pageX: number; pageY: number };
 }> = (props) => {
   const { elem, handleConfirmDel, handleCancelDel, position } = props;
 
@@ -96,9 +97,11 @@ const DeleteConfirm: React.FC<{
       style={{ top: position.pageY, left: position.pageX }}
     >
       <p>{`确认删除${elem.isFile ? "文件" : "文件夹"} "${elem.name}"`}</p>
+
       <div>
-        <p onClick={handleCancelDel}>{"取消"}</p>
-        <p onClick={handleConfirmDel}>{"确认"}</p>
+        <p onClick={handleCancelDel}>取消</p>
+
+        <p onClick={handleConfirmDel}>确认</p>
       </div>
     </div>
   );
@@ -106,15 +109,15 @@ const DeleteConfirm: React.FC<{
 
 const CtxMenu: React.FC<{
   /* 右键点击的元素 */
-  elem: DirElement;
-  openFolder: string;
-  handleOpenFolder: React.MouseEventHandler;
-  handleCloseFolder: React.MouseEventHandler;
-  handleConverVideo?: React.MouseEventHandler;
-  handleDelete: React.MouseEventHandler;
-  handlePlayVideo: React.MouseEventHandler;
-  position: { pageX: number; pageY: number };
-  handleRename: React.MouseEventHandler;
+  readonly elem: DirElement;
+  readonly openFolder: string;
+  readonly handleOpenFolder: React.MouseEventHandler;
+  readonly handleCloseFolder: React.MouseEventHandler;
+  readonly handleConverVideo?: React.MouseEventHandler;
+  readonly handleDelete: React.MouseEventHandler;
+  readonly handlePlayVideo: React.MouseEventHandler;
+  readonly position: { pageX: number; pageY: number };
+  readonly handleRename: React.MouseEventHandler;
 }> = (props) => {
   const {
     elem,
@@ -135,29 +138,30 @@ const CtxMenu: React.FC<{
     >
       <ul>
         {/* First list */}
-        {elem.isFile && lib.isVideo(elem.extName) && (
+        {elem.isFile && lib.isVideo(elem.extName) ? (
           <li onClick={handlePlayVideo}>
             <PlayVideo />
           </li>
-        )}
-        {elem.isFolder &&
-          !openFolder.includes(elem.currentPath + elem.name) && (
-            <li onClick={handleOpenFolder}>
-              <OpenFolder />
-            </li>
-          )}
-        {elem.isFolder && openFolder.includes(elem.currentPath + elem.name) && (
+        ) : null}
+
+        {elem.isFolder && !openFolder.includes(elem.currentPath + elem.name) ? (
+          <li onClick={handleOpenFolder}>
+            <OpenFolder />
+          </li>
+        ) : null}
+
+        {elem.isFolder && openFolder.includes(elem.currentPath + elem.name) ? (
           <li onClick={handleCloseFolder}>
             <CloseFolder />
           </li>
-        )}
+        ) : null}
 
         {/* Second list */}
-        {elem.isFile && lib.isVideo(elem.extName) && (
+        {elem.isFile && lib.isVideo(elem.extName) ? (
           <li onClick={handleConverVideo}>
             <ProcessVideo />
           </li>
-        )}
+        ) : null}
 
         {/* RENAME */}
         <li onClick={handleRename}>
@@ -235,24 +239,25 @@ export const InteractiveCtxMenu: React.FC = () => {
       {!delConfirm && (
         <CtxMenu
           elem={rightClickElem!}
-          position={position!}
-          handleOpenFolder={handleOpenFolder}
           handleCloseFolder={handleCloseFolder}
-          handleDelete={handleDelete}
-          handlePlayVideo={handlePlayVideo}
           handleConverVideo={handleConvertVideo}
-          openFolder={openFolder!}
+          handleDelete={handleDelete}
+          handleOpenFolder={handleOpenFolder}
+          handlePlayVideo={handlePlayVideo}
           handleRename={handleRename}
+          openFolder={openFolder!}
+          position={position!}
         />
       )}
-      {delConfirm && (
+
+      {delConfirm ? (
         <DeleteConfirm
           elem={rightClickElem!}
           handleCancelDel={handleCancelDel}
           handleConfirmDel={handleConfirmDel}
           position={position!}
         />
-      )}
+      ) : null}
     </>
   );
 };

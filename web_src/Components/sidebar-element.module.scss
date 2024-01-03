@@ -47,6 +47,9 @@
     font-size: 18px;
     margin-left: -20px;
     transition: all 0.25s ease-in-out;
+    &:hover {
+      cursor: pointer;
+    }
     @media (width >= 992px) {
       display: none;
     }

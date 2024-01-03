@@ -14,40 +14,42 @@ import {
 } from ".";
 
 const FileElement: React.FC<{
-  elem: DirElement;
-  handleClick: React.MouseEventHandler;
-  handleCtxMenu: React.MouseEventHandler;
-  isSelected?: boolean;
-  isPlaying: boolean;
-  isRename: boolean;
+  readonly elem: DirElement;
+  readonly handleClick: React.MouseEventHandler;
+  readonly handleCtxMenu: React.MouseEventHandler;
+  readonly isSelected?: boolean;
+  readonly isPlaying: boolean;
+  readonly isRename: boolean;
 }> = (props) => {
   const { elem, handleClick, handleCtxMenu, isRename, isPlaying } = props;
 
   return (
     <motion.div
-      className={styles.file}
-      initial={{ paddingLeft: 15 }}
       animate={{ paddingLeft: 0 }}
+      className={styles.file}
       exit={{ paddingLeft: 15 }}
+      initial={{ paddingLeft: 15 }}
       transition={{ duration: 0.2, ease: "easeIn" }}
     >
       <a
+        className={isPlaying ? "file-element playing" : "file-element"}
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
         title={lib.isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
-        className={isPlaying ? "file-element playing" : "file-element"}
       >
         <span>{lib.isVideo(elem.extName) ? <FcVideoFile /> : <FcFile />}</span>
+
         {!isRename && <>{elem.name}</>}
-        {isRename && <InteractiveRenameComponent {...elem} />}
+
+        {isRename ? <InteractiveRenameComponent {...elem} /> : null}
       </a>
     </motion.div>
   );
 };
 
 export const InteractiveFileElement: React.FC<{
-  elem: DirElement;
-  mutateFunc: InterfaceMutateFunc;
+  readonly elem: DirElement;
+  readonly mutateFunc: InterfaceMutateFunc;
 }> = (props) => {
   const {
     clicked,
@@ -102,8 +104,8 @@ export const InteractiveFileElement: React.FC<{
       elem={elem}
       handleClick={handleClick}
       handleCtxMenu={handleCtxMenu}
-      isRename={isRename}
       isPlaying={isPlaying}
+      isRename={isRename}
     />
   );
 };

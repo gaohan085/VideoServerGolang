@@ -11,8 +11,8 @@ import {
 } from ".";
 
 const OpenFolderContainer: React.FC<{
-  elems: DirElement[];
-  mutateFunc: InterfaceMutateFunc;
+  readonly elems: DirElement[];
+  readonly mutateFunc: InterfaceMutateFunc;
 }> = (props) => {
   const { elems, mutateFunc } = props;
 
@@ -23,14 +23,14 @@ const OpenFolderContainer: React.FC<{
         .map((elem, index) => {
           return elem.isFile ? (
             <InteractiveFileElement
-              key={index}
               elem={elem}
+              key={index}
               mutateFunc={mutateFunc}
             />
           ) : (
             <InteractiveFolderElement
-              key={index}
               elem={elem}
+              key={index}
               mutateFunc={mutateFunc}
             />
           );
@@ -40,8 +40,8 @@ const OpenFolderContainer: React.FC<{
 };
 
 export const InteractiveOpenFolderContainer: React.FC<{
-  data: DirectoryProp;
-  mutateFunc: InterfaceMutateFunc;
+  readonly data: DirectoryProp;
+  readonly mutateFunc: InterfaceMutateFunc;
 }> = (props) => {
   return (
     <OpenFolderContainer

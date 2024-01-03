@@ -17,15 +17,15 @@ import {
 } from ".";
 
 const FolderElement: React.FC<{
-  elem: DirElement;
-  isLoading: boolean | undefined;
-  isOpen: boolean | undefined;
-  isError: boolean | undefined;
-  handleClick: React.MouseEventHandler | undefined;
-  handleCtxMenu: React.MouseEventHandler | undefined;
-  subDirectoryData: DirectoryProp | undefined;
-  mutateFunc: InterfaceMutateFunc;
-  isRename: boolean;
+  readonly elem: DirElement;
+  readonly isLoading: boolean | undefined;
+  readonly isOpen: boolean | undefined;
+  readonly isError: boolean | undefined;
+  readonly handleClick: React.MouseEventHandler | undefined;
+  readonly handleCtxMenu: React.MouseEventHandler | undefined;
+  readonly subDirectoryData: DirectoryProp | undefined;
+  readonly mutateFunc: InterfaceMutateFunc;
+  readonly isRename: boolean;
 }> = (props) => {
   const {
     elem,
@@ -51,45 +51,49 @@ const FolderElement: React.FC<{
 
   return (
     <motion.div
-      className={!isOpen ? `${styles.folder}` : `${styles.folder} open`}
-      initial={{ paddingLeft: 12 }}
       animate={{ paddingLeft: 0 }}
+      className={!isOpen ? `${styles.folder}` : `${styles.folder} open`}
       exit={{ paddingLeft: 12 }}
+      initial={{ paddingLeft: 12 }}
       transition={{ duration: 0.2, ease: "easeIn" }}
     >
       <a
+        className="folder-element"
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
-        className="folder-element"
       >
         {ConditionalFolderIcon}
+
         {!isRename && elem.name}
-        {isRename && <InteractiveRenameComponent {...elem} />}
+
+        {isRename ? <InteractiveRenameComponent {...elem} /> : null}
       </a>
-      {isError && <ErrorElement />}
+
+      {isError ? <ErrorElement /> : null}
+
       <AnimatePresence>
-        {isOpen && subDirectoryData && (
+        {isOpen && subDirectoryData ? (
           <motion.div
-            initial={{ opacity: 0, maxHeight: 0 }}
             animate={{ maxHeight: 5000, opacity: 1 }}
             exit={{ maxHeight: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            initial={{ opacity: 0, maxHeight: 0 }}
             style={{ borderLeft: "1px solid #2c2842", marginLeft: "8px" }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
           >
             <InteractiveOpenFolderContainer
               data={subDirectoryData}
               mutateFunc={mutateFunc}
             />
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </motion.div>
   );
 };
 
 export const InteractiveFolderElement: React.FC<{
-  elem: DirElement;
-  mutateFunc: InterfaceMutateFunc;
+  readonly elem: DirElement;
+  readonly mutateFunc: InterfaceMutateFunc;
 }> = (props) => {
   const { elem, mutateFunc } = props;
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -163,14 +167,14 @@ export const InteractiveFolderElement: React.FC<{
   return (
     <FolderElement
       elem={elem}
+      handleClick={handleClick}
+      handleCtxMenu={handleCtxMenu}
       isError={error ? true : false}
       isLoading={isLoading}
       isOpen={isOpen}
-      handleClick={handleClick}
-      handleCtxMenu={handleCtxMenu}
-      subDirectoryData={data?.data}
-      mutateFunc={mutate}
       isRename={isRename}
+      mutateFunc={mutate}
+      subDirectoryData={data?.data}
     />
   );
 };
