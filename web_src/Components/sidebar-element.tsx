@@ -13,7 +13,7 @@ import {
   InteractiveCtxMenu,
   InteractiveOpenFolderContainer,
   Spinner,
-  UseStateReturnType,
+  type UseStateReturnType,
   type DirectoryProp,
   type InterfaceMutateFunc,
 } from ".";
@@ -35,10 +35,10 @@ export const Sidebar: React.FC<{
     isError,
     handleClick,
     handleCtxMenu,
-    mutateFunc,
     isActive,
     toggleActive,
     width,
+    mutateFunc,
   } = props;
 
   const conditionalElem = (
@@ -65,14 +65,11 @@ export const Sidebar: React.FC<{
         <FcPrevious />
       </span>
 
-      {isActive ? (
+      {!!isActive && (
         <>
           <div className="file-system">{conditionalElem}</div>
-
-          {width <= 992 ? <DiskUsage /> : <></>}
+          {width <= 992 && <DiskUsage />}
         </>
-      ) : (
-        <></>
       )}
     </div>
   );
@@ -157,7 +154,7 @@ export const InteractiveSidebar: React.FC = () => {
         handleClick={handleClick}
         handleCtxMenu={handleCtxMenu}
         isActive={isActive}
-        isError={error ? true : false}
+        isError={!error ? false : true}
         isLoading={isLoading}
         mutateFunc={mutate}
         toggleActive={toggleActive}

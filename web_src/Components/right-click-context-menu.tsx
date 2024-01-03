@@ -138,30 +138,32 @@ const CtxMenu: React.FC<{
     >
       <ul>
         {/* First list */}
-        {elem.isFile && lib.isVideo(elem.extName) ? (
+        {!!elem.isFile && lib.isVideo(elem.extName) && (
           <li onClick={handlePlayVideo}>
             <PlayVideo />
           </li>
-        ) : null}
+        )}
 
-        {elem.isFolder && !openFolder.includes(elem.currentPath + elem.name) ? (
-          <li onClick={handleOpenFolder}>
-            <OpenFolder />
-          </li>
-        ) : null}
+        {!!elem.isFolder &&
+          !openFolder.includes(elem.currentPath + elem.name) && (
+            <li onClick={handleOpenFolder}>
+              <OpenFolder />
+            </li>
+          )}
 
-        {elem.isFolder && openFolder.includes(elem.currentPath + elem.name) ? (
-          <li onClick={handleCloseFolder}>
-            <CloseFolder />
-          </li>
-        ) : null}
+        {!!elem.isFolder &&
+          openFolder.includes(elem.currentPath + elem.name) && (
+            <li onClick={handleCloseFolder}>
+              <CloseFolder />
+            </li>
+          )}
 
         {/* Second list */}
-        {elem.isFile && lib.isVideo(elem.extName) ? (
+        {!!elem.isFile && lib.isVideo(elem.extName) && (
           <li onClick={handleConverVideo}>
             <ProcessVideo />
           </li>
-        ) : null}
+        )}
 
         {/* RENAME */}
         <li onClick={handleRename}>
@@ -250,14 +252,14 @@ export const InteractiveCtxMenu: React.FC = () => {
         />
       )}
 
-      {delConfirm ? (
+      {!!delConfirm && (
         <DeleteConfirm
           elem={rightClickElem!}
           handleCancelDel={handleCancelDel}
           handleConfirmDel={handleConfirmDel}
           position={position!}
         />
-      ) : null}
+      )}
     </>
   );
 };

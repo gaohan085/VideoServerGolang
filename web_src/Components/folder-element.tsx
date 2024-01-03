@@ -66,13 +66,13 @@ const FolderElement: React.FC<{
 
         {!isRename && elem.name}
 
-        {isRename ? <InteractiveRenameComponent {...elem} /> : null}
+        {!!isRename && <InteractiveRenameComponent {...elem} />}
       </a>
 
-      {isError ? <ErrorElement /> : null}
+      {!!isError && <ErrorElement />}
 
       <AnimatePresence>
-        {isOpen && subDirectoryData ? (
+        {!!isOpen && !!subDirectoryData && (
           <motion.div
             animate={{ maxHeight: 5000, opacity: 1 }}
             exit={{ maxHeight: 0, opacity: 0 }}
@@ -85,7 +85,7 @@ const FolderElement: React.FC<{
               mutateFunc={mutateFunc}
             />
           </motion.div>
-        ) : null}
+        )}
       </AnimatePresence>
     </motion.div>
   );

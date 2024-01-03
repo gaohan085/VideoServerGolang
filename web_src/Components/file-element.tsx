@@ -41,7 +41,7 @@ const FileElement: React.FC<{
 
         {!isRename && <>{elem.name}</>}
 
-        {isRename ? <InteractiveRenameComponent {...elem} /> : null}
+        {!!isRename && <InteractiveRenameComponent {...elem} />}
       </a>
     </motion.div>
   );

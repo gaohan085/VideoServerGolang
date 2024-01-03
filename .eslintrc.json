@@ -22,8 +22,8 @@
       "typescript": true,
       "node": true
     },
-    "react":{
-      "version":"detect"
+    "react": {
+      "version": "detect"
     }
   },
   "parser": "@typescript-eslint/parser",
@@ -68,7 +68,16 @@
         "ignoreExternal": true
       }
     ],
-    "import/default": 0
+    "import/default": 0,
+    "react/jsx-no-leaked-render": [
+      1,
+      {
+        "validStrategies": [
+          "ternary",
+          "coerce"
+        ]
+      }
+    ]
   },
   "ignorePatterns": [
     "**/dist/**",

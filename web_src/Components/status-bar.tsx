@@ -30,13 +30,13 @@ export const DiskUsage: React.FC = () => {
     return (
       <p>
         <FcDataProtection />{" "}
-        {data ? (
+        {!!data && (
           <>
             {`剩余磁盘空间: ${(diskspace.free / (1024 * 1024 * 1024)).toFixed(
               1,
             )} GB`}
           </>
-        ) : null}
+        )}
       </p>
     );
   }
