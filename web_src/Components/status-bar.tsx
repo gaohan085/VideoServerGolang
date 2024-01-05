@@ -1,6 +1,6 @@
 import React from "react";
+import { FcDataProtection, FcSearch } from "react-icons/fc";
 import useSWR from "swr";
-import { FcDataProtection, FcRightUp } from "react-icons/fc";
 
 import styles from "./status-bar.module.scss";
 
@@ -43,19 +43,22 @@ export const DiskUsage: React.FC = () => {
 };
 
 export const StatusBar: React.FC = () => {
+  const { data, isLoading, error } = useSWR<
+    { statusCode: number; data: string },
+    Error
+  >("/api/version");
   return (
     <div className={styles.statusBar}>
       <div>
         <DiskUsage />
         <p>
-          <FcRightUp />{" "}
-          <a
-            href="http://192.168.1.11/qbittorrent"
-            rel="noreferrer"
-            target="_blank"
-          >
-            Qbittorrent
-          </a>
+          <FcSearch />
+          <>
+            {" "}
+            {!!isLoading && "Loading"}
+            {!!error && "Error Load Data"}
+            {!!data && `当前版本: ${data.data}`}
+          </>
         </p>
       </div>
     </div>
