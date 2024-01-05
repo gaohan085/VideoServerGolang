@@ -47,7 +47,6 @@ export const StatusBar: React.FC = () => {
     <div className={styles.statusBar}>
       <div>
         <DiskUsage />
-
         <p>
           <FcRightUp />{" "}
           <a

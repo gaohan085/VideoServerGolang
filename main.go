@@ -12,6 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/html/v2"
+	_ "github.com/joho/godotenv/autoload"
 
 	"go-fiber-react-ts/handlers"
 )
@@ -23,7 +24,6 @@ func main() {
 	env := flag.String("env", "production", "environment")
 	flag.Parse()
 	os.Setenv("ENV", *env)
-
 	engine := html.NewFileSystem(http.FS(content), ".html")
 
 	app := fiber.New(
@@ -79,6 +79,7 @@ func main() {
 	api.Get("/disk", handlers.DiskUsageHandler)
 	api.Post("/delete", handlers.DeleteHandler)
 	api.Post("/rename", handlers.RenameHandler)
+	api.Get("/version", handlers.VersionHandler)
 	api.Get("/*", handlers.FileReaderHandlers)
 
 	app.Listen(":3000")

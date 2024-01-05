@@ -38,9 +38,7 @@ const FileElement: React.FC<{
         title={lib.isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
       >
         <span>{lib.isVideo(elem.extName) ? <FcVideoFile /> : <FcFile />}</span>
-
         {!isRename && <>{elem.name}</>}
-
         {!!isRename && <InteractiveRenameComponent {...elem} />}
       </a>
     </motion.div>

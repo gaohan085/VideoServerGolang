@@ -8,7 +8,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
-	_ "github.com/joho/godotenv/autoload"
 
 	"go-fiber-react-ts/lib"
 )
