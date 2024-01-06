@@ -1,28 +1,14 @@
-import icon from "../assets/favicon.ico";
 import "../assets/Roboto-Regular.ttf";
 import "./index.css";
+1
 
-import * as App from "./App";
-import { mountPlyr } from "./plyr";
-
-const head = document.querySelector("head");
-const favicon = document.createElement("link");
-favicon.setAttribute("rel", "icon");
-favicon.setAttribute("href", icon);
-head?.appendChild(favicon);
-
+import { renderApp } from "./App";
 const app = document.getElementById("app");
-App.renderSidebar(app!);
 
-const statusbar = document.getElementById("statusbar");
-App.renderStatusbar(statusbar!);
-
-const videoNode = document.getElementById("plyr");
-
-void mountPlyr(videoNode!);
+renderApp(app!);
 
 if (import.meta.hot) {
-  import.meta.hot.accept(["./plyr.ts", "./App.tsx"], () => {
+  import.meta.hot.accept("./App.tsx", () => {
     return;
   });
 }
