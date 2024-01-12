@@ -56,7 +56,6 @@ export const InteractiveRenameComponent: React.FC<DirElement> = (props) => {
       void axios
         .post("/api/rename", { ...props, newName })
         .then(() => {
-          console.log(currentPath === "" ? "/api" : `/api/${currentPath}`);
           void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`);
         })
         .catch(() => {

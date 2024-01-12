@@ -90,11 +90,9 @@ export const InteractiveFolderElement: React.FC<{
     Error
   >(
     isOpen
-      ? encodeURI(
-          elem.currentPath === ""
-            ? `/api/${elem.name}`
-            : `/api/${elem.currentPath}/${elem.name}`,
-        )
+      ? elem.currentPath === ""
+        ? `/api/${elem.name}`
+        : `/api/${elem.currentPath}/${elem.name}`
       : null,
   );
 
