@@ -12,7 +12,7 @@ import {
   InteractiveRenameComponent,
   Spinner,
   type DirElement,
-  type DirectoryProp
+  type DirectoryProp,
 } from ".";
 
 const FolderElement: React.FC<{
@@ -73,9 +73,7 @@ const FolderElement: React.FC<{
             style={{ borderLeft: "1px solid #2c2842", marginLeft: "8px" }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
           >
-            <InteractiveOpenFolderContainer
-              data={subDirectoryData}
-            />
+            <InteractiveOpenFolderContainer data={subDirectoryData} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -86,17 +84,17 @@ const FolderElement: React.FC<{
 export const InteractiveFolderElement: React.FC<{
   readonly elem: DirElement;
 }> = ({ elem }) => {
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { data, isLoading, error } = useSWR<
     { statusCode: number; data: DirectoryProp },
     Error
   >(
     isOpen
-      ? encodeURI("/api/" +
-        (elem.currentPath === "/" ? "" : elem.currentPath) + "/" +
-        elem.name,
-      )
+      ? encodeURI(
+          elem.currentPath === ""
+            ? `/api/${elem.name}`
+            : `/api/${elem.currentPath}/${elem.name}`,
+        )
       : null,
   );
 

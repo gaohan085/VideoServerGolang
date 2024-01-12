@@ -14,7 +14,7 @@ import {
   InteractiveOpenFolderContainer,
   Spinner,
   type DirectoryProp,
-  type UseStateReturnType
+  type UseStateReturnType,
 } from ".";
 
 export const Sidebar: React.FC<{
@@ -45,9 +45,7 @@ export const Sidebar: React.FC<{
       ) : isError ? (
         <ErrorElement />
       ) : (
-        data && (
-          <InteractiveOpenFolderContainer data={data} />
-        )
+        data && <InteractiveOpenFolderContainer data={data} />
       )}
     </>
   );
@@ -83,7 +81,7 @@ export const Context = createContext<{
   setRightClickElem?: UseStateReturnType<DirElement>[1];
   renameElement?: UseStateReturnType<DirElement>[0];
   setRenameElement?: UseStateReturnType<DirElement>[1];
-  mutateFunc?: ReturnType<typeof useSWRConfig>["mutate"]
+  mutateFunc?: ReturnType<typeof useSWRConfig>["mutate"];
 }>({});
 
 export const InteractiveSidebar: React.FC = () => {
@@ -96,13 +94,12 @@ export const InteractiveSidebar: React.FC = () => {
   >(undefined);
   const [openFolder, setOpenFolder] = useState<string>("/");
 
-  const { mutate } = useSWRConfig()
+  const { mutate } = useSWRConfig();
 
   const { data, isLoading, error } = useSWR<
     { statusCode: number; data: DirectoryProp },
     Error
   >("/api");
-
 
   const handleClick: React.MouseEventHandler = () => {
     setClicked(true);
@@ -138,7 +135,7 @@ export const InteractiveSidebar: React.FC = () => {
         setOpenFolder,
         renameElement,
         setRenameElement,
-        mutateFunc: mutate
+        mutateFunc: mutate,
       }}
     >
       <Sidebar

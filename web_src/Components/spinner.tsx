@@ -3,7 +3,9 @@ import React from "react";
 
 import styles from "./spinner.module.scss";
 
-export const Spinner: React.FC<{ readonly fontSize?: number }> = ({ fontSize }) => {
+export const Spinner: React.FC<{ readonly fontSize?: number }> = ({
+  fontSize,
+}) => {
   return (
     <span
       className={styles.spinner}

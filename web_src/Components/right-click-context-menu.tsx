@@ -220,8 +220,8 @@ export const InteractiveCtxMenu: React.FC = () => {
 
   const handleConfirmDel: React.MouseEventHandler = () => {
     void axios.post("/api/delete", rightClickElem).then(() => {
-      const { currentPath } = rightClickElem!
-      void mutateFunc!(currentPath === "" ? "/api" : "/api/" + currentPath);
+      const { currentPath } = rightClickElem!;
+      void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`);
       setClicked!(true);
     });
   };

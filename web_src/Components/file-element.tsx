@@ -6,11 +6,7 @@ import * as lib from "../lib";
 
 import styles from "./file-element.module.scss";
 
-import {
-  Context,
-  InteractiveRenameComponent,
-  type DirElement
-} from ".";
+import { Context, InteractiveRenameComponent, type DirElement } from ".";
 
 const FileElement: React.FC<{
   readonly elem: DirElement;

@@ -6,7 +6,7 @@ import {
   InteractiveFileElement,
   InteractiveFolderElement,
   type DirElement,
-  type DirectoryProp
+  type DirectoryProp,
 } from ".";
 
 const OpenFolderContainer: React.FC<{
@@ -18,15 +18,9 @@ const OpenFolderContainer: React.FC<{
         .sort((a, b) => lib.sortElements(a, b))
         .map((elem, index) => {
           return elem.isFile ? (
-            <InteractiveFileElement
-              elem={elem}
-              key={index}
-            />
+            <InteractiveFileElement elem={elem} key={index} />
           ) : (
-            <InteractiveFolderElement
-              elem={elem}
-              key={index}
-            />
+            <InteractiveFolderElement elem={elem} key={index} />
           );
         })}
     </>
@@ -36,9 +30,5 @@ const OpenFolderContainer: React.FC<{
 export const InteractiveOpenFolderContainer: React.FC<{
   readonly data: DirectoryProp;
 }> = ({ data }) => {
-  return (
-    <OpenFolderContainer
-      elems={data.childElements}
-    />
-  );
+  return <OpenFolderContainer elems={data.childElements} />;
 };
