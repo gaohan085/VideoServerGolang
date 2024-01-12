@@ -7,7 +7,7 @@ import * as lib from "./lib";
 
 export const mountPlyr = (node: HTMLElement) => {
   const plyr = new Plyr(node, {
-    autoplay: true,
+    autoplay: false,
     controls: [
       "play-large",
       "play",
@@ -37,6 +37,7 @@ export const mountPlyr = (node: HTMLElement) => {
       const videoPlaying = lib.redux.store.getState().redux.playingVideo;
       player.source = {
         type: "video",
+        poster: videoPlaying!.poster,
         sources: [
           {
             src: videoPlaying!.playSrc,
@@ -53,15 +54,16 @@ export const mountPlyr = (node: HTMLElement) => {
       const videoPlaying = lib.redux.store.getState().redux.playingVideo;
       const currPlaySrc = player.source as unknown as string;
       if (encodeURI(videoPlaying!.playSrc) !== currPlaySrc) {
+        player.pause();
         player.source = {
           type: "video",
+          poster: videoPlaying!.poster,
           sources: [
             {
               src: videoPlaying!.playSrc,
             },
           ],
         };
-        player.pause();
       }
     });
   });

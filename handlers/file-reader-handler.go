@@ -9,6 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/proxy"
 
+	"go-fiber-react-ts/database"
 	"go-fiber-react-ts/lib"
 )
 
@@ -25,9 +26,11 @@ type DirChildElem struct {
 	ExtName     string `json:"extName"`
 	PlaySrc     string `json:"playSrc"`
 	CurrentPath string `json:"currentPath"`
+	Poster      string `json:"poster"`
+	Title       string `json:"title"`
 }
 
-func FileReaderHandlers(c *fiber.Ctx) error {
+func FileReaderHandler(c *fiber.Ctx) error {
 	path, err := url.QueryUnescape(c.Params("*"))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
@@ -51,6 +54,7 @@ func FileReaderHandlers(c *fiber.Ctx) error {
 
 		for index, entry := range entries {
 			var extName string
+
 			if strings.Contains(entry.Name(), ".") {
 				extName = entry.Name()[strings.LastIndex(entry.Name(), "."):]
 			}
@@ -60,7 +64,27 @@ func FileReaderHandlers(c *fiber.Ctx) error {
 			} else {
 				playSrc = ""
 			}
-			elems[index] = DirChildElem{Name: entry.Name(), IsFile: !entry.IsDir(), IsFolder: entry.IsDir(), ExtName: extName, PlaySrc: playSrc, CurrentPath: path + "/"}
+
+			//从数据库读取视频封面文件名
+			video := new(database.VideoInf)
+			serialNum := lib.GetSerialNum(entry.Name())
+			if !entry.IsDir() && lib.IsVideo(&extName) {
+				if err := video.QueryByVideoName(serialNum); err == database.ErrVideoNotFound {
+					video.SerialNumber = serialNum
+					video.Create()
+				}
+			}
+
+			elems[index] = DirChildElem{
+				Name:        entry.Name(),
+				IsFile:      !entry.IsDir(),
+				IsFolder:    entry.IsDir(),
+				ExtName:     extName,
+				PlaySrc:     playSrc,
+				CurrentPath: path + "/",
+				Poster:      video.PosterName,
+				Title:       video.Title,
+			}
 		}
 
 		var parentFolder string

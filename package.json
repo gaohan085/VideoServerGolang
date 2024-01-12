@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "My Video Server",
   "main": "./web_src/index.ts",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./web_src --ext .ts,tsx --fix && tsc -noEmit",

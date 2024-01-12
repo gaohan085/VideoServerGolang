@@ -14,6 +14,7 @@ import (
 	"github.com/gofiber/template/html/v2"
 	_ "github.com/joho/godotenv/autoload"
 
+	"go-fiber-react-ts/database"
 	"go-fiber-react-ts/handlers"
 )
 
@@ -25,6 +26,8 @@ func main() {
 	flag.Parse()
 	os.Setenv("ENV", *env)
 	engine := html.NewFileSystem(http.FS(content), ".html")
+
+	database.SetDB()
 
 	app := fiber.New(
 		fiber.Config{
@@ -72,6 +75,8 @@ func main() {
 		Browse:     true,
 	}))
 
+	app.Static("/assets", "./assets/")
+
 	app.Get("/", handlers.IndexHandler)
 
 	api := app.Group("/api")
@@ -80,7 +85,7 @@ func main() {
 	api.Post("/delete", handlers.DeleteHandler)
 	api.Post("/rename", handlers.RenameHandler)
 	api.Get("/version", handlers.VersionHandler)
-	api.Get("/*", handlers.FileReaderHandlers)
+	api.Get("/*", handlers.FileReaderHandler)
 
 	app.Listen(":3000")
 }

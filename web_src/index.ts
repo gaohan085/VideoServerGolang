@@ -2,7 +2,7 @@ import icon from "../assets/favicon.ico";
 import "../assets/Roboto-Regular.ttf";
 import "./index.css";
 
-import * as App from "./App";
+import * as app from "./App";
 import { mountPlyr } from "./plyr";
 
 const head = document.querySelector("head");
@@ -11,11 +11,11 @@ favicon.setAttribute("rel", "icon");
 favicon.setAttribute("href", icon);
 head?.appendChild(favicon);
 
-const app = document.getElementById("app");
-App.renderSidebar(app!);
+const appNode = document.getElementById("app");
+void app.renderSidebar(appNode!);
 
 const statusbar = document.getElementById("statusbar");
-App.renderStatusbar(statusbar!);
+void app.renderStatusbar(statusbar!);
 
 const videoNode = document.getElementById("plyr");
 
