@@ -13,7 +13,7 @@ export const renderSidebar = (app: HTMLElement): void => {
         value={{
           refreshInterval: 120000,
           fetcher: lib.fetcher,
-          revalidateOnFocus: false,
+          revalidateOnFocus: true,
         }}
       >
         <Provider store={lib.redux.store}>
@@ -31,7 +31,7 @@ export const renderStatusbar = (statusbar: HTMLElement): void => {
         value={{
           refreshInterval: 120000,
           fetcher: lib.fetcher,
-          revalidateOnFocus: false,
+          revalidateOnFocus: true,
         }}
       >
         <Provider store={lib.redux.store}>

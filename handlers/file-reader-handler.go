@@ -15,7 +15,7 @@ import (
 
 type Folder struct {
 	ParentFolder string         `json:"parentFolder"`
-	CurrentPath  string         `json:"currentPath"`
+	CurrentPath  string         `json:"currentPath"` //不含末尾 "/"
 	ChildElem    []DirChildElem `json:"childElements"`
 }
 
@@ -25,7 +25,7 @@ type DirChildElem struct {
 	IsFolder    bool   `json:"isFolder"`
 	ExtName     string `json:"extName"`
 	PlaySrc     string `json:"playSrc"`
-	CurrentPath string `json:"currentPath"`
+	CurrentPath string `json:"currentPath"` //不含末尾 "/"
 	Poster      string `json:"poster"`
 	Title       string `json:"title"`
 }
@@ -39,7 +39,7 @@ func FileReaderHandler(c *fiber.Ctx) error {
 		})
 	}
 	switch os.Getenv("ENV") {
-	case "production":
+	case "development":
 		rootDir := os.Getenv("ROOT_DIR")
 		nginxServAddr := os.Getenv("NGINX_SERVE_ADDRESS")
 		entries, err := os.ReadDir(rootDir + path)
@@ -81,7 +81,7 @@ func FileReaderHandler(c *fiber.Ctx) error {
 				IsFolder:    entry.IsDir(),
 				ExtName:     extName,
 				PlaySrc:     playSrc,
-				CurrentPath: path + "/",
+				CurrentPath: path,
 				Poster:      video.PosterName,
 				Title:       video.Title,
 			}

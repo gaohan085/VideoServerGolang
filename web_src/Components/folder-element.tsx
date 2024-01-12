@@ -12,8 +12,7 @@ import {
   InteractiveRenameComponent,
   Spinner,
   type DirElement,
-  type DirectoryProp,
-  type InterfaceMutateFunc,
+  type DirectoryProp
 } from ".";
 
 const FolderElement: React.FC<{
@@ -24,7 +23,6 @@ const FolderElement: React.FC<{
   readonly handleClick: React.MouseEventHandler | undefined;
   readonly handleCtxMenu: React.MouseEventHandler | undefined;
   readonly subDirectoryData: DirectoryProp | undefined;
-  readonly mutateFunc: InterfaceMutateFunc;
   readonly isRename: boolean;
 }> = (props) => {
   const {
@@ -35,7 +33,6 @@ const FolderElement: React.FC<{
     handleClick,
     handleCtxMenu,
     subDirectoryData,
-    mutateFunc,
     isRename,
   } = props;
 
@@ -63,14 +60,10 @@ const FolderElement: React.FC<{
         onContextMenu={handleCtxMenu}
       >
         {ConditionalFolderIcon}
-
         {!isRename && elem.name}
-
         {!!isRename && <InteractiveRenameComponent {...elem} />}
       </a>
-
       {!!isError && <ErrorElement />}
-
       <AnimatePresence>
         {!!isOpen && !!subDirectoryData && (
           <motion.div
@@ -82,7 +75,6 @@ const FolderElement: React.FC<{
           >
             <InteractiveOpenFolderContainer
               data={subDirectoryData}
-              mutateFunc={mutateFunc}
             />
           </motion.div>
         )}
@@ -93,20 +85,18 @@ const FolderElement: React.FC<{
 
 export const InteractiveFolderElement: React.FC<{
   readonly elem: DirElement;
-  readonly mutateFunc: InterfaceMutateFunc;
-}> = (props) => {
-  const { elem, mutateFunc } = props;
+}> = ({ elem }) => {
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { data, isLoading, error, mutate } = useSWR<
+  const { data, isLoading, error } = useSWR<
     { statusCode: number; data: DirectoryProp },
     Error
   >(
     isOpen
-      ? encodeURI(
-          "/api/" +
-            (elem.currentPath === "/" ? "" : elem.currentPath) +
-            elem.name,
-        )
+      ? encodeURI("/api/" +
+        (elem.currentPath === "/" ? "" : elem.currentPath) + "/" +
+        elem.name,
+      )
       : null,
   );
 
@@ -117,7 +107,6 @@ export const InteractiveFolderElement: React.FC<{
     clicked,
     setClicked,
     setRightClickElem,
-    setMutateFunc,
     renameElement,
     setRenameElement,
   } = useContext(Context);
@@ -129,7 +118,7 @@ export const InteractiveFolderElement: React.FC<{
     else if (openFolder !== elem.currentPath + elem.name && isOpen)
       setIsOpen(false);
     return;
-  }, [openFolder, props, isOpen, setIsOpen]);
+  }, [openFolder, elem, isOpen, setIsOpen]);
 
   const handleClick: React.MouseEventHandler = (): void => {
     setClicked!(true);
@@ -158,7 +147,7 @@ export const InteractiveFolderElement: React.FC<{
       setPosition!({ ...e });
       clicked && setClicked!(false);
       setRightClickElem!(elem);
-      setMutateFunc!(() => mutateFunc);
+
       //取消其他正在重命名的元素
       setRenameElement!(undefined);
     }
@@ -173,7 +162,6 @@ export const InteractiveFolderElement: React.FC<{
       isLoading={isLoading}
       isOpen={isOpen}
       isRename={isRename}
-      mutateFunc={mutate}
       subDirectoryData={data?.data}
     />
   );

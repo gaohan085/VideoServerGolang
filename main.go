@@ -87,5 +87,7 @@ func main() {
 	api.Get("/version", handlers.VersionHandler)
 	api.Get("/*", handlers.FileReaderHandler)
 
-	app.Listen(":3000")
+	if err := app.Listen("127.0.0.1:3000"); err != nil {
+		log.Fatal(err)
+	}
 }

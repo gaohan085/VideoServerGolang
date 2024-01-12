@@ -5,17 +5,13 @@ import * as lib from "../lib";
 import {
   InteractiveFileElement,
   InteractiveFolderElement,
-  InterfaceMutateFunc,
   type DirElement,
-  type DirectoryProp,
+  type DirectoryProp
 } from ".";
 
 const OpenFolderContainer: React.FC<{
   readonly elems: DirElement[];
-  readonly mutateFunc: InterfaceMutateFunc;
-}> = (props) => {
-  const { elems, mutateFunc } = props;
-
+}> = ({ elems }) => {
   return (
     <>
       {elems
@@ -25,13 +21,11 @@ const OpenFolderContainer: React.FC<{
             <InteractiveFileElement
               elem={elem}
               key={index}
-              mutateFunc={mutateFunc}
             />
           ) : (
             <InteractiveFolderElement
               elem={elem}
               key={index}
-              mutateFunc={mutateFunc}
             />
           );
         })}
@@ -41,12 +35,10 @@ const OpenFolderContainer: React.FC<{
 
 export const InteractiveOpenFolderContainer: React.FC<{
   readonly data: DirectoryProp;
-  readonly mutateFunc: InterfaceMutateFunc;
-}> = (props) => {
+}> = ({ data }) => {
   return (
     <OpenFolderContainer
-      elems={props.data.childElements}
-      mutateFunc={props.mutateFunc}
+      elems={data.childElements}
     />
   );
 };

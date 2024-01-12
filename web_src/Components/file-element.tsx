@@ -9,8 +9,7 @@ import styles from "./file-element.module.scss";
 import {
   Context,
   InteractiveRenameComponent,
-  type DirElement,
-  type InterfaceMutateFunc,
+  type DirElement
 } from ".";
 
 const FileElement: React.FC<{
@@ -47,19 +46,16 @@ const FileElement: React.FC<{
 
 export const InteractiveFileElement: React.FC<{
   readonly elem: DirElement;
-  readonly mutateFunc: InterfaceMutateFunc;
-}> = (props) => {
+}> = ({ elem }) => {
   const {
     clicked,
     setClicked,
     setRightClickElem,
-    setMutateFunc,
     setPosition,
     renameElement,
     setRenameElement,
   } = useContext(Context);
   const dispatch = lib.redux.useAppDispatch();
-  const { elem, mutateFunc } = props;
   const [isRename, setIsRename] = useState<boolean>(false);
 
   const handleClick: React.MouseEventHandler = () => {
@@ -74,7 +70,7 @@ export const InteractiveFileElement: React.FC<{
       clicked && setClicked!(false);
       setPosition!({ ...e });
       setRightClickElem!(elem);
-      setMutateFunc!(() => mutateFunc);
+
       //取消其他正在重命名的元素
       setRenameElement!(undefined);
     }

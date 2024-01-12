@@ -40,5 +40,5 @@ func RenameHandler(c *fiber.Ctx) error {
 		return renameErrHandler(err, c)
 	}
 
-	return renameErrHandler(os.Rename(rootDir+renameBody.CurrentPath+renameBody.Name, rootDir+renameBody.CurrentPath+renameBody.NewName), c)
+	return renameErrHandler(os.Rename(rootDir+renameBody.CurrentPath+"/"+renameBody.Name, rootDir+renameBody.CurrentPath+"/"+renameBody.NewName), c)
 }
