@@ -40,6 +40,8 @@ func FileReaderHandler(c *fiber.Ctx) error {
 	}
 	switch os.Getenv("ENV") {
 	case "development":
+		return proxy.Do(c, "http://192.168.1.31/api/"+c.Params("*"))
+	default:
 		rootDir := os.Getenv("ROOT_DIR")
 		nginxServAddr := os.Getenv("NGINX_SERVE_ADDRESS")
 		entries, err := os.ReadDir(rootDir + path)
@@ -109,7 +111,5 @@ func FileReaderHandler(c *fiber.Ctx) error {
 				ChildElem:    elems,
 			},
 		})
-	default:
-		return proxy.Do(c, "http://192.168.1.31/api/"+c.Params("*"))
 	}
 }
