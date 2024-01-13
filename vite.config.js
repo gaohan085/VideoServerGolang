@@ -35,18 +35,27 @@ export default defineConfig({
     cssMinify: true,
     chunkSizeWarningLimit: 100,
     rollupOptions: {
+      // external: ["react", "react-dom", "axios", "plyr", "framer-motion"],
       output: {
         chunkFileNames: "[name]-[hash:10].js",
         manualChunks: {
-          react: ["react"],
-          "react-dom": ["react-dom"],
+          react: ["react","react-dom"],
           redux: ["redux"],
           plyr: ["plyr"],
           "framer-motion": ["framer-motion"],
           axios: ["axios"],
           swr: ["swr"],
           "react-icons": ["react-icons"],
+          "@reduxjs-toolkit": ["@reduxjs/toolkit"],
         },
+        // paths: {
+        //   react: "https://cdn.jsdelivr.net/npm/react@18.2.0/+esm",
+        //   "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/+esm",
+        //   axios: "https://cdn.jsdelivr.net/npm/axios@1.6.5/+esm",
+        //   plyr: "https://cdn.jsdelivr.net/npm/plyr@3.7.8/+esm",
+        //   "framer-motion":
+        //     "https://cdn.jsdelivr.net/npm/framer-motion@10.18.0/+esm",
+        // },
       },
     },
   },
