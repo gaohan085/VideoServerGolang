@@ -1,6 +1,6 @@
 import icon from "../assets/favicon.ico";
 import "../assets/Roboto-Regular.ttf";
-import "./index.css";
+// import "./index.css";
 
 import * as app from "./App";
 import { mountPlyr } from "./plyr";
@@ -14,8 +14,8 @@ head?.appendChild(favicon);
 const appNode = document.getElementById("app");
 void app.renderSidebar(appNode!);
 
-const statusbar = document.getElementById("statusbar");
-void app.renderStatusbar(statusbar!);
+// const statusbar = document.getElementById("statusbar");
+// void app.renderStatusbar(statusbar!);
 
 const videoNode = document.getElementById("plyr");
 
