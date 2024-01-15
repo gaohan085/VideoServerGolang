@@ -9,22 +9,34 @@ import (
 
 func TestVideoInfo(t *testing.T) {
 	InitTest(t)
-
 	t.Run("测试创建文件信息", func(t *testing.T) {
-		var video, videoResu *VideoInf
-		faker.FakeData(&video)
+
+		video := &VideoInf{
+			SerialNumber:    faker.Username(),
+			PosterName:      faker.Username(),
+			SourceUrl:       faker.Username(),
+			SourcePosterUrl: faker.Username(),
+			Title:           faker.Username(),
+		}
+		var videoResu VideoInf
 
 		err := video.Create()
 		Db.Model(&VideoInf{}).Where(&VideoInf{SerialNumber: video.SerialNumber}).Find(&videoResu)
 
 		assert.Nil(t, err)
 		assert.Equal(t, video.SerialNumber, videoResu.SerialNumber)
+
 		assert.Equal(t, video.PosterName, videoResu.PosterName)
 	})
 
 	t.Run("测试通过文件名读取文件信息", func(t *testing.T) {
-		var video, videoResu = new(VideoInf), new(VideoInf)
-		faker.FakeData(&video)
+		var video, videoResu = &VideoInf{
+			SerialNumber:    faker.Username(),
+			PosterName:      faker.Username(),
+			SourceUrl:       faker.Username(),
+			SourcePosterUrl: faker.Username(),
+			Title:           faker.Username(),
+		}, new(VideoInf)
 		err := video.Create()
 		assert.Nil(t, err)
 
@@ -44,5 +56,5 @@ func TestVideoInfo(t *testing.T) {
 		assert.Equal(t, uint(0), video.ID)
 	})
 
-	DropTables()
+	// DropTables()
 }
