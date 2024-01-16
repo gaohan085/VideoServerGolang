@@ -62,26 +62,31 @@ func TestVideoInfo(t *testing.T) {
 			SerialNum       string
 			SourceUrl       string
 			SourcePosterUrl string
+			Title           string
 		}{
 			{
 				SerialNum:       "adn-187",
 				SourceUrl:       "https://javdb.com/v/deX99",
 				SourcePosterUrl: "https://c0.jdbstatic.com/covers/de/deX99.jpg",
+				Title:           "無防備な人妻 松下紗栄子",
 			},
 			{
 				SerialNum:       "adn-087",
 				SourceUrl:       "https://javdb.com/v/kKKkJ",
 				SourcePosterUrl: "https://c0.jdbstatic.com/covers/kk/kKKkJ.jpg",
+				Title:           "美人ホームヘルパー 背徳の性奉仕 夏目彩春",
 			},
 			{
 				SerialNum:       "royd-057",
 				SourceUrl:       "https://javdb.com/v/7nzxB",
 				SourcePosterUrl: "https://c0.jdbstatic.com/covers/7n/7nzxB.jpg",
+				Title:           "リピート確定！超可愛い新人エステ嬢はお触りNGでもすぐに手マンさせちゃう押しに弱過ぎ娘！イッても止めないエンドレスピストンにガクブル痙攣絶頂 朝比奈ななせ",
 			},
 			{
 				SerialNum:       "stars-250",
 				SourceUrl:       "https://javdb.com/v/rz5eN",
 				SourcePosterUrl: "https://c0.jdbstatic.com/covers/rz/rz5eN.jpg",
+				Title:           "大きな亀頭で子宮口ほじくり性交 朝比奈ななせ",
 			},
 		}
 
@@ -95,6 +100,7 @@ func TestVideoInfo(t *testing.T) {
 			assert.Nil(t, err)
 			assert.Equal(t, unit.SourceUrl, video.SourceUrl)
 			assert.Equal(t, unit.SourcePosterUrl, video.SourcePosterUrl)
+			assert.Equal(t, unit.Title, video.Title)
 		}
 
 		t.Run("测试下载封面文件", func(t *testing.T) {

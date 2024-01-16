@@ -74,7 +74,7 @@ func (v *VideoInf) GetDetailInfo() error {
 	selection := doc.Find("body > section > div > div.movie-list.h.cols-4.vcols-8 > div:nth-child(1) > a")
 
 	valSrc, _ := selection.Attr("href")
-	valTitle, exists := selection.Attr("href")
+	valTitle, exists := selection.Attr("title")
 	if !exists {
 		v.SourceUrl = "-"
 		v.SourcePosterUrl = ""
