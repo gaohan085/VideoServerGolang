@@ -43,7 +43,6 @@ export const mountPlyr = (node: HTMLElement) => {
         ],
       };
       plyr.once("ready", async (e) => {
-        console.log("ready");
         await new Promise((r) => setTimeout(r, 2500));
         await e.detail.plyr.play();
       });
