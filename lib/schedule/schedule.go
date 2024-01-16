@@ -30,7 +30,7 @@ func Schedule() error {
 func QueryVideoInfo() error {
 	videos := []database.VideoInf{}
 
-	if err := database.Db.Model(&database.VideoInf{}).Where(&database.VideoInf{SourceUrl: ""}).Find(&videos).Error; err != nil {
+	if err := database.Db.Model(&database.VideoInf{}).Where("source_url = ?", "").Order("ID").Find(&videos).Error; err != nil {
 		return err
 	}
 
@@ -44,7 +44,7 @@ func QueryVideoInfo() error {
 func DownloadVideoPoster() error {
 	videos := []database.VideoInf{}
 
-	if err := database.Db.Model(&database.VideoInf{}).Where(&database.VideoInf{PosterName: ""}).Find(&videos).Error; err != nil {
+	if err := database.Db.Model(&database.VideoInf{}).Where("source_poster_url <> ? AND poster_name = ?", "", "").Order("ID").Find(&videos).Error; err != nil {
 		return err
 	}
 
