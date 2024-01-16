@@ -1,5 +1,4 @@
 import Plyr from "plyr";
-import { type Unsubscribe } from "redux";
 import "plyr/dist/plyr.css";
 import svg from "plyr/dist/plyr.svg";
 
@@ -28,48 +27,28 @@ export const mountPlyr = (node: HTMLElement) => {
     loadSprite: false,
     iconUrl: svg,
   });
-
-  let unSubscriber: Unsubscribe | undefined = undefined;
-
-  plyr.once("ready", (e) => {
-    const player = e.detail.plyr;
-    unSubscriber = lib.redux.store.subscribe(() => {
-      const videoPlaying = lib.redux.store.getState().redux.playingVideo;
-      player.source = {
+  
+  lib.redux.store.subscribe(() => {
+    const videoPlaying = lib.redux.store.getState().redux.playingVideo;
+    const currPlaySrc = plyr.source as unknown as string;
+    if (encodeURI(videoPlaying!.playSrc) !== currPlaySrc) {
+      plyr.source = {
         type: "video",
-        poster: videoPlaying!.poster,
+        title:videoPlaying?.title,
+        poster: videoPlaying?.poster,
         sources: [
           {
             src: videoPlaying!.playSrc,
           },
         ],
       };
-    });
-  });
+      plyr.once("ready", async (e) => {
+        console.log("ready");
+        await new Promise((r) => setTimeout(r, 2500));
+        await e.detail.plyr.play();
+      });
+    }
 
-  plyr.on("playing", (e) => {
-    const player = e.detail.plyr;
-    unSubscriber!();
-    lib.redux.store.subscribe(() => {
-      const videoPlaying = lib.redux.store.getState().redux.playingVideo;
-      const currPlaySrc = player.source as unknown as string;
-      if (encodeURI(videoPlaying!.playSrc) !== currPlaySrc) {
-        player.pause();
-        player.source = {
-          type: "video",
-          poster: videoPlaying!.poster,
-          sources: [
-            {
-              src: videoPlaying!.playSrc,
-            },
-          ],
-        };
-      }
-    });
-  });
-
-  lib.redux.store.subscribe(() => {
-    const videoPlaying = lib.redux.store.getState().redux.playingVideo;
     document.getElementById("title")!.textContent = videoPlaying
       ? `正在播放 ${videoPlaying.name
           .slice(0, videoPlaying.name.lastIndexOf("."))
@@ -82,6 +61,5 @@ export const mountPlyr = (node: HTMLElement) => {
           .toLocaleUpperCase()}`
       : "没有正在播放";
   });
-
   return plyr;
 };

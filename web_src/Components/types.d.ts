@@ -13,6 +13,7 @@ declare interface DirElement {
   playSrc: string;
   currentPath: string; //relative path
   poster: string;
+  title: string;
 }
 
 export declare interface DirectoryProp {
