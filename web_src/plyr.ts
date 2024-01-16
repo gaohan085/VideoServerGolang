@@ -35,7 +35,7 @@ export const mountPlyr = (node: HTMLElement) => {
       plyr.source = {
         type: "video",
         title: videoPlaying?.title,
-        poster: videoPlaying?.poster,
+        poster: "/assets/poster/" + videoPlaying?.poster,
         sources: [
           {
             src: videoPlaying!.playSrc,
