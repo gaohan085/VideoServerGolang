@@ -27,14 +27,14 @@ export const mountPlyr = (node: HTMLElement) => {
     loadSprite: false,
     iconUrl: svg,
   });
-  
+
   lib.redux.store.subscribe(() => {
     const videoPlaying = lib.redux.store.getState().redux.playingVideo;
     const currPlaySrc = plyr.source as unknown as string;
     if (encodeURI(videoPlaying!.playSrc) !== currPlaySrc) {
       plyr.source = {
         type: "video",
-        title:videoPlaying?.title,
+        title: videoPlaying?.title,
         poster: videoPlaying?.poster,
         sources: [
           {
@@ -52,13 +52,13 @@ export const mountPlyr = (node: HTMLElement) => {
     document.getElementById("title")!.textContent = videoPlaying
       ? `正在播放 ${videoPlaying.name
           .slice(0, videoPlaying.name.lastIndexOf("."))
-          .toLocaleUpperCase()}`
+          .toLocaleUpperCase()}-${videoPlaying.title}`
       : "没有正在播放";
 
     document.title = videoPlaying
       ? `正在播放 ${videoPlaying.name
           .slice(0, videoPlaying.name.lastIndexOf("."))
-          .toLocaleUpperCase()}`
+          .toLocaleUpperCase()}-${videoPlaying.title}`
       : "没有正在播放";
   });
   return plyr;
