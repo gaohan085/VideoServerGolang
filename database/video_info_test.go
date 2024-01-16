@@ -1,6 +1,7 @@
 package database
 
 import (
+	"os"
 	"testing"
 
 	"github.com/go-faker/faker/v4"
@@ -56,5 +57,62 @@ func TestVideoInfo(t *testing.T) {
 		assert.Equal(t, uint(0), video.ID)
 	})
 
-	// DropTables()
+	t.Run("测试获取详情页链接和封面链接", func(t *testing.T) {
+		testEx := []struct {
+			SerialNum       string
+			SourceUrl       string
+			SourcePosterUrl string
+		}{
+			{
+				SerialNum:       "adn-187",
+				SourceUrl:       "https://javdb.com/v/deX99",
+				SourcePosterUrl: "https://c0.jdbstatic.com/covers/de/deX99.jpg",
+			},
+			{
+				SerialNum:       "adn-087",
+				SourceUrl:       "https://javdb.com/v/kKKkJ",
+				SourcePosterUrl: "https://c0.jdbstatic.com/covers/kk/kKKkJ.jpg",
+			},
+			{
+				SerialNum:       "royd-057",
+				SourceUrl:       "https://javdb.com/v/7nzxB",
+				SourcePosterUrl: "https://c0.jdbstatic.com/covers/7n/7nzxB.jpg",
+			},
+			{
+				SerialNum:       "stars-250",
+				SourceUrl:       "https://javdb.com/v/rz5eN",
+				SourcePosterUrl: "https://c0.jdbstatic.com/covers/rz/rz5eN.jpg",
+			},
+		}
+
+		for _, unit := range testEx {
+			video := &VideoInf{
+				SerialNumber: unit.SerialNum,
+			}
+
+			err := video.GetDetailInfo()
+
+			assert.Nil(t, err)
+			assert.Equal(t, unit.SourceUrl, video.SourceUrl)
+			assert.Equal(t, unit.SourcePosterUrl, video.SourcePosterUrl)
+		}
+
+		t.Run("测试下载封面文件", func(t *testing.T) {
+			cwd, _ := os.Getwd()
+			video := &VideoInf{
+				SerialNumber: "adn-187",
+			}
+
+			video.QueryByVideoName(video.SerialNumber)
+			errD := video.DownloadPoster()
+
+			assert.Nil(t, errD)
+			assert.Equal(t, "deX99.jpg", video.PosterName)
+
+			_, err := os.Stat(cwd + "/assets/poster/" + video.PosterName)
+			assert.Nil(t, err)
+		})
+	})
+
+	DropTables()
 }

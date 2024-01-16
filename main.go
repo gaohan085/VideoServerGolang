@@ -16,6 +16,7 @@ import (
 
 	"go-fiber-react-ts/database"
 	"go-fiber-react-ts/handlers"
+	"go-fiber-react-ts/lib/schedule"
 )
 
 //go:embed dist/*
@@ -28,6 +29,7 @@ func main() {
 	engine := html.NewFileSystem(http.FS(content), ".html")
 
 	database.SetDB()
+	schedule.Schedule()
 
 	app := fiber.New(
 		fiber.Config{
