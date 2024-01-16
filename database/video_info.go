@@ -71,15 +71,20 @@ func (v *VideoInf) GetDetailInfo() error {
 		return err
 	}
 
-	val, exists := doc.Find("body > section > div > div.movie-list.h.cols-4.vcols-8 > div:nth-child(1) > a").Attr("href")
+	selection := doc.Find("body > section > div > div.movie-list.h.cols-4.vcols-8 > div:nth-child(1) > a")
+
+	valSrc, _ := selection.Attr("href")
+	valTitle, exists := selection.Attr("href")
 	if !exists {
-		return ErrQueryVideoUrlFail
+		v.SourceUrl = "-"
+		v.SourcePosterUrl = ""
+		v.Title = "-"
+		return v.Update()
 	}
-	v.SourceUrl = "https://javdb.com" + val
+	v.SourceUrl = "https://javdb.com" + valSrc
+	v.Title = valTitle
 
-	selection := doc.Find("body > section > div > div.movie-list.h.cols-4.vcols-8 > div:nth-child(1) > a > div > img")
-
-	valPoster, exists := selection.Attr("src")
+	valPoster, exists := doc.Find("body > section > div > div.movie-list.h.cols-4.vcols-8 > div:nth-child(1) > a > div > img").Attr("src")
 	if !exists {
 		return ErrQueryVideoPosterFail
 	}
@@ -102,6 +107,10 @@ func (v *VideoInf) DownloadPoster() error {
 	}
 
 	//获取封面文件名称
+	if v.SourceUrl == "-" {
+		v.PosterName = ""
+		return v.Update()
+	}
 	segments := strings.Split(v.SourcePosterUrl, "/")
 	v.PosterName = segments[len(segments)-1]
 
