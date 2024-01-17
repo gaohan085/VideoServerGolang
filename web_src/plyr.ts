@@ -35,7 +35,7 @@ export const mountPlyr = (node: HTMLElement) => {
       plyr.source = {
         type: "video",
         title: videoPlaying?.title,
-        poster: videoPlaying?.poster,
+        poster: "/assets/poster/" + videoPlaying?.poster,
         sources: [
           {
             src: videoPlaying!.playSrc,
@@ -52,13 +52,13 @@ export const mountPlyr = (node: HTMLElement) => {
     document.getElementById("title")!.textContent = videoPlaying
       ? `正在播放 ${videoPlaying.name
           .slice(0, videoPlaying.name.lastIndexOf("."))
-          .toLocaleUpperCase()}-${videoPlaying.title}`
+          .toLocaleUpperCase()} ${videoPlaying.title}`
       : "没有正在播放";
 
     document.title = videoPlaying
       ? `正在播放 ${videoPlaying.name
           .slice(0, videoPlaying.name.lastIndexOf("."))
-          .toLocaleUpperCase()}-${videoPlaying.title}`
+          .toLocaleUpperCase()} ${videoPlaying.title}`
       : "没有正在播放";
   });
   return plyr;
