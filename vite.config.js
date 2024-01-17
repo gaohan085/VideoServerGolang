@@ -11,6 +11,9 @@ export default defineConfig({
     port: 3333,
     strictPort: true,
   },
+  esbuild: {
+    drop: isProduction ? ["console", "debugger"] : [],
+  },
   plugins: [react()],
   css: {
     modules: {
@@ -39,7 +42,7 @@ export default defineConfig({
       output: {
         chunkFileNames: "[name]-[hash:10].js",
         manualChunks: {
-          react: ["react","react-dom"],
+          react: ["react", "react-dom"],
           redux: ["redux"],
           plyr: ["plyr"],
           "framer-motion": ["framer-motion"],
