@@ -43,20 +43,19 @@ export const mountPlyr = (node: HTMLElement) => {
         ],
       };
       plyr.once("ready", async (e) => {
-        console.log("ready");
         await new Promise((r) => setTimeout(r, 2500));
         await e.detail.plyr.play();
       });
     }
 
     document.getElementById("title")!.textContent = videoPlaying
-      ? `正在播放 ${videoPlaying.name
+      ? `${videoPlaying.name
           .slice(0, videoPlaying.name.lastIndexOf("."))
           .toLocaleUpperCase()} ${videoPlaying.title}`
       : "没有正在播放";
 
     document.title = videoPlaying
-      ? `正在播放 ${videoPlaying.name
+      ? `${videoPlaying.name
           .slice(0, videoPlaying.name.lastIndexOf("."))
           .toLocaleUpperCase()} ${videoPlaying.title}`
       : "没有正在播放";
