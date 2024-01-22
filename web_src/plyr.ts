@@ -62,11 +62,11 @@ export const mountPlyr = (node: HTMLElement) => {
   });
 
   plyr.on("enterfullscreen", () => {
-    try {
+    if (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
+    ) {
       window.screen.orientation.unlock();
       window.screen.orientation.lock("landscape");
-    } catch (e) {
-      return;
     }
   });
 
