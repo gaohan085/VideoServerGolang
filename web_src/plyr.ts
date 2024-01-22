@@ -60,5 +60,15 @@ export const mountPlyr = (node: HTMLElement) => {
           .toLocaleUpperCase()} ${videoPlaying.title}`
       : "没有正在播放";
   });
+
+  plyr.on("enterfullscreen", () => {
+    try {
+      window.screen.orientation.unlock();
+      window.screen.orientation.lock("landscape");
+    } catch (e) {
+      return;
+    }
+  });
+
   return plyr;
 };
