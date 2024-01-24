@@ -61,12 +61,12 @@ export const mountPlyr = (node: HTMLElement) => {
       : "没有正在播放";
   });
 
-  plyr.on("enterfullscreen", () => {
+  plyr.on("enterfullscreen", async () => {
     if (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
     ) {
       window.screen.orientation.unlock();
-      window.screen.orientation.lock("landscape");
+      await window.screen.orientation.lock("landscape");
     }
   });
 
