@@ -14,7 +14,18 @@ export default defineConfig({
   esbuild: {
     drop: isProduction ? ["console", "debugger"] : [],
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: "html-transform",
+      transformIndexHtml(html) {
+        return html
+          .replace(/(\s\s){1,}</gm, "<")
+          .replace(/^\s{2,}/gm, " ")
+          .replace(/(\r\n|\n|\r)/gm, "");
+      },
+    },
+  ],
   css: {
     modules: {
       localsConvention: "camelCase",

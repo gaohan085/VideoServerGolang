@@ -28,6 +28,7 @@ type DirChildElem struct {
 	CurrentPath string `json:"currentPath"` //不含末尾 "/"
 	Poster      string `json:"poster"`
 	Title       string `json:"title"`
+	Actress     string `json:"actress"`
 }
 
 func FileReaderHandler(c *fiber.Ctx) error {
@@ -74,6 +75,9 @@ func FileReaderHandler(c *fiber.Ctx) error {
 				if err := video.QueryByVideoName(serialNum); err == database.ErrVideoNotFound {
 					video.SerialNumber = serialNum
 					video.Create()
+				} else if video.PlaySrc == "" {
+					video.PlaySrc = playSrc
+					video.Update()
 				}
 			}
 
@@ -86,6 +90,7 @@ func FileReaderHandler(c *fiber.Ctx) error {
 				CurrentPath: path,
 				Poster:      video.PosterName,
 				Title:       video.Title,
+				Actress:     video.Actress,
 			}
 		}
 

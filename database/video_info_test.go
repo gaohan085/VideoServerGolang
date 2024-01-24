@@ -120,5 +120,45 @@ func TestVideoInfo(t *testing.T) {
 		})
 	})
 
+	t.Run("测试获取演员名", func(t *testing.T) {
+
+		testEx := []struct {
+			SerialNum       string
+			SourceUrl       string
+			SourcePosterUrl string
+			Title           string
+			Actress         string
+		}{
+			{
+				SerialNum: "STARS-300",
+				SourceUrl: "https://javdb.com/v/8WrMd",
+				Actress:   "朝比奈ななせ",
+			},
+			{
+				SerialNum: "STARS-290",
+				SourceUrl: "https://javdb.com/v/JzymR",
+				Actress:   "朝比奈ななせ",
+			},
+			{
+				SerialNum: "MUKC-016",
+				SourceUrl: "https://javdb.com/v/0wr8a",
+				Actress:   "朝比奈ななせ",
+			},
+		}
+
+		for _, unit := range testEx {
+			video := &VideoInf{
+				SerialNumber: unit.SerialNum,
+				SourceUrl:    unit.SourceUrl,
+			}
+
+			err := video.GetActress()
+
+			assert.Nil(t, err)
+			assert.Equal(t, unit.Actress, video.Actress)
+		}
+
+	})
+
 	DropTables()
 }

@@ -29,6 +29,8 @@ type VideoInf struct {
 	SourceUrl       string         `json:"sourceUrl"`                  //来源网站信息
 	PosterName      string         `json:"posterName"`                 //封面图片本地链接
 	SourcePosterUrl string         `json:"sourcePosterUrl"`
+	Actress         string         `json:"actress"`
+	PlaySrc         string         `json:"playSrc"`
 }
 
 func (v *VideoInf) Create() error {
@@ -133,6 +135,28 @@ func (v *VideoInf) DownloadPoster() error {
 	//将res.body 写入文件
 	io.Copy(file, res.Body)
 	defer file.Close()
+
+	return v.Update()
+}
+
+func (v *VideoInf) GetActress() error {
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", v.SourceUrl, nil)
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		return err
+	}
+
+	actress := doc.Find("body > section > div > div.video-detail > div.video-meta-panel > div > div:nth-child(2) > nav > div:nth-last-child(3) > span > a:nth-child(1)").Text()
+
+	v.Actress = actress
 
 	return v.Update()
 }
