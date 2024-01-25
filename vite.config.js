@@ -20,9 +20,11 @@ export default defineConfig({
       name: "html-transform",
       transformIndexHtml(html) {
         return html
-          .replace(/(\s\s){1,}</gm, "<")
-          .replace(/^\s{2,}/gm, " ")
-          .replace(/(\r\n|\n|\r)/gm, "");
+          .replace(/\r\n|\r|\n/gm, "")
+          .replace(
+            /(?<=(>|;|{|}|,|:{1,}))\s{2,}(?=<|>|}|-|>|[A-Z]|@|:{2,}|\.|[0-9])|(?<=")\s{2,}(?=>)|(?<=>)\s{2,}(?=)|(?<=)\s{2,}(?=<)/gi,
+            "",
+          ).replace(/\s{2,}/gi, " ")
       },
     },
   ],
