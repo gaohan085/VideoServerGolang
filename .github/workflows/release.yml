@@ -25,13 +25,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version}}
-      - name: Build
-        run: |
-          npm install
-          npx vite build
       - uses: actions/checkout@v3
       - uses: wangyoucao577/go-release-action@v1.43
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
+          pre_command: |
+            npm install
+            npx vite build
