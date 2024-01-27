@@ -1,10 +1,10 @@
-.github/workflows/release.yml
+#.github/workflows/release.yml
 
 on:
   release:
     types: [created]
 
-permission:
+permissions:
   contents: write
   packages: write
 
@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version:[18.x]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v3
       - name: Setup Node.js
@@ -30,7 +30,7 @@ jobs:
     name: Release Go Binary
     runs-on: ubuntu-latest
     
-    needs: Nodejs Vite Build
+    needs: vite-build
     
     strategy:
       matrix:
@@ -42,6 +42,6 @@ jobs:
       - uses: wangyoucao577/go-release-action@v1.43
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          goos: ${{matrix.goos}}
-          goarch: ${{matrix.goarch}}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
           build_command: make init && make build
