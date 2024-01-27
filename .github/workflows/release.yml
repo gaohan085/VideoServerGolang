@@ -20,9 +20,6 @@ jobs:
         goarch: [amd64]
 
     steps:
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
       - uses: actions/checkout@v3
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -34,4 +31,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
-          build_command: make init && make build
+          build_command: npx install && npx build && go build
