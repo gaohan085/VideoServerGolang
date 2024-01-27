@@ -28,7 +28,7 @@ jobs:
       - name: Build
         run: |
           npm install
-          npx build
+          npx vite build
       - uses: actions/checkout@v3
       - uses: wangyoucao577/go-release-action@v1.43
         with:
