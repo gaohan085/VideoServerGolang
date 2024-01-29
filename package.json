@@ -20,7 +20,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.1.0",
     "axios": "^1.6.7",
-    "framer-motion": "^10.18.0",
+    "framer-motion": "^11.0.3",
     "plyr": "^3.7.8",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
