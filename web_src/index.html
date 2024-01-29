@@ -3,8 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="/dist/favicon.ico" />
-    <script type="module" src="./index.ts"></script>
+    <!-- <script type="module" src="./index.ts"></script> -->
     <style>
       html,
       body {
@@ -74,7 +73,7 @@
         }
 
         .player {
-          margin: 0px;
+          margin: 12px;
         }
       }
 
@@ -134,13 +133,7 @@
   </head>
   <body>
     <div id="layout" class="layout">
-      <div class="main">
-        <div class="player">
-          <video id="plyr"></video>
-          <h4 id="title"></h4>
-        </div>
-        <div id="app"></div>
-      </div>
+      <div class="main" id="main"><!--InnerReact--></div>
       <div id="statusbar">
         <div class="statusBar">
           <div>

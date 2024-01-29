@@ -4,6 +4,7 @@ import (
 	"embed"
 	"errors"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,6 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/proxy"
 	"github.com/gofiber/template/html/v2"
 	_ "github.com/joho/godotenv/autoload"
 
@@ -62,8 +64,13 @@ func main() {
 			TimeZone:   "Asia/Shanghai",
 			Output:     file,
 		}))
+		app.Static("/assets", "./assets/")
 
 	default:
+		app.Get("/assets/poster/:name", func(c *fiber.Ctx) error {
+			fmt.Println(c.Params("name"))
+			return proxy.Do(c, "http://192.168.1.31/assets/poster/"+c.Params("name"))
+		})
 		app.Use(logger.New(logger.Config{
 			Format:     "[DEBUG] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
 			TimeFormat: "2006/Jan/02 Monday 15:04:05",
@@ -76,8 +83,6 @@ func main() {
 		PathPrefix: "dist",
 		Browse:     true,
 	}))
-
-	app.Static("/assets", "./assets/")
 
 	app.Get("/", handlers.IndexHandler)
 
