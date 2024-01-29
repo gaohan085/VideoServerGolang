@@ -16,7 +16,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    {
+    isProduction && {
       name: "html-transform",
       transformIndexHtml(html) {
         return html
@@ -24,7 +24,8 @@ export default defineConfig({
           .replace(
             /(?<=(>|;|{|}|,|:{1,}))\s{2,}(?=<|>|}|-|>|[A-Z]|@|:{2,}|\.|[0-9])|(?<=")\s{2,}(?=>)|(?<=>)\s{2,}(?=)|(?<=)\s{2,}(?=<)/gi,
             "",
-          ).replace(/\s{2,}/gi, " ")
+          )
+          .replace(/\s{2,}/gi, " ");
       },
     },
   ],

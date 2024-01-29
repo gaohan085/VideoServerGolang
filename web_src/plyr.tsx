@@ -1,6 +1,7 @@
 import Plyr from "plyr";
 import "plyr/dist/plyr.css";
 import svg from "plyr/dist/plyr.svg";
+import React, { forwardRef, useEffect, useRef } from "react";
 
 import * as lib from "./lib";
 
@@ -47,18 +48,6 @@ export const mountPlyr = (node: HTMLElement) => {
         await e.detail.plyr.play();
       });
     }
-
-    document.getElementById("title")!.textContent = videoPlaying
-      ? `${videoPlaying.name
-          .slice(0, videoPlaying.name.lastIndexOf("."))
-          .toLocaleUpperCase()} ${videoPlaying.title}`
-      : "没有正在播放";
-
-    document.title = videoPlaying
-      ? `${videoPlaying.name
-          .slice(0, videoPlaying.name.lastIndexOf("."))
-          .toLocaleUpperCase()} ${videoPlaying.title}`
-      : "没有正在播放";
   });
 
   plyr.on("enterfullscreen", async () => {
@@ -69,6 +58,37 @@ export const mountPlyr = (node: HTMLElement) => {
       await window.screen.orientation.lock("landscape");
     }
   });
-
-  return plyr;
 };
+
+
+export const Plyer: React.FC = () => {
+  const ref = useRef(null)
+  const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying)
+
+  document.title = videoPlaying
+    ? `${videoPlaying.name
+      .slice(0, videoPlaying.name.lastIndexOf("."))
+      .toLocaleUpperCase()} ${videoPlaying.title}`
+    : "没有正在播放";
+
+  useEffect(() => {
+    if (ref.current) {
+      mountPlyr(ref.current)
+    }
+  }, [ref])
+
+  return (
+    <div className="player">
+      <ForwordPlyr ref={ref} />
+      <h4 className="title">{videoPlaying
+        ? `${videoPlaying.name
+          .slice(0, videoPlaying.name.lastIndexOf("."))
+          .toLocaleUpperCase()} ${videoPlaying.title}`
+        : "没有正在播放"}</h4>
+    </div>
+  )
+}
+
+const ForwordPlyr = forwardRef(function ForwordPlyer(props, ref: React.LegacyRef<HTMLVideoElement> | undefined) {
+  return <video ref={ref}></video>
+})
