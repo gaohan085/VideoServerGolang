@@ -1,6 +1,5 @@
 import icon from "../assets/favicon.ico";
 import "../assets/Roboto-Regular.ttf";
-// import "./index.css";
 
 import * as app from "./App";
 
@@ -13,8 +12,6 @@ head?.appendChild(favicon);
 const appNode = document.getElementById("main");
 void app.renderApp(appNode!);
 
-if (import.meta.hot) {
-  import.meta.hot.accept(["./App.tsx"], () => {
-    return;
-  });
+if (import.meta.webpackHot) {
+  import.meta.webpackHot.accept("./App.tsx");
 }

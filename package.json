@@ -1,15 +1,18 @@
 {
-  "name": "my-video-server",
-  "version": "0.1.0",
-  "description": "My Video Server",
+  "name": "my-webpack-project",
+  "version": "1.0.0",
+  "description": "My webpack project",
   "main": "./web_src/index.ts",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./web_src --ext .ts,tsx --fix && tsc -noEmit",
     "prettier": "prettier ./web_src/ --write",
     "dev": "vite",
-    "build": "vite build"
+    "build": "webpack --mode=production --node-env=production",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "watch": "webpack --watch",
+    "serve": "webpack serve"
   },
   "keywords": [],
   "author": "",
@@ -30,20 +33,31 @@
     "swr": "^2.2.4"
   },
   "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@types/node": "^20.11.7",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
-    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@webpack-cli/generators": "^3.0.7",
+    "css-loader": "^6.9.1",
     "eslint": "^8.56.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.33.2",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.7.7",
     "prettier": "^3.2.4",
     "sass": "^1.70.0",
+    "sass-loader": "^14.0.0",
+    "style-loader": "^3.3.4",
+    "swc": "^1.0.11",
+    "swc-loader": "^0.2.3",
+    "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
-    "vite": "^5.0.12"
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   },
   "prettier": {
     "semi": true,

@@ -1,6 +1,6 @@
 import Plyr from "plyr";
 import "plyr/dist/plyr.css";
-import svg from "plyr/dist/plyr.svg";
+import iconSvg from "plyr/dist/plyr.svg";
 import React, { forwardRef, useEffect, useRef } from "react";
 
 import * as lib from "./lib";
@@ -26,7 +26,7 @@ export const mountPlyr = (node: HTMLElement) => {
     blankVideo: "",
     keyboard: { focused: false, global: true },
     loadSprite: false,
-    iconUrl: svg,
+    iconUrl: iconSvg,
   });
 
   lib.redux.store.subscribe(() => {
