@@ -5,21 +5,10 @@ import { SWRConfig } from "swr";
 
 import * as Components from "./Components";
 import * as lib from "./lib";
+import { Plyer } from "./plyr";
 
-export const renderSidebar = (app: HTMLElement): void => {
-  console.log(JSON.stringify(<StrictMode>
-    <SWRConfig
-      value={{
-        refreshInterval: 120000,
-        fetcher: lib.fetcher,
-        revalidateOnFocus: true,
-      }}
-    >
-      <Provider store={lib.redux.store}>
-        <Components.InteractiveSidebar />
-      </Provider>
-    </SWRConfig>
-  </StrictMode>))
+
+export const renderApp = (app: HTMLElement): void => {
   createRoot(app).render(
     <StrictMode>
       <SWRConfig
@@ -30,27 +19,10 @@ export const renderSidebar = (app: HTMLElement): void => {
         }}
       >
         <Provider store={lib.redux.store}>
+          <Plyer />
           <Components.InteractiveSidebar />
         </Provider>
       </SWRConfig>
     </StrictMode>
-  );
-};
-
-export const renderStatusbar = (statusbar: HTMLElement): void => {
-  createRoot(statusbar).render(
-    <StrictMode>
-      <SWRConfig
-        value={{
-          refreshInterval: 120000,
-          fetcher: lib.fetcher,
-          revalidateOnFocus: true,
-        }}
-      >
-        <Provider store={lib.redux.store}>
-          <Components.StatusBar />
-        </Provider>
-      </SWRConfig>
-    </StrictMode>,
   );
 };
