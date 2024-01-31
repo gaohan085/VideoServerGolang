@@ -7,7 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./web_src --ext .ts,tsx --fix && tsc -noEmit",
     "prettier": "prettier ./web_src/ --write",
-    "dev": "vite",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
     "build:prod": "webpack --mode=production --node-env=production",
