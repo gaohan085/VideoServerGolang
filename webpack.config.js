@@ -5,7 +5,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require("webpack");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
-
 const isProduction = process.env.NODE_ENV == "production";
 
 const stylesHandler = MiniCssExtractPlugin.loader;
@@ -15,7 +14,7 @@ const config = {
   output: {
     clean: true,
     path: path.resolve(__dirname, "dist"),
-    filename: "[contenthash:15].js",
+    filename: "[name]-[contenthash:10].js",
   },
   devServer: {
     open: false,
@@ -33,7 +32,7 @@ const config = {
     }),
     new webpack.EnvironmentPlugin(),
     new MiniCssExtractPlugin({
-      filename: "[contenthash:15].css",
+      filename: "[name]-[contenthash:15].css",
     }),
     !isProduction && new ReactRefreshWebpackPlugin({ overlay: true }),
   ].filter(Boolean),
@@ -47,9 +46,16 @@ const config = {
               .identifier()
               .split("/")
               .reduceRight((item) => item);
-            return moduleFileName;
+            return `${cacheGroupKey}-${moduleFileName}`;
           },
           chunks: "all",
+          priority: -10,
+        },
+        default: {
+          test: /[\\/]web_src[\\/]/,
+          name: "main",
+          chunks: "all",
+          priority: 0,
         },
       },
     },
@@ -107,9 +113,9 @@ const config = {
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif|ico)$/i,
         type: "asset/resource",
-        generator:{
-          filename:"[hash:15][ext][query]"
-        }
+        generator: {
+          filename: "[hash:15][ext][query]",
+        },
       },
 
       // Add your rules for custom modules here

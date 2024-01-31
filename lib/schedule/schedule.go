@@ -21,6 +21,10 @@ func Schedule() error {
 		gocron.DurationRandomJob(30*time.Second, 3*time.Minute),
 		gocron.NewTask(DownloadVideoPoster),
 	)
+	schedule.NewJob(
+		gocron.DurationJob(1*time.Minute),
+		gocron.NewTask(GetActress),
+	)
 
 	schedule.Start()
 
@@ -52,5 +56,18 @@ func DownloadVideoPoster() error {
 		return videos[0].DownloadPoster()
 	}
 
+	return nil
+}
+
+func GetActress() error {
+	videos := []database.VideoInf{}
+
+	if err := database.Db.Model(&database.VideoInf{}).Where("source_url <> ? AND play_src <> ? AND actress = ?", "", "", "").Order("ID").Find(&videos).Error; err != nil {
+		return err
+	}
+
+	if len(videos) != 0 {
+		return videos[0].GetActress()
+	}
 	return nil
 }
