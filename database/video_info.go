@@ -140,23 +140,6 @@ func (v *VideoInf) DownloadPoster() error {
 }
 
 func (v *VideoInf) GetActress() error {
-	client := &http.Client{}
-	req, _ := http.NewRequest("GET", v.SourceUrl, nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-	res, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	if err != nil {
-		return err
-	}
-
-	actress := doc.Find("body > section > div > div.video-detail > div.video-meta-panel > div > div:nth-child(2) > nav > div:nth-last-child(3) > span > a:nth-child(1)").Text()
-
-	v.Actress = actress
-
+	v.Actress = strings.Split(v.PlaySrc, "/")[4]
 	return v.Update()
 }

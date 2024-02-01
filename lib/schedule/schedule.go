@@ -22,7 +22,7 @@ func Schedule() error {
 		gocron.NewTask(DownloadVideoPoster),
 	)
 	schedule.NewJob(
-		gocron.DurationJob(1*time.Minute),
+		gocron.DurationJob(5*time.Second),
 		gocron.NewTask(GetActress),
 	)
 
