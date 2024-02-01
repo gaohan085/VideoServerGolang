@@ -123,33 +123,26 @@ func TestVideoInfo(t *testing.T) {
 	t.Run("测试获取演员名", func(t *testing.T) {
 
 		testEx := []struct {
-			SerialNum       string
-			SourceUrl       string
-			SourcePosterUrl string
-			Title           string
-			Actress         string
+			SerialNum string
+			PlaySrc   string
+			Actress   string
 		}{
 			{
-				SerialNum: "STARS-300",
-				SourceUrl: "https://javdb.com/v/8WrMd",
-				Actress:   "朝比奈ななせ",
+				SerialNum: "waaa-067",
+				PlaySrc:   "http://192.168.1.31/video/白桃はな/waaa-067-C/waaa-067-C.mp4",
+				Actress:   "白桃はな",
 			},
 			{
-				SerialNum: "STARS-290",
-				SourceUrl: "https://javdb.com/v/JzymR",
-				Actress:   "朝比奈ななせ",
-			},
-			{
-				SerialNum: "MUKC-016",
-				SourceUrl: "https://javdb.com/v/0wr8a",
-				Actress:   "朝比奈ななせ",
+				SerialNum: "jul-139",
+				PlaySrc:   "http://192.168.1.31/video/妃光莉/jul-139-C/jul-139-C.mp4",
+				Actress:   "妃光莉",
 			},
 		}
 
 		for _, unit := range testEx {
 			video := &VideoInf{
 				SerialNumber: unit.SerialNum,
-				SourceUrl:    unit.SourceUrl,
+				PlaySrc:      unit.PlaySrc,
 			}
 
 			err := video.GetActress()
