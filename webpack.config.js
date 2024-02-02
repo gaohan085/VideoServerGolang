@@ -14,7 +14,9 @@ const config = {
   output: {
     clean: true,
     path: path.resolve(__dirname, "dist"),
-    filename: "[name]-[contenthash:10].js",
+    filename: !isProduction
+      ? "[name]-[contenthash:10].js"
+      : "[contenthash:10].js",
   },
   devServer: {
     open: false,
@@ -22,19 +24,24 @@ const config = {
     port: 3333,
     hot: true,
     allowedHosts: ["http://192.168.1.31"],
+    historyApiFallback: true,
+    static: {
+      directory: path.join(__dirname, "/"),
+      publicPath: "/",
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./web_src/index.html",
       filename: "index.html",
-      publicPath: isProduction ? "dist" : "auto",
+      publicPath: !isProduction ? "/" : "/dist/",
       hash: false,
     }),
     new webpack.EnvironmentPlugin(),
     new MiniCssExtractPlugin({
-      filename: "[name]-[contenthash:15].css",
+      filename: "[contenthash:15].css",
     }),
-    !isProduction && new ReactRefreshWebpackPlugin({ overlay: true }),
+    new ReactRefreshWebpackPlugin({ overlay: true }),
   ].filter(Boolean),
   optimization: {
     splitChunks: {
@@ -54,8 +61,6 @@ const config = {
         default: {
           test: /[\\/]web_src[\\/]/,
           name: "main",
-          chunks: "all",
-          priority: 0,
         },
       },
     },

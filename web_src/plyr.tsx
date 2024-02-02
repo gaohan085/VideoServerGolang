@@ -2,6 +2,7 @@ import Plyr from "plyr";
 import "plyr/dist/plyr.css";
 import iconSvg from "plyr/dist/plyr.svg";
 import React, { forwardRef, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 
 import * as lib from "./lib";
 
@@ -58,37 +59,53 @@ export const mountPlyr = (node: HTMLElement) => {
       await window.screen.orientation.lock("landscape");
     }
   });
+  return plyr;
 };
 
-
-export const Plyer: React.FC = () => {
-  const ref = useRef(null)
-  const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying)
-
-  document.title = videoPlaying
-    ? `${videoPlaying.name
-      .slice(0, videoPlaying.name.lastIndexOf("."))
-      .toLocaleUpperCase()} ${videoPlaying.title}`
-    : "没有正在播放";
+export const Player: React.FC = () => {
+  const ref = useRef(null);
+  const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
 
   useEffect(() => {
-    if (ref.current) {
-      mountPlyr(ref.current)
+    if (videoPlaying) {
+      document.title = `${videoPlaying.name
+        .slice(0, videoPlaying.name.lastIndexOf("."))
+        .toLocaleUpperCase()} ${videoPlaying.title}`;
     }
-  }, [ref])
+  }, [videoPlaying]);
+
+  useEffect(() => {
+    let plyr: Plyr;
+    if (ref.current) {
+      plyr = mountPlyr(ref.current);
+    }
+    return () => {
+      !ref.current && plyr.destroy();
+    };
+  }, [ref]);
 
   return (
     <div className="player">
       <ForwordPlyr ref={ref} />
-      <h4 className="title">{videoPlaying
-        ? `${videoPlaying.name
-          .slice(0, videoPlaying.name.lastIndexOf("."))
-          .toLocaleUpperCase()} ${videoPlaying.title}`
-        : "没有正在播放"}</h4>
+      <div className="title">
+        <h4>
+          {videoPlaying
+            ? `${videoPlaying.name
+              .slice(0, videoPlaying.name.lastIndexOf("."))
+              .toLocaleUpperCase()} ${videoPlaying.title}`
+            : "没有正在播放"}
+        </h4>
+        {!!videoPlaying && (
+          <Link to={`/actress/${videoPlaying.actress}`}>{videoPlaying.actress}</Link>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-const ForwordPlyr = forwardRef(function ForwordPlyer(props, ref: React.LegacyRef<HTMLVideoElement> | undefined) {
-  return <video ref={ref}></video>
-})
+const ForwordPlyr = forwardRef(function ForwordPlyer(
+  props,
+  ref: React.LegacyRef<HTMLVideoElement> | undefined,
+) {
+  return <video ref={ref}></video>;
+});
