@@ -1,5 +1,8 @@
 import { MediaPlayer, MediaProvider } from "@vidstack/react";
-import { PlyrLayout, plyrLayoutIcons } from "@vidstack/react/player/layouts/plyr";
+import {
+  PlyrLayout,
+  plyrLayoutIcons,
+} from "@vidstack/react/player/layouts/plyr";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -16,7 +19,8 @@ export const Player: React.FC = () => {
         title={videoPlaying.title}
         src={videoPlaying.playSrc}
         aspectRatio="16/9"
-        load="visible" posterLoad="visible"
+        load="visible"
+        posterLoad="visible"
         poster={`/assets/poster/${videoPlaying.poster}`}
         autoPlay={false}
         viewType="video"
