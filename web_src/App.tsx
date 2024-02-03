@@ -1,23 +1,22 @@
 import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { SWRConfig } from "swr";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { SWRConfig } from "swr";
 
-import * as Components from "./Components";
 import * as lib from "./lib";
-import { Player } from "./plyr";
+import * as Routes from "./routes";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <>      <Player />
-        <Components.InteractiveSidebar /></>
-    ),
-    errorElement: <div>Not Found</div>
+    element: <Routes.MainPage />,
+    errorElement: <Routes.ErrorPage />,
   },
-
+  {
+    path: "/actress/:name",
+    element: <Routes.ActressByName />,
+  },
 ]);
 
 export const renderApp = (app: HTMLElement): void => {
@@ -34,6 +33,6 @@ export const renderApp = (app: HTMLElement): void => {
           <RouterProvider router={router} />
         </Provider>
       </SWRConfig>
-    </StrictMode>
+    </StrictMode>,
   );
 };
