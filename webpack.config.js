@@ -78,7 +78,7 @@ const config = {
               },
             },
           },
-          ,
+
           "sass-loader",
         ],
       },
@@ -95,7 +95,7 @@ const config = {
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
+    extensions: [".tsx", ".ts", ".jsx", ".js", ".css", "..."],
   },
 };
 
@@ -120,6 +120,12 @@ module.exports = () => {
           default: {
             test: /[\\/]web_src[\\/]/,
             name: "main",
+          },
+          styles: {
+            name: "styles",
+            type: "css/mini-extract",
+            chunks: "all",
+            enforce: true,
           },
         },
       },
