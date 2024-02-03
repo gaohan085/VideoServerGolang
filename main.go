@@ -84,15 +84,14 @@ func main() {
 		Browse:     true,
 	}))
 
-	app.Get("/", handlers.IndexHandler)
-
 	api := app.Group("/api")
-
 	api.Get("/disk", handlers.DiskUsageHandler)
 	api.Post("/delete", handlers.DeleteHandler)
 	api.Post("/rename", handlers.RenameHandler)
 	api.Get("/version", handlers.VersionHandler)
 	api.Get("/*", handlers.FileReaderHandler)
+
+	app.Get("/*", handlers.IndexHandler)
 
 	if err := app.Listen("127.0.0.1:3000"); err != nil {
 		log.Fatal(err)

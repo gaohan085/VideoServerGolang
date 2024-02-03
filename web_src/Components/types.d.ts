@@ -14,6 +14,7 @@ declare interface DirElement {
   currentPath: string; //relative path
   poster: string;
   title: string;
+  actress: string;
 }
 
 export declare interface DirectoryProp {

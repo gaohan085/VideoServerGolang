@@ -14,11 +14,21 @@ import {
 import { type DirElement } from "../Components";
 
 declare interface PlayingVideo {
-  playingVideo: DirElement | undefined;
+  playingVideo: DirElement;
 }
 
 const initialState: PlayingVideo = {
-  playingVideo: undefined,
+  playingVideo: {
+    name: "",
+    isFile: false,
+    isFolder: false,
+    extName: "",
+    currentPath: "",
+    playSrc: "",
+    poster: "",
+    title: "",
+    actress: "",
+  },
 };
 
 export const Slice = createSlice({
@@ -30,7 +40,17 @@ export const Slice = createSlice({
     },
 
     unSetVideoPlaying(state) {
-      state.playingVideo = undefined;
+      state.playingVideo = {
+        name: "",
+        isFile: false,
+        isFolder: false,
+        extName: "",
+        currentPath: "",
+        playSrc: "",
+        poster: "",
+        title: "",
+        actress: "",
+      };
     },
   },
 });

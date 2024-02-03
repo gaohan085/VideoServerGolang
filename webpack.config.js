@@ -1,5 +1,5 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
-
+// @ts-check
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -9,12 +9,13 @@ const isProduction = process.env.NODE_ENV == "production";
 
 const stylesHandler = MiniCssExtractPlugin.loader;
 
+/** @type {import("webpack").Configuration} */
 const config = {
   entry: "./web_src/index.ts",
   output: {
     clean: true,
     path: path.resolve(__dirname, "dist"),
-    filename: "[name]-[contenthash:10].js",
+    filename: !isProduction ? "[name].js" : "[contenthash:15].js",
   },
   devServer: {
     open: false,
@@ -22,64 +23,35 @@ const config = {
     port: 3333,
     hot: true,
     allowedHosts: ["http://192.168.1.31"],
+    historyApiFallback: true,
+    static: {
+      directory: path.join(__dirname, "/dist/"),
+      publicPath: "/",
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./web_src/index.html",
       filename: "index.html",
-      publicPath: isProduction ? "dist" : "auto",
+      publicPath: !isProduction ? "/" : "/dist/",
       hash: false,
     }),
     new webpack.EnvironmentPlugin(),
-    new MiniCssExtractPlugin({
-      filename: "[name]-[contenthash:15].css",
-    }),
     !isProduction && new ReactRefreshWebpackPlugin({ overlay: true }),
   ].filter(Boolean),
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name(module, chunks, cacheGroupKey) {
-            const moduleFileName = module
-              .identifier()
-              .split("/")
-              .reduceRight((item) => item);
-            return `${cacheGroupKey}-${moduleFileName}`;
-          },
-          chunks: "all",
-          priority: -10,
-        },
-        default: {
-          test: /[\\/]web_src[\\/]/,
-          name: "main",
-          chunks: "all",
-          priority: 0,
-        },
-      },
-    },
-  },
   module: {
     rules: [
       {
-        test: /\.([jt]s|[jt]sx)$/i,
-        exclude: ["/node_modules/"],
+        test: /\.[jt]sx?$/,
+        exclude: /node_modules/,
         use: [
           {
-            loader: "swc-loader",
+            loader: require.resolve("swc-loader"),
             options: {
-              parseMap: !isProduction ? true : false,
-              env: { mode: "entry" },
               jsc: {
-                parser: {
-                  syntax: "typescript",
-                  tsx: true,
-                  dynamicImport: true,
-                },
                 transform: {
                   react: {
-                    runtime: "automatic",
+                    development: !isProduction,
                     refresh: !isProduction,
                   },
                 },
@@ -102,11 +74,11 @@ const config = {
               modules: {
                 localIdentName: isProduction
                   ? "[local]"
-                  : "[path][name]__[local]--[hash:base64:5]",
+                  : "[path][name]-[local]--[hash:base64:5]",
               },
             },
           },
-          ,
+
           "sass-loader",
         ],
       },
@@ -123,16 +95,50 @@ const config = {
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
+    extensions: [".tsx", ".ts", ".jsx", ".js", ".css", "..."],
   },
 };
 
 module.exports = () => {
   if (isProduction) {
     config.mode = "production";
+    config.optimization = {
+      splitChunks: {
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name(module, chunks, cacheGroupKey) {
+              const moduleFileName = module
+                .identifier()
+                .split("/")
+                .reduceRight((item) => item);
+              return `${cacheGroupKey}-${moduleFileName}`;
+            },
+            chunks: "all",
+            priority: -10,
+          },
+          default: {
+            test: /[\\/]web_src[\\/]/,
+            name: "main",
+          },
+          styles: {
+            name: "styles",
+            type: "css/mini-extract",
+            chunks: "all",
+            enforce: true,
+          },
+        },
+      },
+    };
+    config.plugins?.push(
+      new MiniCssExtractPlugin({
+        filename: "[contenthash:15].css",
+      }),
+    );
   } else {
     config.mode = "development";
     config.devtool = "source-map";
+    config.plugins?.push(new MiniCssExtractPlugin());
   }
   return config;
 };

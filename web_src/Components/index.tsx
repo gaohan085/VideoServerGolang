@@ -8,3 +8,4 @@ export * from "./error-element";
 export * from "./right-click-context-menu";
 export * from "./rename-element";
 export * from "./types.d";
+export * from "./player";

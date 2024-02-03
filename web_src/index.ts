@@ -1,7 +1,9 @@
-import icon from "../assets/favicon.ico";
 import "../assets/Roboto-Regular.ttf";
 
+import icon from "../assets/favicon.ico";
+
 import * as app from "./App";
+import "./index.css";
 
 const head = document.querySelector("head");
 const favicon = document.createElement("link");
@@ -13,5 +15,7 @@ const appNode = document.getElementById("main");
 void app.renderApp(appNode!);
 
 if (import.meta.webpackHot) {
-  import.meta.webpackHot.accept("./App.tsx");
+  import.meta.webpackHot.accept("./App.tsx", () => {
+    return;
+  });
 }
