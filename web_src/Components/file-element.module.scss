@@ -19,7 +19,7 @@
   }
   > [class~="file-element"] {
     > span {
-      @include base.icon(17px);
+      @include base.icon();
     }
   }
 }

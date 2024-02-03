@@ -4,6 +4,7 @@ import (
 	"embed"
 	"errors"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -11,10 +12,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/proxy"
 	"github.com/gofiber/template/html/v2"
 	_ "github.com/joho/godotenv/autoload"
 
+	"go-fiber-react-ts/database"
 	"go-fiber-react-ts/handlers"
+	"go-fiber-react-ts/lib/schedule"
 )
 
 //go:embed dist/*
@@ -25,6 +29,9 @@ func main() {
 	flag.Parse()
 	os.Setenv("ENV", *env)
 	engine := html.NewFileSystem(http.FS(content), ".html")
+
+	database.SetDB()
+	schedule.Schedule()
 
 	app := fiber.New(
 		fiber.Config{
@@ -57,8 +64,13 @@ func main() {
 			TimeZone:   "Asia/Shanghai",
 			Output:     file,
 		}))
+		app.Static("/assets", "./assets/")
 
 	default:
+		app.Get("/assets/poster/:name", func(c *fiber.Ctx) error {
+			fmt.Println(c.Params("name"))
+			return proxy.Do(c, "http://192.168.1.31/assets/poster/"+c.Params("name"))
+		})
 		app.Use(logger.New(logger.Config{
 			Format:     "[DEBUG] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
 			TimeFormat: "2006/Jan/02 Monday 15:04:05",
@@ -72,15 +84,16 @@ func main() {
 		Browse:     true,
 	}))
 
-	app.Get("/", handlers.IndexHandler)
-
 	api := app.Group("/api")
-
 	api.Get("/disk", handlers.DiskUsageHandler)
 	api.Post("/delete", handlers.DeleteHandler)
 	api.Post("/rename", handlers.RenameHandler)
 	api.Get("/version", handlers.VersionHandler)
-	api.Get("/*", handlers.FileReaderHandlers)
+	api.Get("/*", handlers.FileReaderHandler)
 
-	app.Listen(":3000")
+	app.Get("/*", handlers.IndexHandler)
+
+	if err := app.Listen("127.0.0.1:3000"); err != nil {
+		log.Fatal(err)
+	}
 }

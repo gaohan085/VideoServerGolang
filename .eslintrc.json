@@ -77,6 +77,20 @@
           "coerce"
         ]
       }
+    ],
+    "react/destructuring-assignment": [
+      1,
+      "always",
+      {
+        "ignoreClassFields": false,
+        "destructureInSignature": "ignore"
+      }
+    ],
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
     ]
   },
   "ignorePatterns": [

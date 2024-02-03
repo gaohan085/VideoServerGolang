@@ -12,6 +12,9 @@ declare interface DirElement {
   extName: string;
   playSrc: string;
   currentPath: string; //relative path
+  poster: string;
+  title: string;
+  actress: string;
 }
 
 export declare interface DirectoryProp {

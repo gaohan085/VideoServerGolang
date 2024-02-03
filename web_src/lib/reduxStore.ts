@@ -30,7 +30,17 @@ export const Slice = createSlice({
     },
 
     unSetVideoPlaying(state) {
-      state.playingVideo = undefined;
+      state.playingVideo = {
+        name: "",
+        isFile: false,
+        isFolder: false,
+        extName: "",
+        currentPath: "",
+        playSrc: "",
+        poster: "",
+        title: "",
+        actress: "",
+      };
     },
   },
 });

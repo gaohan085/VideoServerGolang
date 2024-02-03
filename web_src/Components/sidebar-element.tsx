@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
-import useSWR from "swr";
+import useSWR, { useSWRConfig } from "swr";
 
 import { useWindowDimension } from "../lib";
 
@@ -13,9 +13,8 @@ import {
   InteractiveCtxMenu,
   InteractiveOpenFolderContainer,
   Spinner,
-  type UseStateReturnType,
   type DirectoryProp,
-  type InterfaceMutateFunc,
+  type UseStateReturnType,
 } from ".";
 
 export const Sidebar: React.FC<{
@@ -24,7 +23,6 @@ export const Sidebar: React.FC<{
   readonly isError: boolean | undefined;
   readonly handleClick: React.MouseEventHandler;
   readonly handleCtxMenu: React.MouseEventHandler;
-  readonly mutateFunc: InterfaceMutateFunc;
   readonly isActive: boolean | undefined;
   readonly toggleActive: React.MouseEventHandler;
   readonly width: number;
@@ -38,7 +36,6 @@ export const Sidebar: React.FC<{
     isActive,
     toggleActive,
     width,
-    mutateFunc,
   } = props;
 
   const conditionalElem = (
@@ -48,9 +45,7 @@ export const Sidebar: React.FC<{
       ) : isError ? (
         <ErrorElement />
       ) : (
-        data && (
-          <InteractiveOpenFolderContainer data={data} mutateFunc={mutateFunc} />
-        )
+        data && <InteractiveOpenFolderContainer data={data} />
       )}
     </>
   );
@@ -82,12 +77,11 @@ export const Context = createContext<{
   setPosition?: UseStateReturnType<{ pageX: number; pageY: number }>[1];
   openFolder?: UseStateReturnType<string>[0];
   setOpenFolder?: UseStateReturnType<string>[1];
-  mutateFunc?: UseStateReturnType<InterfaceMutateFunc>[0];
-  setMutateFunc?: UseStateReturnType<InterfaceMutateFunc>[1];
   rightClickElem?: UseStateReturnType<DirElement>[0];
   setRightClickElem?: UseStateReturnType<DirElement>[1];
   renameElement?: UseStateReturnType<DirElement>[0];
   setRenameElement?: UseStateReturnType<DirElement>[1];
+  mutateFunc?: ReturnType<typeof useSWRConfig>["mutate"];
 }>({});
 
 export const InteractiveSidebar: React.FC = () => {
@@ -99,17 +93,13 @@ export const InteractiveSidebar: React.FC = () => {
     { pageX: number; pageY: number } | undefined
   >(undefined);
   const [openFolder, setOpenFolder] = useState<string>("/");
-  const [mutateFunc, setMutateFunc] =
-    useState<
-      ReturnType<
-        typeof useSWR<{ statusCode: number; data: DirectoryProp }, Error>
-      >["mutate"]
-    >();
 
-  const { data, isLoading, error, mutate } = useSWR<
+  const { mutate } = useSWRConfig();
+
+  const { data, isLoading, error } = useSWR<
     { statusCode: number; data: DirectoryProp },
     Error
-  >("/api/");
+  >("/api");
 
   const handleClick: React.MouseEventHandler = () => {
     setClicked(true);
@@ -143,10 +133,9 @@ export const InteractiveSidebar: React.FC = () => {
         setPosition,
         openFolder,
         setOpenFolder,
-        mutateFunc,
-        setMutateFunc,
         renameElement,
         setRenameElement,
+        mutateFunc: mutate,
       }}
     >
       <Sidebar
@@ -156,7 +145,6 @@ export const InteractiveSidebar: React.FC = () => {
         isActive={isActive}
         isError={!error ? false : true}
         isLoading={isLoading}
-        mutateFunc={mutate}
         toggleActive={toggleActive}
         width={width}
       />

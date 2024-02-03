@@ -21,11 +21,20 @@ $backgrdColor: #090812;
   &:hover {
     color: $mainColor;
   }
+
+  @media (width <= 992px) {
+    font-size: 16px;
+    line-height: 24px;
+  }
 }
 
-@mixin icon($fontSize: 17px) {
+@mixin icon() {
   display: inline-block;
   vertical-align: middle;
   margin-right: 5px;
-  font-size: $fontSize;
+  font-size: 17px;
+
+  @media (width <= 992px) {
+    font-size: 22px;
+  }
 }

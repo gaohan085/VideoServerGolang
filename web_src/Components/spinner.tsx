@@ -3,14 +3,16 @@ import React from "react";
 
 import styles from "./spinner.module.scss";
 
-export const Spinner: React.FC<{ readonly fontSize?: number }> = (props) => {
+export const Spinner: React.FC<{ readonly fontSize?: number }> = ({
+  fontSize,
+}) => {
   return (
     <span
       className={styles.spinner}
       style={{
-        fontSize: props.fontSize,
-        width: props.fontSize,
-        height: props.fontSize,
+        fontSize: fontSize,
+        width: fontSize,
+        height: fontSize,
       }}
     >
       <FcSynchronize />

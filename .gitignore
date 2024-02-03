@@ -7,3 +7,9 @@ dist/
 go-fiber-react-ts
 .env
 .out
+**/*.jpg
+**/*.jpeg
+**/*.png
+.editorconfig
+.idea/
+/**/assets/

@@ -17,7 +17,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     font-size: 12px;
-    width: 100%;
+    width: 250px;
   }
 
   > [class~="file-system"] > div {
@@ -38,6 +38,7 @@
       border: 1px solid #2c2842;
       margin: 5px 0;
       border-radius: 8px;
+      width: 320px;
     }
   }
 
@@ -60,7 +61,7 @@
   }
 
   &[class~="active"] {
-    width: 250px;
+    width: 320px;
     padding-left: 3px;
     padding-right: 5px;
 
