@@ -13,5 +13,7 @@ const appNode = document.getElementById("main");
 void app.renderApp(appNode!);
 
 if (import.meta.webpackHot) {
-  import.meta.webpackHot.accept("./App.tsx");
+  import.meta.webpackHot.accept("./App.tsx", () => {
+    return;
+  });
 }

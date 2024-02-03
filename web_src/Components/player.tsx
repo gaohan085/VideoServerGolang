@@ -4,11 +4,17 @@ import iconSvg from "plyr/dist/plyr.svg";
 import React, { forwardRef, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import * as lib from "./lib";
+import * as lib from "../lib";
+
+import styles from "./player.module.scss";
+
+const isProduction = process.env.NODE_ENV === "production";
 
 export const mountPlyr = (node: HTMLElement) => {
   const plyr = new Plyr(node, {
     autoplay: false,
+    autopause: true,
+    debug: !isProduction,
     controls: [
       "play-large",
       "play",
@@ -44,11 +50,16 @@ export const mountPlyr = (node: HTMLElement) => {
           },
         ],
       };
-      plyr.once("ready", async (e) => {
-        await new Promise((r) => setTimeout(r, 2500));
-        await e.detail.plyr.play();
-      });
     }
+  });
+
+  plyr.once("ready", async (e) => {
+    console.log(new Date());
+    console.log(typeof e.detail.plyr.source);
+    console.log((e.detail.plyr.source as unknown as string) === "");
+
+    await new Promise((r) => setTimeout(r, 2500));
+    await e.detail.plyr.play();
   });
 
   plyr.on("enterfullscreen", async () => {
@@ -80,23 +91,25 @@ export const Player: React.FC = () => {
       plyr = mountPlyr(ref.current);
     }
     return () => {
-      !ref.current && plyr.destroy();
+      if (!ref.current) plyr.stop(), plyr.destroy();
     };
   }, [ref]);
 
   return (
-    <div className="player">
+    <div className={styles.player}>
       <ForwordPlyr ref={ref} />
       <div className="title">
         <h4>
-          {videoPlaying
-            ? `${videoPlaying.name
+          {!!videoPlaying &&
+            `${videoPlaying.name
               .slice(0, videoPlaying.name.lastIndexOf("."))
-              .toLocaleUpperCase()} ${videoPlaying.title}`
-            : "没有正在播放"}
+              .toLocaleUpperCase()} ${videoPlaying.title}`}
+          {!videoPlaying && "没有正在播放"}
         </h4>
         {!!videoPlaying && (
-          <Link to={`/actress/${videoPlaying.actress}`}>{videoPlaying.actress}</Link>
+          <Link to={`/actress/${videoPlaying.actress}`}>
+            {videoPlaying.actress}
+          </Link>
         )}
       </div>
     </div>
