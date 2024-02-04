@@ -1,9 +1,13 @@
-import { MediaPlayer, MediaProvider } from "@vidstack/react";
+import {
+  MediaPlayer,
+  MediaProvider,
+  type MediaPlayerInstance,
+} from "@vidstack/react";
 import {
   PlyrLayout,
   plyrLayoutIcons,
 } from "@vidstack/react/player/layouts/plyr";
-import React from "react";
+import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 
 import * as lib from "../lib";
@@ -12,6 +16,8 @@ import styles from "./player.module.scss";
 
 export const Player: React.FC = () => {
   const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
+
+  const player = useRef<MediaPlayerInstance>(null);
 
   return (
     <div className={styles.player}>
@@ -25,7 +31,16 @@ export const Player: React.FC = () => {
         autoPlay={false}
         viewType="video"
         controls={false}
+        playsInline={true}
         fullscreenOrientation="landscape"
+        controlsDelay={3000}
+        hideControlsOnMouseLeave={true}
+        volume={0.2}
+        onCanPlay={async () => {
+          await new Promise((r) => setTimeout(r, 2500));
+          await player.current?.play();
+        }}
+        ref={player}
       >
         <MediaProvider />
         <PlyrLayout
@@ -50,11 +65,11 @@ export const Player: React.FC = () => {
       </MediaPlayer>
       <div className="title">
         <h4>
-          {!!videoPlaying.title &&
+          {!!videoPlaying.playSrc &&
             `${videoPlaying.name
               .slice(0, videoPlaying.name.lastIndexOf("."))
               .toLocaleUpperCase()} ${videoPlaying.title}`}
-          {!videoPlaying.title && "没有正在播放"}
+          {!videoPlaying.playSrc && "没有正在播放"}
         </h4>
         {!!videoPlaying.actress && (
           <Link to={`/actress/${videoPlaying.actress}`}>
