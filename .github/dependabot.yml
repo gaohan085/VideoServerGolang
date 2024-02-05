@@ -27,7 +27,7 @@ updates:
           - "webpack"
           - "webpack-cli"
           - "webpack-dev-server"
-      production:
+      production-dependencies:
         pattrens:
           - "@reduxjs/toolkit"
           - "@vidstack/react"
