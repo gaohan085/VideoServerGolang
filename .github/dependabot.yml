@@ -28,7 +28,7 @@ updates:
           - "webpack-cli"
           - "webpack-dev-server"
       pro-dependencies:
-        pattrens:
+        patterns:
           - "@reduxjs/toolkit"
           - "@vidstack/react"
           - "axios"
