@@ -10,7 +10,7 @@ dependencies:
     version: 2.1.0(react-redux@9.1.0)(react@18.2.0)
   '@vidstack/react':
     specifier: ^1.10.3
-    version: 1.10.3(@types/react@18.2.48)(react@18.2.0)
+    version: 1.10.4(@types/react@18.2.48)(react@18.2.0)
   axios:
     specifier: ^1.6.7
     version: 1.6.7
@@ -1296,8 +1296,8 @@ packages:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
     dev: true
 
-  /@vidstack/react@1.10.3(@types/react@18.2.48)(react@18.2.0):
-    resolution: {integrity: sha512-cQBpp0wszBJ0R8fOhQtNaCaKc76VCdGnIgnlasWNrNmTbxjxgZScJKNFV3UhE7AibaP6RbXYReDlyViyhQLudQ==}
+  /@vidstack/react@1.10.4(@types/react@18.2.48)(react@18.2.0):
+    resolution: {integrity: sha512-4Qr7mIT3k370XvNRJoNRaCNmrFW/ghKvA+Rsc8QTb6XgPJDy0N7xHCg5kKAfs1XywcO3rzpGI4e3JX/MCi8TAw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/react': ^18.0.0
