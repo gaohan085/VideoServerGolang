@@ -6,7 +6,7 @@ updates:
       interval: "weekly"
     groups:
       dev-dependencies:
-        pattrens:
+        patterns:
           - "@pmmmwh/react-refresh-webpack-plugin"
           - "@types/*"
           - "@typescript-eslint/eslint-plugin"
@@ -23,7 +23,8 @@ updates:
           - "style-loader"
           - "swc"
           - "swc-loader"
-          - "typescript" "webpack"
+          - "typescript"
+          - "webpack"
           - "webpack-cli"
           - "webpack-dev-server"
       production:
@@ -41,3 +42,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
