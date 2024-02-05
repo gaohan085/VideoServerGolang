@@ -4,6 +4,39 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      dev-dependencies:
+        pattrens:
+          - "@pmmmwh/react-refresh-webpack-plugin"
+          - "@types/*"
+          - "@typescript-eslint/eslint-plugin"
+          - "@typescript-eslint/parser"
+          - "@webpack-cli/generators"
+          - "css-loader"
+          - "eslint"
+          - "eslint-*"
+          - "html-webpack-plugin"
+          - "mini-css-extract-plugin"
+          - "prettier"
+          - "sass"
+          - "sass-loader"
+          - "style-loader"
+          - "swc"
+          - "swc-loader"
+          - "typescript" "webpack"
+          - "webpack-cli"
+          - "webpack-dev-server"
+      production:
+        pattrens:
+          - "@reduxjs/toolkit"
+          - "@vidstack/react"
+          - "axios"
+          - "framer-motion"
+          - "plyr"
+          - "prop-types"
+          - "react*"
+          - "redux"
+          - "swr"
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
