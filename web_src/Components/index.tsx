@@ -9,3 +9,4 @@ export * from "./right-click-context-menu";
 export * from "./rename-element";
 export * from "./types.d";
 export * from "./player";
+export { VideoBox } from "./actress-by-name/";

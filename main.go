@@ -4,7 +4,6 @@ import (
 	"embed"
 	"errors"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -66,32 +65,39 @@ func main() {
 		}))
 		app.Static("/assets", "./assets/")
 
+		api := app.Group("/api")
+		api.Get("/disk", handlers.DiskUsageHandler)
+		api.Post("/delete", handlers.DeleteHandler)
+		api.Post("/rename", handlers.RenameHandler)
+		api.Get("/version", handlers.VersionHandler)
+		api.Get("/actress/:name", handlers.GetVideosByActress)
+		api.Get("/*", handlers.FileReaderHandler)
+		app.Use("/dist", filesystem.New(filesystem.Config{
+			Root:       http.FS(content),
+			PathPrefix: "dist",
+			Browse:     true,
+		}))
+		app.Get("/*", handlers.IndexHandler)
 	default:
-		app.Get("/assets/poster/:name", func(c *fiber.Ctx) error {
-			fmt.Println(c.Params("name"))
-			return proxy.Do(c, "http://192.168.1.31/assets/poster/"+c.Params("name"))
+		app.Use("/dist", filesystem.New(filesystem.Config{
+			Root:       http.FS(content),
+			PathPrefix: "dist",
+			Browse:     true,
+		}))
+		app.Use("/api/*", func(c *fiber.Ctx) error {
+			return proxy.Do(c, "http://192.168.1.31/api/"+c.Params("*"))
 		})
+		app.Get("/assets/*", func(c *fiber.Ctx) error {
+			return proxy.Do(c, "http://192.168.1.31/assets/"+c.Params("*"))
+		})
+		app.Get("/*", handlers.IndexHandler)
+
 		app.Use(logger.New(logger.Config{
 			Format:     "[DEBUG] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
 			TimeFormat: "2006/Jan/02 Monday 15:04:05",
 			TimeZone:   "Asia/Shanghai",
 		}))
 	}
-
-	app.Use("/dist", filesystem.New(filesystem.Config{
-		Root:       http.FS(content),
-		PathPrefix: "dist",
-		Browse:     true,
-	}))
-
-	api := app.Group("/api")
-	api.Get("/disk", handlers.DiskUsageHandler)
-	api.Post("/delete", handlers.DeleteHandler)
-	api.Post("/rename", handlers.RenameHandler)
-	api.Get("/version", handlers.VersionHandler)
-	api.Get("/*", handlers.FileReaderHandler)
-
-	app.Get("/*", handlers.IndexHandler)
 
 	if err := app.Listen("127.0.0.1:3000"); err != nil {
 		log.Fatal(err)
