@@ -9,7 +9,7 @@
     "prettier": "prettier ./web_src/ --write",
     "build": "webpack --mode=production --node-env=production",
     "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
+    "build:watch": "webpack --mode=production --node-env=production --watch",
     "watch": "webpack --watch",
     "serve": "webpack serve"
   },

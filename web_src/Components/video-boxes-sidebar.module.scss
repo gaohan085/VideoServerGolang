@@ -1,9 +1,13 @@
-@use "../base";
-.videos {
-  overflow-y: auto;
-  margin: 5px;
+@use "../base" as base;
 
-  [class~="videobox"] {
+.video-box-sidebar {
+  @extend %sidebar;
+
+  [class~="video-box-container"] {
+    overflow-y: auto;
+  }
+
+  [class~="video-box-container"] > [class~="videobox"] {
     display: flex;
     height: 105px;
     margin: 2px;
