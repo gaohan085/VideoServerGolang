@@ -20,12 +20,12 @@ var (
 )
 
 type VideoInf struct {
-	ID              uint           `gorm:"primaryKey" faker:"-"`
-	CreatedAt       int            `faker:"-"`
-	UpdatedAt       int            `faker:"-"`
-	DeletedAt       gorm.DeletedAt `gorm:"index" faker:"-"`
-	Title           string         `json:"title"`
-	SerialNumber    string         `json:"SerialNumber" gorm:"unique"` //视频文件名
+	ID              uint           `gorm:"primaryKey" faker:"-" json:"id"`
+	CreatedAt       int            `faker:"-" json:"createdAt"`
+	UpdatedAt       int            `faker:"-" json:"updatedAt"`
+	DeletedAt       gorm.DeletedAt `gorm:"index" faker:"-" json:"deletedAt"`
+	Title           string         `json:"title" json:"title"`
+	SerialNumber    string         `json:"serialNumber" gorm:"unique"` //视频文件名
 	SourceUrl       string         `json:"sourceUrl"`                  //来源网站信息
 	PosterName      string         `json:"posterName"`                 //封面图片本地链接
 	SourcePosterUrl string         `json:"sourcePosterUrl"`

@@ -65,10 +65,14 @@ export const Player: React.FC = () => {
       </MediaPlayer>
       <div className="title">
         <h4>
-          {!!videoPlaying.playSrc &&
+          {!!videoPlaying &&
+            videoPlaying.name.includes(".") &&
             `${videoPlaying.name
               .slice(0, videoPlaying.name.lastIndexOf("."))
               .toLocaleUpperCase()} ${videoPlaying.title}`}
+          {!!videoPlaying &&
+            !videoPlaying.name.includes(".") &&
+            `${videoPlaying.name.toLocaleUpperCase()} ${videoPlaying.title}`}
           {!videoPlaying.playSrc && "没有正在播放"}
         </h4>
         {!!videoPlaying.actress && (

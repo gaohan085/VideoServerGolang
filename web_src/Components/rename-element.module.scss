@@ -16,7 +16,7 @@
     font-family: inherit;
     line-height: 20px;
     text-align: justify;
-    outline: 1px solid lighten(base.$mainColor, 20%);
+    outline: 1px solid lighten(base.$main-color, 20%);
 
     &:focus-visible {
       line-height: 20px;
@@ -28,7 +28,7 @@
     }
     &::selection {
       background: lighten(base.$backgrdColor, 45%);
-      color: lighten(base.$mainColor, 5%);
+      color: lighten(base.$main-color, 5%);
     }
   }
 

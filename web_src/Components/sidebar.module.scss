@@ -10,19 +10,8 @@
   justify-content: flex-start;
   transition: all 0.25s ease-in-out;
   border-left: 1px solid #2c2842;
-
-  > [class~="file-system"] {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
-    font-size: 12px;
-    width: 250px;
-  }
-
-  > [class~="file-system"] > div {
-    border-left: none;
-  }
+  bottom: 20px;
+  padding-top: 35px;
 
   @media (width <= 992px) {
     position: absolute;
@@ -33,13 +22,7 @@
     width: 0px;
     flex-direction: column;
     border-left: none;
-
-    > [class~="file-system"] {
-      border: 1px solid #2c2842;
-      margin: 5px 0;
-      border-radius: 8px;
-      width: 320px;
-    }
+    padding-top: 5px;
   }
 
   [class="arrow"] {

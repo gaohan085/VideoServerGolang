@@ -24,3 +24,21 @@ export declare interface DirectoryProp {
 }
 
 declare type UseStateReturnType<T> = ReturnType<typeof useState<T>>;
+export interface ResWithActressName {
+  statusCode: number;
+  data: VideoInfo[];
+}
+
+declare interface VideoInfo {
+  id: number;
+  createdAt: number;
+  updatedAt: number;
+  deletedAt: number;
+  playSrc: string;
+  posterName: string;
+  serialNumber: string;
+  sourcePosterUrl: string;
+  sourceUrl: string;
+  title: string;
+  actress: string;
+}
