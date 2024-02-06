@@ -139,6 +139,7 @@ export const InteractiveFolderElement: React.FC<{
   }, [elem, renameElement, setIsRename]);
 
   const handleCtxMenu: React.MouseEventHandler = (e): void => {
+    console.log(e);
     if (!isRename) {
       setPosition!({ ...e });
       clicked && setClicked!(false);

@@ -1,11 +1,12 @@
+import { FcPrevious } from "react-icons/fc";
 import React, { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 
 import * as lib from "../lib";
 
-import styles from "./video-boxes.module.scss";
+import styles from "./video-boxes-sidebar.module.scss";
 
-import { type VideoInfo, type ResWithActressName } from ".";
+import { type VideoInfo, type ResWithActressName, DiskUsage } from ".";
 
 export const VideoBox: React.FC<VideoInfo> = (props) => {
   const dispatch = lib.redux.useAppDispatch();
@@ -50,12 +51,36 @@ export const VideoBox: React.FC<VideoInfo> = (props) => {
 
 export const VideoBoxes: React.FC = () => {
   const { data } = useLoaderData() as ResWithActressName;
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const toggleActive: React.MouseEventHandler = () => setIsActive(!isActive);
+  const { width } = lib.useWindowDimension();
+
+  //监听窗口宽度
+  useEffect(() => {
+    if (width >= 992) setIsActive(true);
+  }, [width, isActive, setIsActive]);
 
   return (
-    <div className={styles.videos}>
-      {data.map((video, index) => {
-        return <VideoBox key={index} {...video} />;
-      })}
+    <div
+      className={
+        !isActive
+          ? styles["video-box-sidebar"]
+          : `${styles["video-box-sidebar"]} active`
+      }
+    >
+      <span className="arrow" onClick={toggleActive}>
+        <FcPrevious />
+      </span>
+      {!!isActive && (
+        <>
+          <div className="video-box-container">
+            {data.map((video, index) => {
+              return <VideoBox key={index} {...video} />;
+            })}
+          </div>
+          {width <= 992 && <DiskUsage />}
+        </>
+      )}
     </div>
   );
 };

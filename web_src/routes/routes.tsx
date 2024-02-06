@@ -13,16 +13,14 @@ const router = createBrowserRouter([
     element: (
       <>
         <Components.Player />
-        <Components.InteractiveSideBar>
-          <Outlet />
-        </Components.InteractiveSideBar>
+        <Outlet />
       </>
     ),
     errorElement: <ErrorPage />,
     children: [
       {
         index: true,
-        element: <Components.InteractiveSideBarFileSys />,
+        element: <Components.InteractiveFileSysSideBar />,
         errorElement: <ErrorPage />,
       },
       {
