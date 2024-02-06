@@ -1,5 +1,5 @@
 init:
-  @echo
+	@echo
 	@echo "----------------------- INSTALL GO DEPENDENCIES ------------------------"
 	go get -u github.com/gofiber/fiber/v2@latest
 	go get -u github.com/gofiber/template/html/v2@latest
