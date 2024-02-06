@@ -1,5 +1,6 @@
 init:
-	echo "go install"
+  @echo
+	@echo "----------------------- INSTALL GO DEPENDENCIES ------------------------"
 	go get -u github.com/gofiber/fiber/v2@latest
 	go get -u github.com/gofiber/template/html/v2@latest
 	go get -u github.com/joho/godotenv@latest
@@ -8,14 +9,18 @@ init:
 	go get -u gorm.io/driver/postgres@v1.5.4
 	go get -u github.com/PuerkitoBio/goquery@latest
 	go get -u github.com/go-co-op/gocron/v2@latest
-	
-	@pnpm install
+	@echo
+	@echo "----------------------- INSTALL NPM DEPENDENCIES -----------------------"
+	@echo
+	pnpm install
 
 build:
 	rm .out/* -rf
+	@echo 
+	@echo "--------------------------- PNPM BUILD ---------------------------------"
 	pnpm build
-	@echo " "
-	@echo "--------------------GO BUILD------------------------"
-	@echo " "
+	@echo 
+	@echo "---------------------------- GO BUILD ----------------------------------"
+	@echo 
 	GOOS=linux GOACH=amd64 go build -ldflags="-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'" -o .out/videoserver-linux-amd64 main.go
 	GOOS=windows GOACH=amd64 go build -ldflags="-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'" -o .out/videoserver-windows-amd64.exe main.go
