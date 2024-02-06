@@ -5,14 +5,17 @@ init:
 	go get -u github.com/joho/godotenv@latest
 	go get -u github.com/shirou/gopsutil/v3@latest
 	go get -u gorm.io/gorm@latest
-	go get -u gorm.io/driver/postgres@latest
+	go get -u gorm.io/driver/postgres@v1.5.4
 	go get -u github.com/PuerkitoBio/goquery@latest
 	go get -u github.com/go-co-op/gocron/v2@latest
 	
 	@pnpm install
 
 build:
-	rm .out/* -r
+	rm .out/* -rf
 	pnpm build
+	@echo " "
+	@echo "--------------------GO BUILD------------------------"
+	@echo " "
 	GOOS=linux GOACH=amd64 go build -ldflags="-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'" -o .out/videoserver-linux-amd64 main.go
 	GOOS=windows GOACH=amd64 go build -ldflags="-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'" -o .out/videoserver-windows-amd64.exe main.go

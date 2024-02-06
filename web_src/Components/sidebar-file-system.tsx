@@ -1,14 +1,12 @@
-import React, { createContext, useEffect, useState } from "react";
-import { FcPrevious } from "react-icons/fc";
+import React, { createContext, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 
 import { useWindowDimension } from "../lib";
 
-import styles from "./sidebar-element.module.scss";
+import styles from "./sidebar-file-system.module.scss";
 
 import {
   DirElement,
-  DiskUsage,
   ErrorElement,
   InteractiveCtxMenu,
   InteractiveOpenFolderContainer,
@@ -17,26 +15,15 @@ import {
   type UseStateReturnType,
 } from ".";
 
-export const Sidebar: React.FC<{
+const SideBarFileSys: React.FC<{
   readonly data: DirectoryProp | undefined;
   readonly isLoading: boolean | undefined;
   readonly isError: boolean | undefined;
   readonly handleClick: React.MouseEventHandler;
-  readonly handleCtxMenu: React.MouseEventHandler;
-  readonly isActive: boolean | undefined;
-  readonly toggleActive: React.MouseEventHandler;
   readonly width: number;
+  readonly handleCtxMenu: React.MouseEventHandler;
 }> = (props) => {
-  const {
-    data,
-    isLoading,
-    isError,
-    handleClick,
-    handleCtxMenu,
-    isActive,
-    toggleActive,
-    width,
-  } = props;
+  const { data, isLoading, isError, handleClick, handleCtxMenu } = props;
 
   const conditionalElem = (
     <>
@@ -51,22 +38,15 @@ export const Sidebar: React.FC<{
   );
 
   return (
-    <div
-      className={!isActive ? styles.sidebar : `${styles.sidebar} active`}
-      onClick={handleClick}
-      onContextMenu={handleCtxMenu}
-    >
-      <span className="arrow" onClick={toggleActive}>
-        <FcPrevious />
-      </span>
-
-      {!!isActive && (
-        <>
-          <div className="file-system">{conditionalElem}</div>
-          {width <= 992 && <DiskUsage />}
-        </>
-      )}
-    </div>
+    <>
+      <div
+        className={styles["file-system"]}
+        onClick={handleClick}
+        onContextMenu={handleCtxMenu}
+      >
+        {conditionalElem}
+      </div>
+    </>
   );
 };
 
@@ -84,7 +64,7 @@ export const Context = createContext<{
   mutateFunc?: ReturnType<typeof useSWRConfig>["mutate"];
 }>({});
 
-export const InteractiveSidebar: React.FC = () => {
+export const InteractiveSideBarFileSys: React.FC = () => {
   const [rightClickElem, setRightClickElem] = useState<DirElement | undefined>(
     undefined,
   );
@@ -108,15 +88,7 @@ export const InteractiveSidebar: React.FC = () => {
     e.preventDefault();
   };
 
-  const [isActive, setIsActive] = useState<boolean>(false);
-  const toggleActive: React.MouseEventHandler = () => setIsActive(!isActive);
-
   const { width } = useWindowDimension();
-
-  //监听窗口宽度
-  useEffect(() => {
-    if (width >= 992) setIsActive(true);
-  }, [width, isActive, setIsActive]);
 
   const [renameElement, setRenameElement] = useState<DirElement | undefined>(
     undefined,
@@ -138,17 +110,14 @@ export const InteractiveSidebar: React.FC = () => {
         mutateFunc: mutate,
       }}
     >
-      <Sidebar
+      <SideBarFileSys
         data={data?.data}
         handleClick={handleClick}
         handleCtxMenu={handleCtxMenu}
-        isActive={isActive}
         isError={!error ? false : true}
         isLoading={isLoading}
-        toggleActive={toggleActive}
         width={width}
       />
-
       {!clicked && <InteractiveCtxMenu />}
     </Context.Provider>
   );

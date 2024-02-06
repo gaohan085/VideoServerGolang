@@ -1,4 +1,4 @@
-$mainColor: #e85982;
+$main-color: #e85982;
 $backgrdColor: #090812;
 
 %element {
@@ -19,7 +19,7 @@ $backgrdColor: #090812;
   width: 100%;
 
   &:hover {
-    color: $mainColor;
+    color: $main-color;
   }
 
   @media (width <= 992px) {

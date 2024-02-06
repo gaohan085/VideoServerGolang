@@ -9,11 +9,11 @@
     padding-right: 10px;
 
     &[class~="playing"] {
-      color: lighten(base.$mainColor, 10%);
+      color: lighten(base.$main-color, 10%);
       text-decoration: underline;
 
       &:hover {
-        color: base.$mainColor;
+        color: base.$main-color;
       }
     }
   }
