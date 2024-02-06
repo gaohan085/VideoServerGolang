@@ -46,3 +46,5 @@ updates:
       dependencies:
         patterns:
           - "*"
+        exclude-patterns:
+          - "gorm.io/driver/postgres"
