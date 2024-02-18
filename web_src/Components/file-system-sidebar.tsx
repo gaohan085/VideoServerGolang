@@ -53,9 +53,7 @@ const FileSysSideBar: React.FC<{
   return (
     <div
       className={
-        !isActive
-          ? styles.fileSysSidebar
-          : `${styles.fileSysSidebar} active`
+        !isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`
       }
       onClick={handleClick}
       onContextMenu={handleCtxMenu}

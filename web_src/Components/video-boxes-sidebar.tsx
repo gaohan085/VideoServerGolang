@@ -1,12 +1,12 @@
 import { FcPrevious } from "react-icons/fc";
 import React, { useEffect, useState } from "react";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigation } from "react-router";
 
 import * as lib from "../lib";
 
 import styles from "./video-boxes-sidebar.module.scss";
 
-import { type VideoInfo, type ResWithActressName, DiskUsage } from ".";
+import { type VideoInfo, type ResWithActressName, DiskUsage, Spinner } from ".";
 
 export const VideoBox: React.FC<VideoInfo> = (props) => {
   const dispatch = lib.redux.useAppDispatch();
@@ -43,7 +43,7 @@ export const VideoBox: React.FC<VideoInfo> = (props) => {
         </a>
       </div>
       <div className="title">
-        <a onClick={handleClick}>{title}</a>
+        <a onClick={handleClick}>{`${serialNumber} ${title}`}</a>
       </div>
     </div>
   );
@@ -54,6 +54,8 @@ export const VideoBoxes: React.FC = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const toggleActive: React.MouseEventHandler = () => setIsActive(!isActive);
   const { width } = lib.useWindowDimension();
+
+  const navigation = useNavigation();
 
   //监听窗口宽度
   useEffect(() => {
@@ -74,9 +76,15 @@ export const VideoBoxes: React.FC = () => {
       {!!isActive && (
         <>
           <div className="video-box-container">
-            {data.map((video, index) => {
-              return <VideoBox key={index} {...video} />;
-            })}
+            {navigation.state === "loading" ? (
+              <Spinner fontSize={24} />
+            ) : (
+              <>
+                {data.map((video, index) => {
+                  return <VideoBox key={index} {...video} />;
+                })}
+              </>
+            )}
           </div>
           {width <= 992 && <DiskUsage />}
         </>
