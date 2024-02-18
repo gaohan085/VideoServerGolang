@@ -101,6 +101,20 @@
         }
       }
     </style>
+    <% if (process.env.NODE_ENV === "production") { %>
+    <script
+      src="https://www.unpkg.com/react@18.2.0/umd/react.production.min.js"
+      defer
+    ></script>
+    <script
+      src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"
+      defer
+    ></script>
+    <script
+      src="https://www.unpkg.com/axios@1.6.7/dist/axios.min.js"
+      defer
+    ></script>
+    <% } %>
   </head>
   <body>
     <div id="layout" class="layout">

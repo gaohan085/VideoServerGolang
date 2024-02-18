@@ -134,7 +134,13 @@ module.exports = () => {
       new MiniCssExtractPlugin({
         filename: "[contenthash:15].css",
       }),
+      new webpack.EnvironmentPlugin(),
     );
+    config.externals = [
+      { react: "React" },
+      { "react-dom": "ReactDOM" },
+      { axios: "axios" },
+    ];
   } else {
     config.mode = "development";
     config.devtool = "source-map";
