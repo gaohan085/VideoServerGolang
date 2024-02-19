@@ -33,6 +33,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
-          binary_name: videoServer
+          binary_name: videoserver
           ldflags: "-X 'go-fiber-react-ts/lib.Version=${{ github.ref_name }}' "
           compress_assets: OFF
