@@ -33,7 +33,6 @@ updates:
           - "@vidstack/react"
           - "axios"
           - "framer-motion"
-          - "plyr"
           - "prop-types"
           - "react*"
           - "redux"
