@@ -34,5 +34,5 @@ jobs:
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
           binary_name: videoServer
-          ldflags: "-X 'go-fiber-react-ts/lib.Version=${{ github.ref_name }}"
+          ldflags: "-X 'go-fiber-react-ts/lib.Version=${{ github.ref_name }}' "
           compress_assets: OFF
