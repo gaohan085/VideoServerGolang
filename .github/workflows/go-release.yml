@@ -1,0 +1,35 @@
+# .github/workflows/go-release.yaml
+
+on:
+  release:
+    types: [created]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release-matrix:
+    name: Release Go Binary
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows]
+        goarch: [amd64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: true
+      - uses: wangyoucao577/go-release-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          binary_name: VideoServer-${{ matrix.goos }}-${{ matrix.goarch }}
+          ldflags: "-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'"
+          pre_command: "pnpm build"

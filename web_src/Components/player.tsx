@@ -33,11 +33,11 @@ export const Player: React.FC = () => {
         controls={false}
         playsInline={true}
         fullscreenOrientation="landscape"
-        controlsDelay={3000}
+        controlsDelay={2000}
         hideControlsOnMouseLeave={true}
-        volume={0.2}
+        volume={0.5}
         onCanPlay={async () => {
-          await new Promise((r) => setTimeout(r, 2500));
+          await new Promise((r) => setTimeout(r, 2000));
           await player.current?.play();
         }}
         ref={player}
@@ -60,7 +60,11 @@ export const Player: React.FC = () => {
           seekTime={5}
           displayDuration={true}
           clickToFullscreen={true}
-          clickToPlay={true}
+          clickToPlay={
+            !/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(
+              navigator.userAgent,
+            )
+          }
         />
       </MediaPlayer>
       <div className="title">
