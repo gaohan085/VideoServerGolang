@@ -1,4 +1,5 @@
 # .github/workflows/go-release.yaml
+name: Go Binary Release
 
 on:
   release:
@@ -25,6 +26,8 @@ jobs:
         with:
           version: 8
           run_install: true
+      - name: Build
+        run: pnpm build
       - uses: wangyoucao577/go-release-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -32,4 +35,3 @@ jobs:
           goarch: ${{ matrix.goarch }}
           binary_name: VideoServer-${{ matrix.goos }}-${{ matrix.goarch }}
           ldflags: "-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'"
-          pre_command: "pnpm build"
