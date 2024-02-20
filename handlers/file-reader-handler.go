@@ -66,8 +66,8 @@ func FileReaderHandler(c *fiber.Ctx) error {
 
 		//从数据库读取视频封面文件名
 		video := new(database.VideoInf)
-		serialNum := lib.GetSerialNum(entry.Name())
-		if !entry.IsDir() && lib.IsVideo(&extName) {
+		serialNum := lib.GetSerialNumReg(entry.Name())
+		if !entry.IsDir() && lib.IsVideo(&extName) && serialNum != "" {
 			if err := video.QueryByVideoName(serialNum); err == database.ErrVideoNotFound {
 				video.SerialNumber = serialNum
 				video.Create()

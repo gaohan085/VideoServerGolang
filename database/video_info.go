@@ -24,10 +24,10 @@ type VideoInf struct {
 	CreatedAt       int            `faker:"-" json:"createdAt"`
 	UpdatedAt       int            `faker:"-" json:"updatedAt"`
 	DeletedAt       gorm.DeletedAt `gorm:"index" faker:"-" json:"deletedAt"`
-	Title           string         `json:"title" json:"title"`
-	SerialNumber    string         `json:"serialNumber" gorm:"unique"` //视频文件名
-	SourceUrl       string         `json:"sourceUrl"`                  //来源网站信息
-	PosterName      string         `json:"posterName"`                 //封面图片本地链接
+	Title           string         `json:"title"`
+	SerialNumber    string         `json:"serialNumber"` //视频文件名
+	SourceUrl       string         `json:"sourceUrl"`    //来源网站信息
+	PosterName      string         `json:"posterName"`   //封面图片本地链接
 	SourcePosterUrl string         `json:"sourcePosterUrl"`
 	Actress         string         `json:"actress"`
 	PlaySrc         string         `json:"playSrc"`
