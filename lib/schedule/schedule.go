@@ -2,6 +2,7 @@ package schedule
 
 import (
 	"go-fiber-react-ts/database"
+	"go-fiber-react-ts/lib"
 	"time"
 
 	"github.com/go-co-op/gocron/v2"
@@ -24,6 +25,11 @@ func Schedule() error {
 	schedule.NewJob(
 		gocron.DurationJob(5*time.Second),
 		gocron.NewTask(GetActress),
+	)
+
+	schedule.NewJob(
+		gocron.DurationJob(24*time.Hour),
+		gocron.NewTask(RemoveErrorSerialNum()),
 	)
 
 	schedule.Start()
@@ -69,5 +75,21 @@ func GetActress() error {
 	if len(videos) != 0 {
 		return videos[0].GetActress()
 	}
+	return nil
+}
+
+func RemoveErrorSerialNum() error {
+	videos := []database.VideoInf{}
+
+	if err := database.Db.Model(&database.VideoInf{}).Order("ID").Find(&videos).Error; err != nil {
+		return err
+	}
+
+	for _, video := range videos {
+		if lib.GetSerialNumReg(video.SerialNumber) != video.SerialNumber {
+			video.Delete()
+		}
+	}
+
 	return nil
 }
