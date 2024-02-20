@@ -109,6 +109,9 @@ devDependencies:
   swc-loader:
     specifier: ^0.2.6
     version: 0.2.6(@swc/core@1.4.2)(webpack@5.90.3)
+  terser-webpack-plugin:
+    specifier: ^5.3.10
+    version: 5.3.10(@swc/core@1.4.2)(webpack@5.90.3)
   ts-loader:
     specifier: ^9.5.1
     version: 9.5.1(typescript@5.3.3)(webpack@5.90.3)
@@ -844,6 +847,7 @@ packages:
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
     requiresBuild: true
     dev: true
     optional: true
@@ -863,6 +867,7 @@ packages:
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
     requiresBuild: true
     dev: true
     optional: true
@@ -882,6 +887,7 @@ packages:
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
     requiresBuild: true
     dev: true
     optional: true
@@ -901,6 +907,7 @@ packages:
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
     requiresBuild: true
     dev: true
     optional: true

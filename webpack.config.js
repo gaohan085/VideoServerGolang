@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require("webpack");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const isProduction = process.env.NODE_ENV == "production";
+const TerserPlugin = require("terser-webpack-plugin");
 
 const stylesHandler = MiniCssExtractPlugin.loader;
 
@@ -103,6 +104,17 @@ module.exports = () => {
   if (isProduction) {
     config.mode = "production";
     config.optimization = {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          parallel: true,
+          terserOptions: {
+            compress: {
+              drop_console: true,
+            },
+          },
+        }),
+      ],
       splitChunks: {
         cacheGroups: {
           vendors: {
