@@ -41,6 +41,7 @@ export const Player: React.FC = () => {
           await player.current?.play();
         }}
         ref={player}
+        storage={"plyr"}
       >
         <MediaProvider />
         <PlyrLayout
