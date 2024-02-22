@@ -8,7 +8,9 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const isProduction = process.env.NODE_ENV == "production";
 const TerserPlugin = require("terser-webpack-plugin");
 
-const stylesHandler = MiniCssExtractPlugin.loader;
+const stylesHandler = isProduction
+  ? MiniCssExtractPlugin.loader
+  : "style-loader";
 
 /** @type {import("webpack").Configuration} */
 const config = {
@@ -133,20 +135,14 @@ module.exports = () => {
             test: /[\\/]web_src[\\/]/,
             name: "main",
           },
-          styles: {
-            name: "styles",
-            type: "css/mini-extract",
-            chunks: "all",
-            enforce: true,
-          },
         },
       },
     };
     config.plugins?.push(
       new MiniCssExtractPlugin({
         filename: "[contenthash:15].css",
+        chunkFilename: "[id].css",
       }),
-      new webpack.EnvironmentPlugin(),
     );
     config.externals = [
       { react: "React" },
