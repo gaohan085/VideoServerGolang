@@ -7,6 +7,7 @@ const webpack = require("webpack");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const isProduction = process.env.NODE_ENV == "production";
 const TerserPlugin = require("terser-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 const stylesHandler = isProduction
   ? MiniCssExtractPlugin.loader
@@ -18,7 +19,7 @@ const config = {
   output: {
     clean: true,
     path: path.resolve(__dirname, "dist"),
-    filename: !isProduction ? "[name].js" : "[contenthash:15].js",
+    filename: !isProduction ? "[name].js" : "js/[contenthash:15].js",
   },
   devServer: {
     open: false,
@@ -89,7 +90,7 @@ const config = {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif|ico)$/i,
         type: "asset/resource",
         generator: {
-          filename: "[hash:15][ext][query]",
+          filename: "assets/[hash:15][ext][query]",
         },
       },
 
@@ -116,6 +117,18 @@ module.exports = () => {
             },
           },
         }),
+        new CssMinimizerPlugin({
+          minimizerOptions: {
+            preset: [
+              "default",
+              {
+                discardComments: {
+                  removeAll: true,
+                },
+              },
+            ],
+          },
+        }),
       ],
       splitChunks: {
         cacheGroups: {
@@ -140,8 +153,9 @@ module.exports = () => {
     };
     config.plugins?.push(
       new MiniCssExtractPlugin({
-        filename: "[contenthash:15].css",
+        filename: "css/[contenthash:15].css",
         chunkFilename: "[id].css",
+        runtime: false,
       }),
     );
     config.externals = [
