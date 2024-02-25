@@ -19,7 +19,7 @@ const config = {
   output: {
     clean: true,
     path: path.resolve(__dirname, "dist"),
-    filename: !isProduction ? "[name].js" : "js/[contenthash:15].js",
+    filename: !isProduction ? "[name].js" : "js/[name].[contenthash:15].js",
   },
   devServer: {
     open: false,
@@ -131,15 +131,15 @@ module.exports = () => {
         }),
       ],
       splitChunks: {
+        maxSize: 100000,
         cacheGroups: {
           vendors: {
             test: /[\\/]node_modules[\\/]/,
             name(module, chunks, cacheGroupKey) {
-              const moduleFileName = module
-                .identifier()
-                .split("/")
-                .reduceRight((item) => item);
-              return `${cacheGroupKey}-${moduleFileName}`;
+              const moduleFileName = module.identifier().split("/");
+              const moduleName =
+                moduleFileName[moduleFileName.lastIndexOf("node_modules") + 1];
+              return `${moduleName.replace("@","")}`;
             },
             chunks: "all",
             priority: -10,
