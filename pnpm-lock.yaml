@@ -10,13 +10,13 @@ dependencies:
     version: 2.2.1(react-redux@9.1.0)(react@18.2.0)
   '@vidstack/react':
     specifier: ^1.10.7
-    version: 1.10.7(@types/react@18.2.58)(react@18.2.0)
+    version: 1.10.9(@types/react@18.2.56)(react@18.2.0)
   axios:
     specifier: ^1.6.7
     version: 1.6.7
   framer-motion:
     specifier: ^11.0.5
-    version: 11.0.5(react-dom@18.2.0)(react@18.2.0)
+    version: 11.0.6(react-dom@18.2.0)(react@18.2.0)
   plyr:
     specifier: ^3.7.8
     version: 3.7.8
@@ -3833,8 +3833,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
-  /framer-motion@11.0.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-Lb0EYbQcSK/pgyQUJm+KzsQrKrJRX9sFRyzl9hSr9gFG4Mk8yP7BjhuxvRXzblOM/+JxycrJdCDVmOQBsjpYlw==}
+  /framer-motion@11.0.6(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-BpO3mWF8UwxzO3Ca5AmSkrg14QYTeJa9vKgoLOoBdBdTPj0e81i1dMwnX6EQJXRieUx20uiDBXq8bA6y7N6b8Q==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
