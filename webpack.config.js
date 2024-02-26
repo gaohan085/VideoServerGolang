@@ -19,7 +19,7 @@ const config = {
   output: {
     clean: true,
     path: path.resolve(__dirname, "dist"),
-    filename: !isProduction ? "[name].js" : "js/[name].[contenthash:15].js",
+    filename: !isProduction ? "[name].js" : "js/[name].js?[contenthash:10]",
   },
   devServer: {
     open: false,
@@ -90,7 +90,9 @@ const config = {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif|ico)$/i,
         type: "asset/resource",
         generator: {
-          filename: "assets/[hash:15][ext][query]",
+          filename: isProduction
+            ? "[hash:15][ext][query]"
+            : "[name][ext][query]",
         },
       },
 
@@ -131,15 +133,27 @@ module.exports = () => {
         }),
       ],
       splitChunks: {
-        maxSize: 100000,
+        // maxSize: 100000,
         cacheGroups: {
           vendors: {
             test: /[\\/]node_modules[\\/]/,
             name(module, chunks, cacheGroupKey) {
-              const moduleFileName = module.identifier().split("/");
-              const moduleName =
-                moduleFileName[moduleFileName.lastIndexOf("node_modules") + 1];
-              return `${moduleName.replace("@","")}`;
+              const chunkInfoSlice = module.identifier().split("/");
+              // console.log(moduleFileName);
+              const moduleSlice =
+                chunkInfoSlice[
+                  chunkInfoSlice.lastIndexOf("node_modules") - 1
+                ].split(/(?:@|_)/);
+              const moduleName = moduleSlice[0];
+              const version = moduleSlice[1];
+
+              if (!/[\d.]/.test(version)) {
+                return chunkInfoSlice[
+                  chunkInfoSlice.lastIndexOf("node_modules") + 1
+                ].replace("@", "");
+              }
+
+              return `${moduleName}/${version}/${moduleName}`;
             },
             chunks: "all",
             priority: -10,
@@ -153,7 +167,7 @@ module.exports = () => {
     };
     config.plugins?.push(
       new MiniCssExtractPlugin({
-        filename: "css/[contenthash:15].css",
+        filename: "css/[contenthash:10].css",
         chunkFilename: "[id].css",
         runtime: false,
       }),
@@ -162,6 +176,7 @@ module.exports = () => {
       { react: "React" },
       { "react-dom": "ReactDOM" },
       { axios: "axios" },
+      { plyr: "Plyr" },
     ];
   } else {
     config.mode = "development";
