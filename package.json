@@ -18,7 +18,6 @@
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.1",
-    "@vidstack/react": "^1.10.7",
     "axios": "^1.6.7",
     "framer-motion": "^11.0.5",
     "plyr": "^3.7.8",
