@@ -91,7 +91,7 @@ const config = {
         type: "asset/resource",
         generator: {
           filename: isProduction
-            ? "[hash:15][ext][query]"
+            ? "assets/[hash:15][ext][query]"
             : "[name][ext][query]",
         },
       },
