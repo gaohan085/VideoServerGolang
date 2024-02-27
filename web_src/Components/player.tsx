@@ -22,7 +22,7 @@ const Title: React.FC = () => {
             .toLocaleUpperCase()} ${videoPlaying.title}`}
         {!videoPlaying.title && "没有正在播放"}
       </h4>
-      {!!videoPlaying.title && (
+      {!!videoPlaying.actress && (
         <Link to={`/actress/${videoPlaying.actress}`}>
           {videoPlaying.actress}
         </Link>
