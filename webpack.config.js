@@ -139,7 +139,6 @@ module.exports = () => {
             test: /[\\/]node_modules[\\/]/,
             name(module, chunks, cacheGroupKey) {
               const chunkInfoSlice = module.identifier().split("/");
-              // console.log(moduleFileName);
               const moduleSlice =
                 chunkInfoSlice[
                   chunkInfoSlice.lastIndexOf("node_modules") - 1
