@@ -8,8 +8,33 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows]
+        goarch: [amd64]
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: ncipollo/release-action@v1
+        with:
+          prerelease: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: true
+      - name: Build
+        run: pnpm build
+      - uses: wangyoucao577/go-release-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          goos: ${{ matrix.goos }}
+          goarch: ${{ matrix.goarch }}
+          binary_name: videoserver
+          ldflags: "-X 'go-fiber-react-ts/lib.Version=${{ github.ref_name }}' "
+          compress_assets: OFF
+          md5sum: FALSE
+          sha256sum: TRUE
