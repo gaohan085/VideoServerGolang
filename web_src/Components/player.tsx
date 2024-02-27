@@ -22,7 +22,7 @@ const Title: React.FC = () => {
             .toLocaleUpperCase()} ${videoPlaying.title}`}
         {!videoPlaying.title && "没有正在播放"}
       </h4>
-      {!!videoPlaying.title && (
+      {!!videoPlaying.actress && (
         <Link to={`/actress/${videoPlaying.actress}`}>
           {videoPlaying.actress}
         </Link>
@@ -84,9 +84,13 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     iconUrl: plyrSvg,
   });
 
-  plyr.on("canplay", async (e) => {
+  plyr.on("loadedmetadata", async (e) => {
+    const instance = e.detail.plyr;
+    const playSrc = instance.source as unknown as string;
+    const historyTime = localStorage.getItem(playSrc);
     await new Promise((r) => setTimeout(r, 2500));
-    await e.detail.plyr.play();
+    instance.currentTime = Number(historyTime)
+    await instance.play();
   });
 
   plyr.on("enterfullscreen", async () => {
@@ -97,6 +101,13 @@ const mountPlyr = (node: HTMLElement): Plyr => {
       await window.screen.orientation.lock("landscape");
     }
   });
+
+  plyr.on("timeupdate", (e) => {
+    const instance = e.detail.plyr
+    const source = instance.source as unknown as string
+    const currentTime = instance.currentTime
+    localStorage.setItem(source, String(currentTime))
+  })
 
   lib.redux.store.subscribe(() => {
     const videoPlaying = lib.redux.store.getState().redux.playingVideo;
