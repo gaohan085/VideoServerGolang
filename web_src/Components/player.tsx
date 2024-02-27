@@ -16,7 +16,7 @@ const Title: React.FC = () => {
   return (
     <div className="title">
       <h4>
-        {!!videoPlaying.title &&
+        {!!videoPlaying.name &&
           `${videoPlaying.name
             .slice(0, videoPlaying.name.lastIndexOf("."))
             .toLocaleUpperCase()} ${videoPlaying.title}`}
