@@ -28,6 +28,7 @@ func main() {
 	flag.Parse()
 	os.Setenv("ENV", *env)
 	engine := html.NewFileSystem(http.FS(content), ".html")
+	remoteServerAddress := os.Getenv("REMOTE_SERVER_ADDR")
 
 	database.SetDB()
 	schedule.Schedule()
@@ -85,10 +86,10 @@ func main() {
 			Browse:     true,
 		}))
 		app.Use("/api/*", func(c *fiber.Ctx) error {
-			return proxy.Do(c, "http://192.168.1.31/api/"+c.Params("*"))
+			return proxy.Do(c, remoteServerAddress+"/api/"+c.Params("*"))
 		})
 		app.Get("/assets/*", func(c *fiber.Ctx) error {
-			return proxy.Do(c, "http://192.168.1.31/assets/"+c.Params("*"))
+			return proxy.Do(c, remoteServerAddress+"/assets/"+c.Params("*"))
 		})
 		app.Get("/*", handlers.IndexHandler)
 
