@@ -58,6 +58,7 @@ const FolderElement: React.FC<{
         className="folder-element"
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
+        title={isOpen ? "收起文件夹" : "打开文件夹"}
       >
         {ConditionalFolderIcon}
         {!isRename && elem.name}
@@ -139,7 +140,6 @@ export const InteractiveFolderElement: React.FC<{
   }, [elem, renameElement, setIsRename]);
 
   const handleCtxMenu: React.MouseEventHandler = (e): void => {
-    console.log(e);
     if (!isRename) {
       setPosition!({ ...e });
       clicked && setClicked!(false);
