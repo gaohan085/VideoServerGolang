@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useContext, useEffect, useState } from "react";
-import { FcFile, FcVideoFile } from "react-icons/fc";
+import { FcFile, FcFilm } from "react-icons/fc";
 
 import * as lib from "../lib";
 
@@ -32,7 +32,7 @@ const FileElement: React.FC<{
         onContextMenu={handleCtxMenu}
         title={lib.isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
       >
-        <span>{lib.isVideo(elem.extName) ? <FcVideoFile /> : <FcFile />}</span>
+        <span>{lib.isVideo(elem.extName) ? <FcFilm /> : <FcFile/>}</span>
         {!isRename && <>{elem.name}</>}
         {!!isRename && <InteractiveRenameComponent {...elem} />}
       </a>

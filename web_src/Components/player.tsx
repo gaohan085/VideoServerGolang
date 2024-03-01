@@ -20,7 +20,7 @@ const Title: React.FC = () => {
           `${videoPlaying.name
             .slice(0, videoPlaying.name.lastIndexOf("."))
             .toLocaleUpperCase()} ${videoPlaying.title}`}
-        {!videoPlaying.title && "没有正在播放"}
+        {!videoPlaying.name && "没有正在播放"}
       </h4>
       {!!videoPlaying.actress && (
         <Link to={`/actress/${videoPlaying.actress}`}>
