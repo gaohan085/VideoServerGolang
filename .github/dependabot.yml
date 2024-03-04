@@ -1,12 +1,12 @@
 version: 2
 updates:
-  schedule:
-    interval: "weekly"
-    time: "12:00"
-    timezone: "Asia/Shanghai"
   - package-ecosystem: "npm"
     directory: "/"
     version-strategy: increase
+    schedule:
+      interval: "weekly"
+      time: "12:00"
+      timezone: "Asia/Shanghai"
     groups:
       nodejs-dependencies:
         patterns:
@@ -41,6 +41,10 @@ updates:
           - "webpack-cli"
           - "webpack-dev-server"
   - package-ecosystem: "gomod"
+    schedule:
+      interval: "weekly"
+      time: "12:00"
+      timezone: "Asia/Shanghai"
     directory: "/"
     groups:
       golang-dependencies:
