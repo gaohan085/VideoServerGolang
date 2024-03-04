@@ -2,10 +2,25 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    versioning-strategy: increase
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "12:00"
+      timezone: "Asia/Shanghai"
     groups:
-      dev-dependencies:
+      nodejs-dependencies:
+        dependency-type: "production"
+        patterns:
+          - "@reduxjs/toolkit"
+          - "axios"
+          - "framer-motion"
+          - "prop-types"
+          - "react*"
+          - "redux"
+          - "swr"
+      nodejs-development-dependencies:
+        dependency-type: "development"
         patterns:
           - "@pmmmwh/react-refresh-webpack-plugin"
           - "@types/*"
@@ -27,22 +42,15 @@ updates:
           - "webpack"
           - "webpack-cli"
           - "webpack-dev-server"
-      pro-dependencies:
-        patterns:
-          - "@reduxjs/toolkit"
-          - "@vidstack/react"
-          - "axios"
-          - "framer-motion"
-          - "prop-types"
-          - "react*"
-          - "redux"
-          - "swr"
   - package-ecosystem: "gomod"
-    directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "12:00"
+      timezone: "Asia/Shanghai"
+    directory: "/"
     groups:
-      dependencies:
+      golang-dependencies:
         patterns:
           - "*"
         exclude-patterns:
