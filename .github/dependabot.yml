@@ -5,6 +5,7 @@ updates:
     version-strategy: increase
     schedule:
       interval: "weekly"
+      day: "monday"
       time: "12:00"
       timezone: "Asia/Shanghai"
     groups:
@@ -43,6 +44,7 @@ updates:
   - package-ecosystem: "gomod"
     schedule:
       interval: "weekly"
+      day: "monday"
       time: "12:00"
       timezone: "Asia/Shanghai"
     directory: "/"
