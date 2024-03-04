@@ -1,11 +1,9 @@
 version: 2
 updates:
-
   schedule:
     interval: "weekly"
     time: "12:00"
     timezone: "Asia/Shanghai"
-
   - package-ecosystem: "npm"
     directory: "/"
     version-strategy: increase
@@ -41,8 +39,7 @@ updates:
           - "typescript"
           - "webpack"
           - "webpack-cli"
-          - "webpack-dev-server"    
-
+          - "webpack-dev-server"
   - package-ecosystem: "gomod"
     directory: "/"
     groups:
