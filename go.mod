@@ -5,14 +5,14 @@ go 1.21
 toolchain go1.21.0
 
 require (
-	github.com/PuerkitoBio/goquery v1.9.0
+	github.com/PuerkitoBio/goquery v1.9.1
 	github.com/go-co-op/gocron/v2 v2.2.4
 	github.com/go-faker/faker/v4 v4.3.0
-	github.com/gofiber/fiber/v2 v2.52.1
+	github.com/gofiber/fiber/v2 v2.52.2
 	github.com/gofiber/template/html/v2 v2.1.1
 	github.com/joho/godotenv v1.5.1
-	github.com/shirou/gopsutil/v3 v3.24.1
-	github.com/stretchr/testify v1.8.4
+	github.com/shirou/gopsutil/v3 v3.24.2
+	github.com/stretchr/testify v1.9.0
 	gorm.io/driver/postgres v1.5.6
 	gorm.io/gorm v1.25.7
 )
