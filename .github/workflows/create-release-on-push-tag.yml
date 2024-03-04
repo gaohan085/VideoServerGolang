@@ -17,6 +17,9 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           prerelease: true
+          allowUpdates: true
+          generateReleaseNotes: true
+          makeLatest: true
   
   build:
     runs-on: ubuntu-latest
