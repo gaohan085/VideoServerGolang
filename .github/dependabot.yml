@@ -2,14 +2,15 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    version-strategy: increase
     schedule:
       interval: "weekly"
       day: "monday"
       time: "12:00"
       timezone: "Asia/Shanghai"
     groups:
+      version-strategy: increase
       nodejs-dependencies:
+        dependency-type: "production"
         patterns:
           - "@reduxjs/toolkit"
           - "@vidstack/react"
@@ -20,6 +21,7 @@ updates:
           - "redux"
           - "swr"
       nodejs-development-dependencies:
+        dependency-type: "development"
         patterns:
           - "@pmmmwh/react-refresh-webpack-plugin"
           - "@types/*"
