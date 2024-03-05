@@ -17,9 +17,7 @@ const Title: React.FC = () => {
     <div className="title">
       <h4>
         {!!videoPlaying.name &&
-          `${videoPlaying.name
-            .slice(0, videoPlaying.name.lastIndexOf("."))
-            .toLocaleUpperCase()} ${videoPlaying.title}`}
+          `${videoPlaying.name.match(/([0-9]|[a-z]|[A-Z]){3,}-[0-9]{3,}/g)![0]} ${videoPlaying.title}`}
         {!videoPlaying.name && "没有正在播放"}
       </h4>
       {!!videoPlaying.actress && (
@@ -89,7 +87,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     const playSrc = instance.source as unknown as string;
     const historyTime = localStorage.getItem(playSrc);
     await new Promise((r) => setTimeout(r, 2500));
-    instance.currentTime = Number(historyTime)
+    instance.currentTime = Number(historyTime);
     await instance.play();
   });
 
@@ -103,11 +101,11 @@ const mountPlyr = (node: HTMLElement): Plyr => {
   });
 
   plyr.on("timeupdate", (e) => {
-    const instance = e.detail.plyr
-    const source = instance.source as unknown as string
-    const currentTime = instance.currentTime
-    localStorage.setItem(source, String(currentTime))
-  })
+    const instance = e.detail.plyr;
+    const source = instance.source as unknown as string;
+    const currentTime = instance.currentTime;
+    localStorage.setItem(source, String(currentTime));
+  });
 
   lib.redux.store.subscribe(() => {
     const videoPlaying = lib.redux.store.getState().redux.playingVideo;
