@@ -12,12 +12,15 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const Title: React.FC = () => {
   const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
+  const serialNumber = videoPlaying.name.match(
+    /([0-9]|[a-z]|[A-Z]){3,}-[0-9]{3,}/g,
+  );
 
   return (
     <div className="title">
       <h4>
         {!!videoPlaying.name &&
-          `${videoPlaying.name.match(/([0-9]|[a-z]|[A-Z]){3,}-[0-9]{3,}/g)![0]} ${videoPlaying.title}`}
+          `${serialNumber ? serialNumber[0] : videoPlaying.name} ${videoPlaying.title}`}
         {!videoPlaying.name && "没有正在播放"}
       </h4>
       {!!videoPlaying.actress && (
@@ -120,7 +123,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
             src: videoPlaying.playSrc,
           },
         ],
-      };
+      }; 
     }
   });
 
