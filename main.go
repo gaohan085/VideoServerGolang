@@ -80,6 +80,12 @@ func main() {
 		}))
 		app.Get("/*", handlers.IndexHandler)
 	default:
+		app.Use(logger.New(logger.Config{
+			Format:     "[DEBUG] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
+			TimeFormat: "2006/Jan/02 Monday 15:04:05",
+			TimeZone:   "Asia/Shanghai",
+		}))
+
 		app.Use("/dist", filesystem.New(filesystem.Config{
 			Root:       http.FS(content),
 			PathPrefix: "dist",
@@ -93,11 +99,6 @@ func main() {
 		})
 		app.Get("/*", handlers.IndexHandler)
 
-		app.Use(logger.New(logger.Config{
-			Format:     "[DEBUG] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
-			TimeFormat: "2006/Jan/02 Monday 15:04:05",
-			TimeZone:   "Asia/Shanghai",
-		}))
 	}
 
 	if err := app.Listen("127.0.0.1:3000"); err != nil {
