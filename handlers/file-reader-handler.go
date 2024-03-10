@@ -72,7 +72,7 @@ func FileReaderHandler(c *fiber.Ctx) error {
 			if err := video.QueryByVideoName(serialNum); err == database.ErrVideoNotFound {
 				video.SerialNumber = serialNum
 				video.Create()
-			} else if video.PlaySrc == "" {
+			} else if video.PlaySrc == "" || video.PlaySrc != playSrc {
 				video.PlaySrc = playSrc
 				video.Update()
 			}
