@@ -15,6 +15,7 @@ declare interface DirElement {
   poster: string;
   title: string;
   actress: string;
+  sourceUrl: string;
 }
 
 export declare interface DirectoryProp {

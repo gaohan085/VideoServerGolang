@@ -2,6 +2,7 @@ import Plyr from "plyr";
 import "plyr/dist/plyr.css";
 import plyrSvg from "plyr/dist/plyr.svg";
 import React, { forwardRef, useEffect, useRef } from "react";
+import { FcLink } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
 import * as lib from "../lib";
@@ -23,11 +24,18 @@ const Title: React.FC = () => {
           `${serialNumber ? serialNumber[0] : videoPlaying.name} ${videoPlaying.title}`}
         {!videoPlaying.name && "没有正在播放"}
       </h4>
-      {!!videoPlaying.actress && (
-        <Link to={`/actress/${videoPlaying.actress}`}>
-          {videoPlaying.actress}
-        </Link>
-      )}
+      <div className="info">
+        {!!videoPlaying.actress && (
+          <Link to={`/actress/${videoPlaying.actress}`}>
+            {videoPlaying.actress}
+          </Link>
+        )}
+        {
+          !!videoPlaying.sourceUrl && <a href={videoPlaying.sourceUrl} target="_blank" rel="noreferrer">
+            <span><FcLink /></span>{"On JavDB"}
+          </a>
+        }
+      </div>
     </div>
   );
 };
@@ -123,7 +131,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
             src: videoPlaying.playSrc,
           },
         ],
-      }; 
+      };
     }
   });
 

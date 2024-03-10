@@ -5,7 +5,7 @@
 
   [class~="title"] {
     border-left: 3px solid #e85982;
-    // border-right: 4px solid #e85982;
+    border-right: 3px solid #e85982;
     padding: 0.25rem 1rem;
     margin-top: 1rem;
     border-radius: 5px;
@@ -15,18 +15,29 @@
       margin-block-start: 0em;
     }
 
-    a {
-      display: block;
-      line-height: 0.8rem;
-      font-size: 14px;
-      margin-block-start: 0.8em;
-      margin-block-end: 0.4em;
-      font-style: italic;
-      width: fit-content;
+    > [class~="info"] {
+      display: flex;
+      justify-content: space-between;
+      margin-block-start: 0.4em;
+      margin-block-end: 0.1em;
 
-      &:hover {
-        color: #e85982;
-        text-decoration: underline;
+      > a {
+        line-height: 22px;
+        font-size: 14px;
+        font-style: italic;
+        display: block;
+
+        > span {
+          display: inline-block;
+          vertical-align: middle;
+          font-size: 20px;
+          margin-right: 3px;
+        }
+
+        &:hover {
+          color: #e85982;
+          text-decoration: underline;
+        }
       }
     }
   }

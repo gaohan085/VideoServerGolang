@@ -11,7 +11,7 @@ import { type VideoInfo, type ResWithActressName, DiskUsage, Spinner } from ".";
 export const VideoBox: React.FC<VideoInfo> = (props) => {
   const dispatch = lib.redux.useAppDispatch();
   const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
-  const { title, posterName, serialNumber, playSrc, actress } = props;
+  const { title, posterName, serialNumber, playSrc, actress, sourceUrl } = props;
   const [isPlaying, setIsplaying] = useState<boolean>(false);
 
   const handleClick = () => {
@@ -26,6 +26,7 @@ export const VideoBox: React.FC<VideoInfo> = (props) => {
         currentPath: "",
         actress: actress,
         poster: posterName,
+        sourceUrl: sourceUrl
       }),
     );
   };

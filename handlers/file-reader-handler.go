@@ -28,6 +28,7 @@ type DirChildElem struct {
 	Poster      string `json:"poster"`
 	Title       string `json:"title"`
 	Actress     string `json:"actress"`
+	SourceUrl   string `json:"sourceUrl"`
 }
 
 func FileReaderHandler(c *fiber.Ctx) error {
@@ -87,6 +88,7 @@ func FileReaderHandler(c *fiber.Ctx) error {
 			Poster:      video.PosterName,
 			Title:       video.Title,
 			Actress:     video.Actress,
+			SourceUrl:   video.SourceUrl,
 		}
 	}
 
