@@ -18,10 +18,10 @@
     > [class~="info"] {
       display: flex;
       justify-content: space-between;
-      margin-block-start: 0.4em;
-      margin-block-end: 0.1em;
 
       > a {
+        margin-block-start: 0.6em;
+        margin-block-end: 0em;
         line-height: 22px;
         font-size: 14px;
         font-style: italic;

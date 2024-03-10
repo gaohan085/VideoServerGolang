@@ -37,14 +37,12 @@ export const VideoBox: React.FC<VideoInfo> = (props) => {
   }, [videoPlaying, playSrc]);
 
   return (
-    <div className={!isPlaying ? "videobox" : "videobox playing"}>
-      <div className="img-box">
-        <a onClick={handleClick}>
-          <img src={`/assets/poster/${posterName}`} loading="lazy" />
-        </a>
+    <div className={!isPlaying ? "videobox" : "videobox playing"} onClick={handleClick}>
+      <div className="img-box" >
+        <img src={`/assets/poster/${posterName}`} loading="lazy" />
       </div>
       <div className="title">
-        <a onClick={handleClick}>{`${serialNumber} ${title}`}</a>
+        <a>{`${serialNumber} ${title}`}</a>
       </div>
     </div>
   );

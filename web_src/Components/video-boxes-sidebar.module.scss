@@ -21,10 +21,12 @@
       padding-right: 10px;
       cursor: pointer;
 
-      a img {
+      img {
         width: 130px;
         border-radius: 10px;
         padding: 0px;
+        object-fit: contain;
+        height: 100%;
       }
     }
 
