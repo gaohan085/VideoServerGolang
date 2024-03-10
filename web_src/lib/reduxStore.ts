@@ -28,6 +28,7 @@ const initialState: PlayingVideo = {
     poster: "",
     title: "",
     actress: "",
+    sourceUrl: "",
   },
 };
 
@@ -50,6 +51,7 @@ export const Slice = createSlice({
         poster: "",
         title: "",
         actress: "",
+        sourceUrl: "",
       };
     },
   },
