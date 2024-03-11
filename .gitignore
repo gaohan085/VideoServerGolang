@@ -13,3 +13,4 @@ go-fiber-react-ts
 .editorconfig
 .idea/
 /**/assets/
+*.sh
