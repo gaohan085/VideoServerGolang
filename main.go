@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -31,7 +32,7 @@ func main() {
 	remoteServerAddress := os.Getenv("REMOTE_SERVER_ADDR")
 
 	database.SetDB()
-	schedule.Schedule()
+	go schedule.Schedule()
 
 	app := fiber.New(
 		fiber.Config{
@@ -51,9 +52,19 @@ func main() {
 		},
 	)
 
+	app.Use("/api/ws", func(c *fiber.Ctx) error {
+		if websocket.IsWebSocketUpgrade(c) {
+			c.Locals("allowed", true)
+			return c.Next()
+		}
+		return fiber.ErrUpgradeRequired
+	})
+
+	app.Get("/api/ws", handlers.Wshandler)
+
 	switch *env {
 	case "production":
-		file, err := os.OpenFile("./access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		file, err := os.OpenFile("./log/access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
 			log.Fatalf("error opening file: %v", err)
 		}
@@ -72,7 +83,9 @@ func main() {
 		api.Post("/rename", handlers.RenameHandler)
 		api.Get("/version", handlers.VersionHandler)
 		api.Get("/actress/:name", handlers.GetVideosByActress)
+		api.Post("/convert", handlers.ConvertHandler)
 		api.Get("/*", handlers.FileReaderHandler)
+
 		app.Use("/dist", filesystem.New(filesystem.Config{
 			Root:       http.FS(content),
 			PathPrefix: "dist",
@@ -91,6 +104,8 @@ func main() {
 			PathPrefix: "dist",
 			Browse:     true,
 		}))
+
+		app.Post("/api/convert", handlers.ConvertHandler)
 		app.Use("/api/*", func(c *fiber.Ctx) error {
 			return proxy.Do(c, remoteServerAddress+"/api/"+c.Params("*"))
 		})
@@ -98,7 +113,6 @@ func main() {
 			return proxy.Do(c, remoteServerAddress+"/assets/"+c.Params("*"))
 		})
 		app.Get("/*", handlers.IndexHandler)
-
 	}
 
 	if err := app.Listen("127.0.0.1:3000"); err != nil {

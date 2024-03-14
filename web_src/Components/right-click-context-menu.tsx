@@ -227,9 +227,11 @@ export const InteractiveCtxMenu: React.FC = () => {
   };
 
   const handleConvertVideo: React.MouseEventHandler = () => {
-    setClicked!(true);
-
-    //TODO POST Convert video
+    void axios.post("/api/convert", rightClickElem).then(() => {
+      setClicked!(true);
+      const { currentPath } = rightClickElem!;
+      void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`)
+    })
   };
 
   const handleRename: React.MouseEventHandler = () => {
