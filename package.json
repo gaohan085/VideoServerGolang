@@ -1,5 +1,5 @@
 {
-  "name": "my-webpack-project",
+  "name": "go-fiber-react-ts",
   "version": "1.0.0",
   "description": "My webpack project",
   "main": "./web_src/index.ts",
