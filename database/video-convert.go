@@ -43,7 +43,7 @@ func (v *VideoConvert) Query(s string) error {
 	return Db.Where(&VideoConvert{PlaySource: s}).First(&v).Error
 }
 
-func (v *VideoConvert) UpdateDuration() error { //TODO TEST
+func (v *VideoConvert) UpdateDuration() error { //DONE TEST
 	rootDir := os.Getenv("ROOT_DIR")
 	var script = fmt.Sprintf(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal %s`, fmt.Sprintf("%s%s/%s", rootDir, v.Path, v.FileName))
 
@@ -119,7 +119,7 @@ func (v *VideoConvert) Convert(chInter chan<- int, chDone chan<- int) error {
 	return nil
 }
 
-func (v *VideoConvert) ReadLog(chInter <-chan int, chDone <-chan int) error {
+func (v *VideoConvert) ReadLog(chInter <-chan int, chDone <-chan int) error { //DONE TEST
 	var progressline string
 	progressReg := regexp.MustCompile(`(time=)([\d]{2}(:||[^\s])){4}`)
 
