@@ -6,12 +6,12 @@ export interface VideoStatus {
   status: "pending" | "converting" | "done",
   duration: number
   progress: number
-  playSrouce: string
+  playSource: string
 }
 
 export const WsContext = createContext<{
-  status?: VideoStatus[]
-}>({ status: undefined })
+  convertingElems?: VideoStatus[]
+}>({ convertingElems: undefined })
 
 export const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
   const { children } = props
@@ -34,7 +34,7 @@ export const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
   }, [convertState])
 
   return (
-    <WsContext.Provider value={{ status: convertState ? JSON.parse(convertState) as VideoStatus[] : undefined }}>
+    <WsContext.Provider value={{ convertingElems: convertState ? JSON.parse(convertState) as VideoStatus[] : undefined }}>
       {children}
     </WsContext.Provider>
   )

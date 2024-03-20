@@ -7,13 +7,28 @@
     transition: color 0.2s ease-in-out;
     text-overflow: ellipsis;
     padding-right: 10px;
+    > [class~="name"]:hover {
+      color: base.$main-color;
+    }
 
     &[class~="playing"] {
-      color: lighten(base.$main-color, 10%);
+      color: lighten(base.$main-color, 5%);
       text-decoration: underline;
 
       &:hover {
         color: base.$main-color;
+      }
+    }
+
+    &[class~="convert"] {
+      > [class~="name"] {
+        text-decoration: line-through;
+        &:hover {
+          color: lighten($color: #1c1838, $amount: 50%);
+        }
+      }
+      > [class~="progress"] {
+        font-style: italic;
       }
     }
   }

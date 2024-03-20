@@ -25,7 +25,7 @@ var Wshandler = websocket.New(func(c *websocket.Conn) {
 					{
 						PlaySource: "http://192.168.1.199/video/今井えみ/bacj-100/bacj-100.mp4",
 						Status:     "converting",
-						Progress:   0.2,
+						Progress:   0.23456,
 					},
 					{
 						PlaySource: "http://192.168.1.199/video/今井えみ/200GANA-2966/200GANA-2966.mp4",

@@ -6,8 +6,12 @@
   > [class~="folder-element"] {
     @include base.name(pointer);
     transition: color 0.2s ease-in-out;
-  }
-  > [class~="folder-element"] > span {
-    @include base.icon();
+    > span {
+      @include base.icon();
+    }
+
+    &:hover {
+      color: base.$main-color;
+    }
   }
 }

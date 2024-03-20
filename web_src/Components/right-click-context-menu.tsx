@@ -17,69 +17,69 @@ import { Context, type DirElement } from ".";
 
 const PlayVideo: React.FC = () => {
   return (
-    <p>
+    <a>
       <span>
         <FcStart />
       </span>
       播放视频
-    </p>
+    </a>
   );
 };
 
 const OpenFolder: React.FC = () => {
   return (
-    <p>
+    <a>
       <span>
         <FcOpenedFolder />
       </span>
       打开文件夹
-    </p>
+    </a>
   );
 };
 
 const CloseFolder: React.FC = () => {
   return (
-    <p>
+    <a>
       <span>
         <FcFolder />
       </span>
       收起文件夹
-    </p>
+    </a>
   );
 };
 
 const ProcessVideo: React.FC = () => {
   return (
-    <p>
+    <a>
       <span>
         <FcProcess />
       </span>
       转换视频
-    </p>
+    </a>
   );
 };
 
 const Delete: React.FC<{ readonly isFile: boolean }> = (props) => {
   const { isFile } = props;
   return (
-    <p>
+    <a>
       <span>
         <FcEmptyTrash />
       </span>
 
       {isFile ? "删除文件" : "删除文件夹"}
-    </p>
+    </a>
   );
 };
 
 const Rename: React.FC = () => {
   return (
-    <p>
+    <a>
       <span>
         <FcServices />
       </span>
       重命名
-    </p>
+    </a>
   );
 };
 
