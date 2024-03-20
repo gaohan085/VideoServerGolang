@@ -16,13 +16,16 @@ import (
 )
 
 type VideoConvert struct {
-	gorm.Model
-	FileName   string  `json:"fileName"`
-	Path       string  `json:"path"`
-	Status     string  `json:"status"` // "pending" || "converting" || "done"
-	Duration   float64 `json:"duration"`
-	Progress   float64 `json:"progress"`
-	PlaySource string  `gorm:"unique" json:"playSource"`
+	ID         uint           `gorm:"primaryKey" faker:"-" json:"-"`
+	CreatedAt  time.Time      `faker:"-" json:"-"`
+	UpdatedAt  time.Time      `faker:"-" json:"-"`
+	DeletedAt  gorm.DeletedAt `gorm:"index" faker:"-" json:"-"`
+	FileName   string         `json:"fileName"`
+	Path       string         `json:"path"`
+	Status     string         `json:"status"` // "pending" || "converting" || "done"
+	Duration   float64        `json:"duration"`
+	Progress   float64        `json:"progress"`
+	PlaySource string         `gorm:"unique" json:"playSource"`
 }
 
 func (v *VideoConvert) Create() error {

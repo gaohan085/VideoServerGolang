@@ -1,35 +1,46 @@
 package handlers
 
 import (
-	"encoding/json"
+	"go-fiber-react-ts/database"
 	"log"
 
-	ws "github.com/fasthttp/websocket"
 	"github.com/gofiber/contrib/websocket"
 )
 
 var Wshandler = websocket.New(func(c *websocket.Conn) {
-	log.Printf("%T\n", c.Locals("allowed"))
-
 	if c.Locals("allowed").(bool) {
 		for {
-			msgType, msg, err := c.ReadMessage()
+			_, _, err := c.ReadMessage()
 			if err != nil {
 				log.Println(err.Error())
 				break
 			}
-			log.Println(msg)
 
-			user := struct {
-				Username string `json:"username"`
-			}{Username: "ponyamu"}
+			queue := database.VideoQueue{
+				Queue: []database.VideoConvert{
+					{
+						PlaySource: "http://192.168.1.199/video/栗宮ふたば/cawd-630/cawd-630.mp4",
+						Status:     "done",
+					},
+					{
+						PlaySource: "http://192.168.1.199/video/今井えみ/bacj-100/bacj-100.mp4",
+						Status:     "converting",
+						Progress:   0.2,
+					},
+					{
+						PlaySource: "http://192.168.1.199/video/今井えみ/200GANA-2966/200GANA-2966.mp4",
+						Status:     "pending",
+					},
+				},
+			}
+			// if err := queue.Query(); err != nil {
+			// 	break
+			// }
 
-			userJSON, _ := json.Marshal(user)
-			pm, _ := ws.NewPreparedMessage(msgType, userJSON)
-
-			if err := c.WritePreparedMessage(pm); err != nil {
+			if err := c.WriteJSON(queue.Queue); err != nil {
 				break
 			}
+
 		}
 	}
 })
