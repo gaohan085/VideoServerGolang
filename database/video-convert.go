@@ -93,7 +93,7 @@ func (v *VideoConvert) Convert(chInter chan<- int, chDone chan<- int) error {
 	var inputVideoPath = fmt.Sprintf("%s%s/%s", rootDir, v.Path, v.FileName)
 	var outputVideoPath = fmt.Sprintf("%s%s/%s", rootDir, v.Path, "converted-"+v.FileName)
 	var script = fmt.Sprintf(`
-		FFREPORT=file=ffreport.log:level=32 taskset -c 0 ffmpeg -y -i %s -vcodec copy %s
+		FFREPORT=file=ffreport.log:level=32 taskset -c 0,2 ffmpeg -y -i %s -vcodec libx264 %s
 		`, inputVideoPath, outputVideoPath)
 
 	cmd := exec.Command("bash")
