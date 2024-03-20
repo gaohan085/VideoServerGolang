@@ -20,12 +20,12 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Components.InteractiveFileSysSideBar />,
+        element: <Components.WebSocketLayer><Components.InteractiveFileSysSideBar /></Components.WebSocketLayer>,
         errorElement: <ErrorPage />,
       },
       {
         path: "/actress/:name",
-        element: <Components.VideoBoxes />,
+        element: <Components.WebSocketLayer><Components.VideoBoxes /> </Components.WebSocketLayer>,
         loader: async ({ params }) => {
           const data = (
             await axios.get<AxiosResponse<ResWithActressName>>(

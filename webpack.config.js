@@ -177,9 +177,10 @@ module.exports = () => {
       { axios: "axios" },
       { plyr: "Plyr" },
     ];
+    config.devtool = "source-map";
   } else {
     config.mode = "development";
-    config.devtool = "source-map";
+    config.devtool = "eval-source-map";
     config.plugins?.push(new MiniCssExtractPlugin());
   }
   return config;
