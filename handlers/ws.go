@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"go-fiber-react-ts/database"
-	"log"
 
 	"github.com/gofiber/contrib/websocket"
 )
@@ -12,7 +11,6 @@ var Wshandler = websocket.New(func(c *websocket.Conn) {
 		for {
 			_, _, err := c.ReadMessage()
 			if err != nil {
-				log.Println(err.Error())
 				break
 			}
 
