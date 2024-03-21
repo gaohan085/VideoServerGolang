@@ -44,6 +44,7 @@ func TestUpdateDuration(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, "done", videoT.Status)
 		assert.Equal(t, float64(1), videoT.Progress)
+		assert.NotNil(t, videoT.Duration)
 	})
 
 	Db.Migrator().DropTable(&VideoConvert{})

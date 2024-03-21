@@ -29,10 +29,6 @@ export const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
     }
   }, [setConvertState])
 
-  useEffect(() => {
-    console.log(convertState)
-  }, [convertState])
-
   return (
     <WsContext.Provider value={{ convertingElems: convertState ? JSON.parse(convertState) as VideoStatus[] : undefined }}>
       {children}

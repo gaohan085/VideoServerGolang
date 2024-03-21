@@ -91,9 +91,9 @@ func (v *VideoConvert) Convert(chInter chan<- int, chDone chan<- int) error {
 
 	rootDir := os.Getenv("ROOT_DIR")
 	var inputVideoPath = fmt.Sprintf("%s%s/%s", rootDir, v.Path, v.FileName)
-	var outputVideoPath = fmt.Sprintf("%s%s/%s", rootDir, v.Path, "converted-"+v.FileName)
+	var outputVideoPath = fmt.Sprintf("%s%s/%s", rootDir, v.Path, lib.GetFilenameWithoutExt(v.FileName)+"_cvt.mp4")
 	var script = fmt.Sprintf(`
-		FFREPORT=file=ffreport.log:level=32 taskset -c 0,2 ffmpeg -y -i %s -vcodec libx264 %s
+		FFREPORT=file=ffreport.log:level=32 taskset -c 0,2 ffmpeg -y -i %s -movflags faststart -acodec copy -vcodec libx264 %s
 		`, inputVideoPath, outputVideoPath)
 
 	cmd := exec.Command("bash")

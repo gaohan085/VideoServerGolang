@@ -66,9 +66,17 @@ export const InteractiveFileElement: React.FC<{
 
   useEffect(() => {
     const filterElem = convertingElems?.filter(video => video.playSource === elem.playSrc)
-    if (filterElem?.length === 1 && (filterElem[0].status === "converting" || filterElem[0].status === "pending")) {
-      setIsConverting(true)
-      setProgress(filterElem[0].progress)
+    if (filterElem?.length === 1) {
+      if (filterElem[0].status === "converting" || filterElem[0].status === "pending") {
+        setIsConverting(true)
+        setProgress(filterElem[0].progress)
+        console.log("AAAAadasa")
+      } else {
+        setIsConverting(false)
+      }
+    }
+    return () => {
+      setIsConverting(false)
     }
   }, [elem, convertingElems, setIsConverting])
 
