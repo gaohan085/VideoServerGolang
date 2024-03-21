@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -93,7 +94,7 @@ func (v *VideoConvert) Convert(chInter chan<- int, chDone chan<- int) error {
 	var inputVideoPath = fmt.Sprintf("%s%s/%s", rootDir, v.Path, v.FileName)
 	var outputVideoPath = fmt.Sprintf("%s%s/%s", rootDir, v.Path, lib.GetFilenameWithoutExt(v.FileName)+"_cvt.mp4")
 	var script = fmt.Sprintf(`
-		FFREPORT=file=ffreport.log:level=32 taskset -c 0,2 ffmpeg -y -i %s -movflags faststart -acodec copy -vcodec libx264 %s
+		taskset -c 0,1,2 ffmpeg -y -progress ffreport.log -i %s -movflags faststart -acodec copy -vcodec libx264 %s
 		`, inputVideoPath, outputVideoPath)
 
 	cmd := exec.Command("bash")
@@ -123,8 +124,7 @@ func (v *VideoConvert) Convert(chInter chan<- int, chDone chan<- int) error {
 }
 
 func (v *VideoConvert) ReadLog(chInter <-chan int, chDone <-chan int) error { //DONE TEST
-	var progressline string
-	progressReg := regexp.MustCompile(`(time=)([\d]{2}(:||[^\s])){4}`)
+	script := `cat ffreport.log`
 
 	for {
 		select {
@@ -136,38 +136,27 @@ func (v *VideoConvert) ReadLog(chInter <-chan int, chDone <-chan int) error { //
 		case <-chInter:
 			return nil
 		default:
-			file, err := os.OpenFile("./ffreport.log", os.O_RDONLY, 0000)
-			if err != nil && err != os.ErrNotExist {
-				defer file.Close()
-				return err
-			} else if err == os.ErrNotExist {
-				continue
-			}
-
-			scanner := bufio.NewScanner(file)
+			cmd := exec.Command("bash")
+			cmd.Stdin = strings.NewReader(script)
+			buf, _ := cmd.StdoutPipe()
+			scanner := bufio.NewScanner(buf)
+			var timeSlice []string
+			cmd.Start()
 
 			for scanner.Scan() {
-				if progressReg.MatchString(scanner.Text()) {
-					progressline = scanner.Text()
+				if regexp.MustCompile(`(out_time_us=)[\d]{5,}`).MatchString(scanner.Text()) {
+					timeSlice = append(timeSlice, scanner.Text())
 				}
 			}
 
-			proTimeSlice := progressReg.FindAllString(progressline, -1)
-			if len(proTimeSlice) != 0 {
-				proTimeStr := (proTimeSlice[len(proTimeSlice)-1])
-				progressTime := regexp.MustCompile(`([\d]{2}(:||[^\s])){4}`).FindString(proTimeStr)
-				proInSeconds, err := lib.DurationInSeconds(progressTime)
-				if err != nil {
-					defer file.Close()
-					return err
-				}
-				if err := v.UpdateProgress(proInSeconds / v.Duration); err != nil {
-					defer file.Close()
+			if len(timeSlice) > 0 {
+				outTime := timeSlice[len(timeSlice)-1]
+				outTimeInus, _ := strconv.ParseFloat(regexp.MustCompile(`[\d]{5,}`).FindString(outTime), 64)
+				if err := v.UpdateProgress((outTimeInus / 1000000) / v.Duration); err != nil {
 					return err
 				}
 			}
 
-			file.Close()
 			time.Sleep(1 * time.Second)
 		}
 	}
