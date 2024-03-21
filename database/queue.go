@@ -87,6 +87,10 @@ func StartConvert() error {
 			return err
 		}
 
+		if err := video.UpdateDuration(); err != nil {
+			return err
+		}
+
 		go video.Convert(chInter, chDone)
 		go video.ReadLog(chInter, chDone)
 
