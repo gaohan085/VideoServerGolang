@@ -30,7 +30,7 @@ const FileElement: React.FC<{
       transition={{ duration: 0.2, ease: "easeIn" }}
     >
       <div
-        className={isPlaying ? "file-element playing" : isConverting ? "file-element convert" : "file-element"}
+        className={isConverting ? "file-element convert" : isPlaying ? "file-element playing" : "file-element"}
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
         title={lib.isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
