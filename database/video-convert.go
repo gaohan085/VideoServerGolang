@@ -157,6 +157,7 @@ func (v *VideoConvert) ReadLog(chInter <-chan int, chDone <-chan int) error { //
 				}
 			}
 
+			cmd.Wait()
 			time.Sleep(3 * time.Second)
 		}
 	}
