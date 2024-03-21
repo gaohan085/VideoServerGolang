@@ -52,8 +52,8 @@ func SetDB() {
 		log.Fatal(err)
 	}
 
-	sqlDB.SetMaxIdleConns(10)
-	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetMaxIdleConns(5)
+	sqlDB.SetMaxOpenConns(10)
 	sqlDB.SetConnMaxIdleTime(time.Hour)
 
 	db.AutoMigrate(&VideoInf{}, &VideoConvert{})

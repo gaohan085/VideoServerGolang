@@ -20,7 +20,7 @@ export const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
   useEffect(() => {
     const hostname = window.location.hostname
     const ws = new WebSocket("ws://" + hostname + "/api/ws")
-    const intervalID = setInterval(() => { ws.send("Hello from server") }, 1500)
+    const intervalID = setInterval(() => { ws.send("Hello from server") }, 3000)
     ws.onmessage = (data: MessageEvent<string>) => setConvertState(data.data)
 
     return () => {
