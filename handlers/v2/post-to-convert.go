@@ -7,8 +7,10 @@ import (
 )
 
 func ConvertVideo(ctx *fiber.Ctx) error {
-	var video = database.VideoConvert{}
-	ctx.BodyParser(&video)
+	var video database.VideoConvert
+	if err := ctx.BodyParser(&video); err != nil {
+		return ctx.SendStatus(fiber.StatusInternalServerError)
+	}
 
 	go func() error {
 		chDone, chInter := make(chan int, 1024), make(chan int, 1024)
@@ -21,5 +23,5 @@ func ConvertVideo(ctx *fiber.Ctx) error {
 
 		return nil
 	}()
-	return nil
+	return ctx.SendStatus(fiber.StatusOK)
 }
