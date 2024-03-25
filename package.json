@@ -17,9 +17,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@reduxjs/toolkit": "^2.2.1",
+    "@reduxjs/toolkit": "^2.2.2",
     "axios": "^1.6.8",
-    "framer-motion": "^11.0.14",
+    "framer-motion": "^11.0.20",
     "plyr": "^3.7.8",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
