@@ -95,6 +95,7 @@ func StartConvert() error {
 
 		body, _ := json.Marshal(video)
 		req, _ := http.NewRequest("POST", ffmpegServer+"/api/v2/convert", bytes.NewBuffer(body))
+		req.Header.Set("Content-Type", "application/json")
 		http.DefaultClient.Do(req)
 
 	}

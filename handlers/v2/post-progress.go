@@ -13,9 +13,9 @@ import (
 
 // FFmpeg Server post to main server
 func PostProgress(ctx *fiber.Ctx) error {
-	video := &database.VideoConvert{}
+	var video database.VideoConvert
 	if err := ctx.BodyParser(&video); err != nil {
-		return err
+		return ctx.SendStatus(fiber.StatusInternalServerError)
 	}
 
 	if err := video.Update(); err != nil {
@@ -38,5 +38,5 @@ func PostProgress(ctx *fiber.Ctx) error {
 		}()
 	}
 
-	return nil
+	return ctx.SendStatus(fiber.StatusOK)
 }
