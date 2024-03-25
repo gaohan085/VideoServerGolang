@@ -1,7 +1,13 @@
 package database
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
+	"net/http"
+	"os"
+
+	_ "github.com/joho/godotenv/autoload"
 )
 
 var ErrVideoConverting = errors.New("video is converting, cannot delete")
@@ -66,7 +72,7 @@ func (qu *VideoQueue) GetNextConvertVideo() (video *VideoConvert, err error) { /
 
 func StartConvert() error {
 	queue := VideoQueue{}
-	chDone, chInter := make(chan int, 1024), make(chan int, 1024)
+	ffmpegServer := os.Getenv("FFMPEG_SERVER_ADDR")
 
 	if err := queue.Query(); err != nil {
 		return err
@@ -87,12 +93,9 @@ func StartConvert() error {
 			return err
 		}
 
-		if err := video.UpdateDuration(); err != nil {
-			return err
-		}
-
-		go video.Convert(chInter, chDone)
-		go video.ReadLog(chInter, chDone)
+		body, _ := json.Marshal(video)
+		req, _ := http.NewRequest("POST", ffmpegServer+"/api/v2/convert", bytes.NewBuffer(body))
+		http.DefaultClient.Do(req)
 
 	}
 

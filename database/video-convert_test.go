@@ -10,8 +10,9 @@ import (
 func TestUpdateDuration(t *testing.T) {
 	InitTest(t)
 	video := VideoConvert{
-		FileName: "test.mp4",
-		Path:     "test",
+		FileName:   "test.mp4",
+		Path:       "test",
+		PlaySource: "http://127.0.0.1/video/test/test.mp4",
 	}
 
 	t.Run("获取Duration", func(t *testing.T) {

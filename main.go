@@ -8,11 +8,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/proxy"
 	"github.com/gofiber/template/html/v2"
 	_ "github.com/joho/godotenv/autoload"
 
@@ -29,7 +26,6 @@ func main() {
 	flag.Parse()
 	os.Setenv("ENV", *env)
 	engine := html.NewFileSystem(http.FS(content), ".html")
-	remoteServerAddress := os.Getenv("REMOTE_SERVER_ADDR")
 
 	database.SetDB()
 	go schedule.Schedule()
@@ -49,71 +45,37 @@ func main() {
 				}
 				return nil
 			},
+			DisableStartupMessage: false,
+			AppName:               "Go Fiber React TypeScript",
 		},
 	)
 
-	app.Use("/api/ws", func(c *fiber.Ctx) error {
-		if websocket.IsWebSocketUpgrade(c) {
-			c.Locals("allowed", true)
-			return c.Next()
-		}
-		return fiber.ErrUpgradeRequired
-	})
+	file, err := os.OpenFile("./log/access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer file.Close()
 
-	app.Get("/api/ws", handlers.Wshandler)
+	loggerConfigDev := logger.Config{
+		Format:     "[DEBUG] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
+		TimeFormat: "2006/Jan/02 Monday 15:04:05",
+		TimeZone:   "Asia/Shanghai",
+	}
+	loggerConfigPro := logger.Config{
+		Format:     "[${time}] ${ip} ${status} ${latency} ${method} ${path} - ${ua}\n",
+		TimeFormat: "2006/Jan/02 Monday 15:04:05",
+		TimeZone:   "Asia/Shanghai",
+		Output:     file,
+	}
 
 	switch *env {
 	case "production":
-		file, err := os.OpenFile("./log/access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-		if err != nil {
-			log.Fatalf("error opening file: %v", err)
-		}
-		// defer file.Close()
-		app.Use(logger.New(logger.Config{
-			Format:     "[${time}] ${ip} ${status} ${latency} ${method} ${path} - ${ua}\n",
-			TimeFormat: "2006/Jan/02 Monday 15:04:05",
-			TimeZone:   "Asia/Shanghai",
-			Output:     file,
-		}))
-		app.Static("/assets", "./assets/")
-
-		api := app.Group("/api")
-		api.Get("/disk", handlers.DiskUsageHandler)
-		api.Post("/delete", handlers.DeleteHandler)
-		api.Post("/rename", handlers.RenameHandler)
-		api.Get("/version", handlers.VersionHandler)
-		api.Get("/actress/:name", handlers.GetVideosByActress)
-		api.Post("/convert", handlers.ConvertHandler)
-		api.Get("/*", handlers.FileReaderHandler)
-
-		app.Use("/dist", filesystem.New(filesystem.Config{
-			Root:       http.FS(content),
-			PathPrefix: "dist",
-			Browse:     true,
-		}))
-		app.Get("/*", handlers.IndexHandler)
+		app.Use(logger.New(loggerConfigPro))
 	default:
-		app.Use(logger.New(logger.Config{
-			Format:     "[DEBUG] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
-			TimeFormat: "2006/Jan/02 Monday 15:04:05",
-			TimeZone:   "Asia/Shanghai",
-		}))
-
-		app.Use("/dist", filesystem.New(filesystem.Config{
-			Root:       http.FS(content),
-			PathPrefix: "dist",
-			Browse:     true,
-		}))
-
-		app.Post("/api/convert", handlers.ConvertHandler)
-		app.Use("/api/*", func(c *fiber.Ctx) error {
-			return proxy.Do(c, remoteServerAddress+"/api/"+c.Params("*"))
-		})
-		app.Get("/assets/*", func(c *fiber.Ctx) error {
-			return proxy.Do(c, remoteServerAddress+"/assets/"+c.Params("*"))
-		})
-		app.Get("/*", handlers.IndexHandler)
+		app.Use(logger.New(loggerConfigDev))
 	}
+
+	SetRoutes(app)
 
 	if err := app.Listen("127.0.0.1:3000"); err != nil {
 		log.Fatal(err)
