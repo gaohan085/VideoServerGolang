@@ -14,7 +14,7 @@ func ConvertVideo(ctx *fiber.Ctx) error {
 
 	go func() error {
 		chDone, chInter := make(chan int, 1024), make(chan int, 1024)
-		if err := video.UpdateDuration(); err != nil {
+		if err := video.UpdateDurationOnFFmpegServer(); err != nil {
 			return err
 		}
 
