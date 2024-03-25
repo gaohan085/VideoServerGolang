@@ -38,7 +38,7 @@ func (v *VideoConvert) Create() error {
 }
 
 func (v *VideoConvert) Update() error {
-	return Db.Model(&VideoConvert{}).Where("play_source = ?", v.PlaySource).Updates(v).Error
+	return Db.Model(&VideoConvert{}).Where("play_source = ?", v.PlaySource).Updates(&v).Error
 }
 
 func (v *VideoConvert) UpdateStatus(s string) error {
@@ -173,11 +173,11 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 	cmd.Stdin = strings.NewReader(script)
 	if err := cmd.Start(); err != nil {
 		chInter <- 0
-		v.Status = "converting"
-
-		v.PostVideoData()
 		return err
 	}
+
+	v.Status = "converting"
+	v.PostVideoData()
 
 	if err := cmd.Wait(); err != nil {
 		chInter <- 0
@@ -240,4 +240,34 @@ func (v *VideoConvert) PostVideoData() {
 	req, _ := http.NewRequest("POST", mainServer+"/api/v2/progress", bytes.NewBuffer(bodyByte))
 	req.Header.Set("Content-Type", "application/json")
 	http.DefaultClient.Do(req)
+}
+
+func (v *VideoConvert) UpdateDurationOnFFmpegServer() error { //DONE TEST
+	var script = fmt.Sprintf(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal %s`, v.PlaySource)
+
+	cmd := exec.Command("bash")
+	cmd.Stdin = strings.NewReader(script)
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return err
+	}
+
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+
+	scanner := bufio.NewScanner(stdout)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		duration, err := lib.DurationInSeconds(line)
+		if err != nil {
+			return err
+		}
+
+		v.Duration = duration
+	}
+
+	return cmd.Wait()
 }
