@@ -238,5 +238,6 @@ func (v *VideoConvert) PostVideoData() {
 
 	bodyByte, _ := json.Marshal(&v)
 	req, _ := http.NewRequest("POST", mainServer+"/api/v2/progress", bytes.NewBuffer(bodyByte))
+	req.Header.Set("Content-Type", "application/json")
 	http.DefaultClient.Do(req)
 }
