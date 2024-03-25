@@ -33,7 +33,7 @@ func main() {
 	app := fiber.New(
 		fiber.Config{
 			Views:        engine,
-			Prefork:      true,
+			Prefork:      false,
 			ServerHeader: "Fiber",
 			ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 				var e *fiber.Error
