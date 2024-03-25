@@ -6,7 +6,6 @@ toolchain go1.21.0
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.1
-	github.com/fasthttp/websocket v1.5.8
 	github.com/go-co-op/gocron/v2 v2.2.6
 	github.com/go-faker/faker/v4 v4.3.0
 	github.com/gofiber/contrib/websocket v1.3.0
@@ -17,7 +16,7 @@ require (
 	github.com/shirou/gopsutil/v3 v3.24.2
 	github.com/stretchr/testify v1.9.0
 	gorm.io/driver/postgres v1.5.7
-	gorm.io/gorm v1.25.7
+	gorm.io/gorm v1.25.8
 )
 
 require (
@@ -26,6 +25,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/fasthttp/websocket v1.5.8 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/gofiber/template v1.8.3 // indirect
 	github.com/gofiber/utils v1.1.0 // indirect
