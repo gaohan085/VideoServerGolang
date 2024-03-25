@@ -38,7 +38,7 @@ func SetRoutes(app *fiber.App) {
 	v2.Post("/convert", handlersV2.ConvertVideo)
 
 	// for main server to receive video convert progress
-	v2.Post("/progress", handlersV2.ConvertVideo)
+	v2.Post("/progress", handlersV2.PostProgress)
 
 	app.Use("/dist", filesystem.New(filesystem.Config{
 		Root:       http.FS(content),

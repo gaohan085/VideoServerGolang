@@ -23,5 +23,5 @@ build:
 	@echo 
 	@echo "-------------------------- GO BUILD ---------------------------------"
 	@echo 
-	GOOS=linux GOACH=amd64 go build -ldflags="-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'" -o .out/videoserver-linux-amd64 main.go
-	GOOS=windows GOACH=amd64 go build -ldflags="-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'" -o .out/videoserver-windows-amd64.exe main.go
+	GOOS=linux GOACH=amd64 go build -ldflags="-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'" -o .out/videoserver-linux-amd64 
+	GOOS=windows GOACH=amd64 go build -ldflags="-X 'go-fiber-react-ts/lib.Version=`git tag --sort=-version:refname | head -n 1`'" -o .out/videoserver-windows-amd64.exe 
