@@ -19,7 +19,7 @@ func PostProgress(ctx *fiber.Ctx) error {
 	}
 
 	if err := video.Update(); err != nil {
-		return err
+		return ctx.SendStatus(fiber.StatusInternalServerError)
 	}
 
 	if video.Status == "done" {
