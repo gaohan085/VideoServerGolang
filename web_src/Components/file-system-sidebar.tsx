@@ -90,11 +90,11 @@ export const InteractiveFileSysSideBar: React.FC = () => {
   const [rightClickElem, setRightClickElem] = useState<DirElement | undefined>(
     undefined,
   );
-  const [clicked, setClicked] = useState<boolean>(true);
+  const [clicked, setClicked] = useState<boolean | undefined>(true);
   const [position, setPosition] = useState<
     { pageX: number; pageY: number } | undefined
   >(undefined);
-  const [openFolder, setOpenFolder] = useState<string>("/");
+  const [openFolder, setOpenFolder] = useState<string | undefined>("/");
 
   const { mutate } = useSWRConfig();
 

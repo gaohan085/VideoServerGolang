@@ -32,7 +32,7 @@ func Schedule() error {
 	)
 
 	schedule.NewJob(
-		gocron.DurationJob(30*time.Second),
+		gocron.DurationJob(1*time.Minute),
 		gocron.NewTask(database.StartConvert),
 	)
 
