@@ -24,9 +24,9 @@ func PostProgress(ctx *fiber.Ctx) error {
 
 	if video.Status == "done" {
 		go func() {
-			var rootPath = os.Getenv("ROOT_PATH")
+			var rootDir = os.Getenv("ROOT_DIR")
 			var downloadLink = os.Getenv("FFMPEG_DOWNLOAD_ADDR")
-			var script = fmt.Sprintf(`wget %s -P %s%s`, downloadLink+video.OutputName, rootPath, video.Path)
+			var script = fmt.Sprintf(`wget %s -P %s%s/`, downloadLink+video.OutputName, rootDir, video.Path)
 			cmd := exec.Command("bash")
 			cmd.Stdin = strings.NewReader(script)
 

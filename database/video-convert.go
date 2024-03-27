@@ -166,7 +166,7 @@ func (v *VideoConvert) ReadLog(chInter <-chan int, chDone <-chan int) error { //
 func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- int) error {
 	v.OutputName = lib.GetFilenameWithoutExt(v.FileName) + "_cvt.mp4"
 	var script = fmt.Sprintf(`
-	taskset -c 0,1,2 ffmpeg -y -progress ffreport.log -i %s -movflags faststart -acodec copy -vcodec libx264 %s
+	taskset -c 0,1,2 ffmpeg -y -progress ffreport.log -stats_period 2 -i %s -movflags faststart -acodec copy -vcodec libx264 %s
 		`, v.PlaySource, v.OutputName)
 
 	cmd := exec.Command("bash")
