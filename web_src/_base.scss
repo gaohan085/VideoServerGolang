@@ -7,8 +7,7 @@ $backgrdColor: #090812;
   transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
-@mixin name($curosr: none) {
-  cursor: $curosr;
+@mixin name() {
   padding: 2px 0px;
   border-radius: 4px;
   white-space: nowrap;
