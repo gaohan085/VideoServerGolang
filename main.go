@@ -47,6 +47,7 @@ func main() {
 			},
 			DisableStartupMessage: false,
 			AppName:               "Go Fiber React TypeScript",
+			ProxyHeader:           fiber.HeaderXForwardedFor,
 		},
 	)
 
