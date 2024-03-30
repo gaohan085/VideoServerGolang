@@ -3,12 +3,19 @@
 .file {
   @extend %element;
   > [class~="file-element"] {
-    @include base.name(pointer);
+    @include base.name();
     transition: color 0.2s ease-in-out;
     text-overflow: ellipsis;
     padding-right: 10px;
     > [class~="name"]:hover {
       color: base.$main-color;
+    }
+    > span {
+      @include base.icon();
+    }
+
+    &:hover {
+      cursor: pointer;
     }
 
     &[class~="playing"] {
@@ -21,20 +28,18 @@
     }
 
     &[class~="convert"] {
-      > [class~="name"] {
-        text-decoration: line-through;
-        &:hover {
-          color: lighten($color: #1c1838, $amount: 50%);
-        }
-      }
       > [class~="progress"] {
         font-style: italic;
       }
-    }
-  }
-  > [class~="file-element"] {
-    > span {
-      @include base.icon();
+
+      &:hover {
+        cursor: not-allowed;
+
+        > [class~="name"] {
+          text-decoration: line-through;
+          color: lighten($color: #1c1838, $amount: 50%);
+        }
+      }
     }
   }
 }
