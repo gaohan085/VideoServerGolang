@@ -15,8 +15,6 @@ import (
 	"time"
 
 	"gorm.io/gorm"
-
-	_ "github.com/joho/godotenv/autoload"
 )
 
 type VideoConvert struct {
@@ -192,7 +190,7 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 
 // This function should only execute in ffmpeg server
 func (v *VideoConvert) ReadLogANDSendToMainServer(chInter <-chan int, chDone <-chan int) error {
-	script := `cat ffreport.log`
+	script := `cat ./progress2.log | tail -n 24`
 
 	for {
 		select {
@@ -225,21 +223,26 @@ func (v *VideoConvert) ReadLogANDSendToMainServer(chInter <-chan int, chDone <-c
 				v.Progress = (outTimeInus / 1000000) / v.Duration
 				v.PostVideoData()
 			}
-
 			cmd.Wait()
-			time.Sleep(3 * time.Second)
 		}
+		time.Sleep(3 * time.Second)
 	}
 }
 
 // This function should only execute in ffmpeg server
-func (v *VideoConvert) PostVideoData() {
+func (v *VideoConvert) PostVideoData() (err error) {
 	mainServer := os.Getenv("MAIN_SERVER")
 
 	bodyByte, _ := json.Marshal(&v)
 	req, _ := http.NewRequest("POST", mainServer+"/api/v2/progress", bytes.NewBuffer(bodyByte))
 	req.Header.Set("Content-Type", "application/json")
-	http.DefaultClient.Do(req)
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	return
 }
 
 func (v *VideoConvert) UpdateDurationOnFFmpegServer() error { //DONE TEST

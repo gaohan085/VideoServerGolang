@@ -1,6 +1,11 @@
 package database
 
 import (
+	"bufio"
+	"os/exec"
+	"regexp"
+	"strconv"
+	"strings"
 	"sync"
 	"testing"
 
@@ -49,4 +54,34 @@ func TestUpdateDuration(t *testing.T) {
 	})
 
 	Db.Migrator().DropTable(&VideoConvert{})
+}
+
+func TestReduceLineReadFromCat(t *testing.T) {
+	var script = "cat ./progress2.log | tail -n 24"
+
+	cmd := exec.Command("bash")
+
+	cmd.Stdin = strings.NewReader(script)
+	pipe, _ := cmd.StdoutPipe()
+	scanner := bufio.NewScanner(pipe)
+	var timeSlice []string
+
+	err := cmd.Start()
+
+	for scanner.Scan() {
+		if regexp.MustCompile(`(out_time_us=)[\d]{5,}`).MatchString(scanner.Text()) {
+			timeSlice = append(timeSlice, scanner.Text())
+		}
+	}
+
+	if len(timeSlice) > 0 {
+		outTime := timeSlice[len(timeSlice)-1]
+		outTimeInus, _ := strconv.ParseFloat(regexp.MustCompile(`[\d]{5,}`).FindString(outTime), 64)
+
+		assert.Equal(t, float64(189674667), outTimeInus)
+	}
+
+	assert.Nil(t, err)
+
+	cmd.Wait()
 }
