@@ -185,6 +185,7 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 
 	if cmd.ProcessState.Success() {
 		chDone <- 0
+		return nil
 	}
 	return nil
 }
