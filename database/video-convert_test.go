@@ -57,30 +57,24 @@ func TestUpdateDuration(t *testing.T) {
 }
 
 func TestReduceLineReadFromCat(t *testing.T) {
-	var script = "cat ./progress2.log | tail -n 24"
+	var script = "cat ./progress2.log | tail -n 12"
 
 	cmd := exec.Command("bash")
 
 	cmd.Stdin = strings.NewReader(script)
 	pipe, _ := cmd.StdoutPipe()
 	scanner := bufio.NewScanner(pipe)
-	var timeSlice []string
+	var time float64
 
 	err := cmd.Start()
 
 	for scanner.Scan() {
 		if regexp.MustCompile(`(out_time_us=)[\d]{5,}`).MatchString(scanner.Text()) {
-			timeSlice = append(timeSlice, scanner.Text())
+			time, _ = strconv.ParseFloat(regexp.MustCompile(`[\d]{5,}`).FindString(scanner.Text()), 64)
 		}
 	}
 
-	if len(timeSlice) > 0 {
-		outTime := timeSlice[len(timeSlice)-1]
-		outTimeInus, _ := strconv.ParseFloat(regexp.MustCompile(`[\d]{5,}`).FindString(outTime), 64)
-
-		assert.Equal(t, float64(189674667), outTimeInus)
-	}
-
+	assert.Equal(t, float64(189674667), time)
 	assert.Nil(t, err)
 
 	cmd.Wait()
