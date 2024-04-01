@@ -164,6 +164,7 @@ func (v *VideoConvert) ReadLog(chInter <-chan int, chDone <-chan int) error { //
 func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- int) error {
 	v.OutputName = lib.GetFilenameWithoutExt(v.FileName) + "_cvt.mp4"
 	var script = fmt.Sprintf(`
+	rm -f ffreport.log &&
 	taskset -c 0,1,2 ffmpeg -y -progress ffreport.log -stats_period 2 -i %s -movflags faststart -acodec copy -vcodec libx264 %s
 		`, v.PlaySource, v.OutputName)
 
@@ -189,8 +190,8 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 }
 
 // This function should only execute in ffmpeg server
-func (v *VideoConvert) ReadLogANDSendToMainServer(chInter <-chan int, chDone <-chan int) error {
-	script := `cat ./progress2.log | tail -n 24`
+func (v *VideoConvert) ReadLogANDSendToMainServer(chInter <-chan int, chDone <-chan int) {
+	script := `cat ffreport.log | tail -n 12`
 
 	for {
 		select {
@@ -199,30 +200,24 @@ func (v *VideoConvert) ReadLogANDSendToMainServer(chInter <-chan int, chDone <-c
 			v.Status = "done"
 			v.PostVideoData()
 
-			return nil
+			return
 		case <-chInter:
-			return nil
+			return
 		default:
 			cmd := exec.Command("bash")
 			cmd.Stdin = strings.NewReader(script)
 			buf, _ := cmd.StdoutPipe()
 			scanner := bufio.NewScanner(buf)
-			var timeSlice []string
 			cmd.Start()
 
 			for scanner.Scan() {
 				if regexp.MustCompile(`(out_time_us=)[\d]{5,}`).MatchString(scanner.Text()) {
-					timeSlice = append(timeSlice, scanner.Text())
+					outTimeInus, _ := strconv.ParseFloat(regexp.MustCompile(`[\d]{5,}`).FindString(scanner.Text()), 64)
+					v.Progress = (outTimeInus / 1000000) / v.Duration
 				}
 			}
 
-			if len(timeSlice) > 0 {
-				outTime := timeSlice[len(timeSlice)-1]
-				outTimeInus, _ := strconv.ParseFloat(regexp.MustCompile(`[\d]{5,}`).FindString(outTime), 64)
-
-				v.Progress = (outTimeInus / 1000000) / v.Duration
-				v.PostVideoData()
-			}
+			v.PostVideoData()
 			cmd.Wait()
 		}
 		time.Sleep(3 * time.Second)
