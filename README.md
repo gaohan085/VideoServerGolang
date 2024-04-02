@@ -1,15 +1,25 @@
-# 🚀 Welcome to your new awesome project!
+# [Golang](https://go.dev/) Video Server Writen in [fiber framework](https://gofiber.io/) with [React](https://react.dev/)
 
-This project has been created using **webpack-cli**, you can now run
+## 👉[Release Page](https://github.com/gaohan085/VideoServerGolang/tags)
 
-```
-npm run build
-```
+## 👉 Build Yourself
 
-or
+### 👉 requirement [Nodejs](https://nodejs.org/) [Go](https://go.dev/) [FFMPEG](https://ffmpeg.org/)
 
-```
-yarn build
+```bash
+make && make build
 ```
 
-to bundle your application
+#### Usage
+
+```bash
+videoserver-0.7.0.1-linux-amd64 usage -ffmpeg -pro # As ffmpeg server in production mode
+```
+
+```bash
+videoserver-0.7.0.1-linux-amd64 usage -pro # As main video server in production mode
+```
+
+```bash
+videoserver-0.7.0.1-linux-amd64 usage -dev # As main video server in development mode
+```

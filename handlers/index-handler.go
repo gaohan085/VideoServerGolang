@@ -16,6 +16,6 @@ func IndexHandler(c *fiber.Ctx) error {
 
 	return c.Render("dist/index", fiber.Map{
 		"Version":  lib.Version,
-		"Freedisk": fmt.Sprintf("%.1f", freedisk) + "GB",
+		"Freedisk": fmt.Sprintf("%.2f", freedisk) + "GB",
 	})
 }

@@ -4,11 +4,13 @@ import (
 	"embed"
 	"errors"
 	"flag"
+	"io"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	fiberlog "github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/template/html/v2"
@@ -22,10 +24,47 @@ import (
 //go:embed dist/*
 var content embed.FS
 
+// main usage -ffmpeg -pro
+
+func Parseflag() {
+	usage := flag.NewFlagSet("usage", flag.ExitOnError)
+	usageFFmpeg := usage.Bool("ffmpeg", false, "-ffmpeg use as ffmpeg server, not provide as main server")
+	usageIsDev := usage.Bool("dev", false, "'-dev' use as development server and '-pro' use as production server")
+	usageIsPro := usage.Bool("pro", false, "'-dev' use as development server and '-pro' use as production server")
+
+	if len(os.Args) <= 1 {
+		log.Panic("expected 'usage' commands")
+	}
+
+	switch os.Args[1] {
+	case "usage":
+		usage.Parse(os.Args[2:])
+		if *usageFFmpeg {
+			os.Setenv("USAGE", "ffmpeg")
+		} else {
+			os.Setenv("USAGE", "main")
+		}
+
+		if *usageIsDev && *usageIsPro {
+			log.Panic("'-dev' and '-pro' cannot be provided at same time")
+		}
+
+		if *usageIsDev {
+			os.Setenv("ENV", "dev")
+		}
+
+		if *usageIsPro {
+			os.Setenv("ENV", "pro")
+		}
+	default:
+		log.Panic("expect command 'usage'")
+	}
+}
+
 func main() {
-	env := flag.String("env", "production", "environment")
-	flag.Parse()
-	os.Setenv("ENV", *env)
+	Parseflag()
+	usage := os.Getenv("USAGE")
+
 	engine := html.NewFileSystem(http.FS(content), ".html")
 
 	database.SetDB()
@@ -52,6 +91,12 @@ func main() {
 		},
 	)
 
+	//Global fiberlog
+	fiberlog.SetLevel(fiberlog.LevelInfo)
+	file, _ := os.OpenFile("./log/record.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	iw := io.MultiWriter(os.Stdout, file)
+	fiberlog.SetOutput(iw)
+
 	app.Use(pprof.New())
 	file, err := os.OpenFile("./log/access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -71,14 +116,14 @@ func main() {
 		Output:     file,
 	}
 
-	switch *env {
-	case "production":
+	switch usage {
+	case "ffmpeg":
 		app.Use(logger.New(loggerConfigPro))
+
 	default:
 		app.Use(logger.New(loggerConfigDev))
+		SetRoutes(app)
 	}
-
-	SetRoutes(app)
 
 	if err := app.Listen("127.0.0.1:3000"); err != nil {
 		log.Fatal(err)

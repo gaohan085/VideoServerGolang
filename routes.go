@@ -2,7 +2,6 @@ package main
 
 import (
 	"go-fiber-react-ts/handlers"
-	handlersV2 "go-fiber-react-ts/handlers/v2"
 	"net/http"
 
 	"github.com/gofiber/contrib/websocket"
@@ -31,14 +30,6 @@ func SetRoutes(app *fiber.App) {
 	api.Get("/actress/:name", handlers.GetVideosByActress)
 	api.Post("/convert", handlers.ConvertHandler)
 	api.Get("/*", handlers.FileReaderHandler)
-
-	v2 := app.Group("/api/v2")
-
-	// for ffmpeg server to receive video info to convert
-	v2.Post("/convert", handlersV2.ConvertVideo)
-
-	// for main server to receive video convert progress
-	v2.Post("/progress", handlersV2.PostProgress)
 
 	app.Use("/dist", filesystem.New(filesystem.Config{
 		Root:       http.FS(content),
