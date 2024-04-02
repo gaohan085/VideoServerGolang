@@ -2,11 +2,8 @@ package database
 
 import (
 	"bufio"
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"go-fiber-react-ts/lib"
-	"net/http"
 	"os"
 	"os/exec"
 	"regexp"
@@ -15,6 +12,8 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+
+	fiberlog "github.com/gofiber/fiber/v2/log"
 )
 
 type VideoConvert struct {
@@ -29,6 +28,7 @@ type VideoConvert struct {
 	Progress   float64        `json:"progress"`
 	PlaySource string         `gorm:"unique" json:"playSource"`
 	OutputName string         `json:"outputName"`
+	Downloaded bool           `json:"downloaded"`
 }
 
 func (v *VideoConvert) Create() error {
@@ -37,10 +37,6 @@ func (v *VideoConvert) Create() error {
 
 func (v *VideoConvert) Update() error {
 	return Db.Model(&VideoConvert{}).Where("play_source = ?", v.PlaySource).Updates(&v).Error
-}
-
-func (v *VideoConvert) UpdateStatus(s string) error {
-	return Db.Model(&VideoConvert{}).Where(&VideoConvert{PlaySource: v.PlaySource}).Update("status", s).Error
 }
 
 func (v *VideoConvert) Query(s string) error {
@@ -78,86 +74,8 @@ func (v *VideoConvert) UpdateDuration() error { //DONE TEST
 		return err
 	}
 
-	return Db.Save(&v).Error
-}
-
-func (v *VideoConvert) UpdateProgress(p float64) error {
-	return Db.Model(&VideoConvert{}).Where("play_source = ?", v.PlaySource).Update("progress", p).Error
-}
-
-func (v *VideoConvert) Convert(chInter chan<- int, chDone chan<- int) error {
-
-	rootDir := os.Getenv("ROOT_DIR")
-	var inputVideoPath = fmt.Sprintf("%s%s/%s", rootDir, v.Path, v.FileName)
-	var outputVideoPath = fmt.Sprintf("%s%s/%s", rootDir, v.Path, lib.GetFilenameWithoutExt(v.FileName)+"_cvt.mp4")
-	var script = fmt.Sprintf(`
-		taskset -c 0,1 ffmpeg -y -progress ffreport.log -i %s -movflags faststart -acodec copy -vcodec copy %s
-		`, inputVideoPath, outputVideoPath)
-
-	cmd := exec.Command("bash")
-	cmd.Stdin = strings.NewReader(script)
-	if err := cmd.Start(); err != nil {
-		chInter <- 0
-		return err
-	}
-
-	v.Status = "converting"
-	if err := v.Update(); err != nil {
-		chInter <- 0
-		return err
-	}
-
-	if err := cmd.Wait(); err != nil {
-		chInter <- 0
-		return err
-	}
-
-	if cmd.ProcessState.Success() {
-		v.Status = "done"
-		chDone <- 0
-		return v.Update()
-	}
-	return nil
-}
-
-func (v *VideoConvert) ReadLog(chInter <-chan int, chDone <-chan int) error { //DONE TEST
-	script := `cat ffreport.log`
-
-	for {
-		select {
-		case <-chDone:
-			if err := v.UpdateProgress(1); err != nil {
-				return err
-			}
-			return nil
-		case <-chInter:
-			return nil
-		default:
-			cmd := exec.Command("bash")
-			cmd.Stdin = strings.NewReader(script)
-			buf, _ := cmd.StdoutPipe()
-			scanner := bufio.NewScanner(buf)
-			var timeSlice []string
-			cmd.Start()
-
-			for scanner.Scan() {
-				if regexp.MustCompile(`(out_time_us=)[\d]{5,}`).MatchString(scanner.Text()) {
-					timeSlice = append(timeSlice, scanner.Text())
-				}
-			}
-
-			if len(timeSlice) > 0 {
-				outTime := timeSlice[len(timeSlice)-1]
-				outTimeInus, _ := strconv.ParseFloat(regexp.MustCompile(`[\d]{5,}`).FindString(outTime), 64)
-				if err := v.UpdateProgress((outTimeInus / 1000000) / v.Duration); err != nil {
-					return err
-				}
-			}
-
-			cmd.Wait()
-			time.Sleep(3 * time.Second)
-		}
-	}
+	fiberlog.Info(fmt.Sprintf("Get video duration %s", v.FileName))
+	return v.Update()
 }
 
 // This function should only execute in ffmpeg server
@@ -165,8 +83,9 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 	v.OutputName = lib.GetFilenameWithoutExt(v.FileName) + "_cvt.mp4"
 	var script = fmt.Sprintf(`
 	rm -f ffreport.log &&
+	wget %s &&
 	taskset -c 0,1,2 ffmpeg -y -progress ffreport.log -stats_period 2 -i %s -movflags faststart -acodec copy -vcodec libx264 %s
-		`, v.PlaySource, v.OutputName)
+		`, v.PlaySource, v.FileName, v.OutputName)
 
 	cmd := exec.Command("bash")
 	cmd.Stdin = strings.NewReader(script)
@@ -176,7 +95,8 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 	}
 
 	v.Status = "converting"
-	v.PostVideoData()
+	v.Update()
+	fiberlog.Info(fmt.Sprintf("Start converting video %s", v.FileName))
 
 	if err := cmd.Wait(); err != nil {
 		chInter <- 0
@@ -185,13 +105,14 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 
 	if cmd.ProcessState.Success() {
 		chDone <- 0
+		fiberlog.Info(fmt.Sprintf("Finish converting video %s", v.FileName))
 		return nil
 	}
 	return nil
 }
 
 // This function should only execute in ffmpeg server
-func (v *VideoConvert) ReadLogANDSendToMainServer(chInter <-chan int, chDone <-chan int) {
+func (v *VideoConvert) ReadProgress(chInter <-chan int, chDone <-chan int) error {
 	script := `cat ffreport.log | tail -n 12`
 
 	for {
@@ -199,11 +120,9 @@ func (v *VideoConvert) ReadLogANDSendToMainServer(chInter <-chan int, chDone <-c
 		case <-chDone:
 			v.Progress = 1
 			v.Status = "done"
-			v.PostVideoData()
-
-			return
+			return v.Update()
 		case <-chInter:
-			return
+			return nil
 		default:
 			cmd := exec.Command("bash")
 			cmd.Stdin = strings.NewReader(script)
@@ -215,58 +134,39 @@ func (v *VideoConvert) ReadLogANDSendToMainServer(chInter <-chan int, chDone <-c
 				if regexp.MustCompile(`(out_time_us=)[\d]{5,}`).MatchString(scanner.Text()) {
 					outTimeInus, _ := strconv.ParseFloat(regexp.MustCompile(`[\d]{5,}`).FindString(scanner.Text()), 64)
 					v.Progress = (outTimeInus / 1000000) / v.Duration
+					v.Update()
 				}
 			}
 
-			v.PostVideoData()
 			cmd.Wait()
 		}
 		time.Sleep(3 * time.Second)
 	}
 }
 
-// This function should only execute in ffmpeg server
-func (v *VideoConvert) PostVideoData() (err error) {
-	mainServer := os.Getenv("MAIN_SERVER")
-
-	bodyByte, _ := json.Marshal(&v)
-	req, _ := http.NewRequest("POST", mainServer+"/api/v2/progress", bytes.NewBuffer(bodyByte))
-	req.Header.Set("Content-Type", "application/json")
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-
-	return
-}
-
-func (v *VideoConvert) UpdateDurationOnFFmpegServer() error { //DONE TEST
-	var script = fmt.Sprintf(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 -sexagesimal %s`, v.PlaySource)
+func (v *VideoConvert) DownloadConverted() error {
+	downloadLink := os.Getenv("FFMPEG_DOWNLOAD_ADDR")
+	rootDir := os.Getenv("ROOT_DIR")
+	var script = fmt.Sprintf(`wget -nc %s -P %s%s/`, downloadLink+v.OutputName, rootDir, v.Path)
 
 	cmd := exec.Command("bash")
 	cmd.Stdin = strings.NewReader(script)
-
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return err
-	}
 
 	if err := cmd.Start(); err != nil {
 		return err
 	}
 
-	scanner := bufio.NewScanner(stdout)
+	fiberlog.Info(fmt.Sprintf("Downloading video %s from %s", v.OutputName, downloadLink+v.OutputName))
 
-	for scanner.Scan() {
-		line := scanner.Text()
-		duration, err := lib.DurationInSeconds(line)
-		if err != nil {
-			return err
-		}
-
-		v.Duration = duration
+	if err := cmd.Wait(); err != nil {
+		return err
 	}
 
-	return cmd.Wait()
+	if cmd.ProcessState.Success() {
+		v.Downloaded = true
+		fiberlog.Info(fmt.Sprintf("Finish download video %s", v.OutputName))
+		return v.Update()
+	}
+
+	return nil
 }

@@ -21,10 +21,10 @@ func TestUpdateDuration(t *testing.T) {
 	}
 
 	t.Run("获取Duration", func(t *testing.T) {
-		err := video.UpdateDuration()
+		assert.Nil(t, video.Create())
 
-		assert.Nil(t, err)
-		assert.Equal(t, 596.962, video.Duration)
+		assert.Nil(t, video.UpdateDuration())
+		assert.Equal(t, 596.961814, video.Duration)
 
 	})
 
@@ -34,12 +34,12 @@ func TestUpdateDuration(t *testing.T) {
 
 		wg.Add(1)
 		go func(chInter chan<- int, chDone chan<- int) {
-			video.Convert(chInter, chDone)
+			video.ConvertOnFFmpegServer(chInter, chDone)
 			defer wg.Done()
 		}(chInter, chDone)
 		wg.Add(1)
 		go func(chInter <-chan int, chDone <-chan int) {
-			video.ReadLog(chInter, chDone)
+			video.ReadProgress(chInter, chDone)
 			defer wg.Done()
 		}(chInter, chDone)
 		wg.Wait()

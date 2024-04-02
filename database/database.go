@@ -17,7 +17,7 @@ func SetDB() {
 	var loggerConfig *logger.Config
 	dest := os.Getenv("DB_DESTN")
 	switch os.Getenv("ENV") {
-	case "production":
+	case "pro":
 		loggerConfig = &logger.Config{
 			SlowThreshold:             time.Second,  // 慢 SQL 阈值
 			LogLevel:                  logger.Error, // 日志级别
