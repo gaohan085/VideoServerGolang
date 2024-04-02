@@ -9,5 +9,5 @@ func InitTest(t *testing.T) {
 }
 
 func DropTables() {
-	Db.Migrator().DropTable(&VideoInf{})
+	Db.Migrator().DropTable(&VideoInf{}, &VideoConvert{})
 }
