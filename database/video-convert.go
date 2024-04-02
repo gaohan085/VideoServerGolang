@@ -28,7 +28,7 @@ type VideoConvert struct {
 	Progress   float64        `json:"progress"`
 	PlaySource string         `gorm:"unique" json:"playSource"`
 	OutputName string         `json:"outputName"`
-	Downloaded bool           `json:"downloaded"`
+	Downloaded *bool          `json:"downloaded" gorm:"default:false"`
 }
 
 func (v *VideoConvert) Create() error {
@@ -163,7 +163,8 @@ func (v *VideoConvert) DownloadConverted() error {
 	}
 
 	if cmd.ProcessState.Success() {
-		v.Downloaded = true
+		downloaded := true
+		v.Downloaded = &downloaded
 		fiberlog.Info(fmt.Sprintf("Finish download video %s", v.OutputName))
 		return v.Update()
 	}

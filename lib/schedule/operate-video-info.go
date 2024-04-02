@@ -64,17 +64,13 @@ func RemoveErrorSerialNum() error {
 }
 
 func DownloadConvertedVideo() error {
-	videoConverts := []database.VideoConvert{}
+	videoConverts := database.VideoConvert{}
 
-	if err := database.Db.Model(&database.VideoConvert{}).Where("downloaded <> ? ", true).Order("ID").Find(&videoConverts).Error; err != nil {
+	if err := database.Db.Model(&database.VideoConvert{}).Where("downloaded = ? ", false).First(&videoConverts).Error; err != nil {
 		return err
 	}
 
-	if len(videoConverts) > 0 {
-		go videoConverts[0].DownloadConverted()
-
-		return nil
-	}
+	go videoConverts.DownloadConverted()
 
 	return nil
 }

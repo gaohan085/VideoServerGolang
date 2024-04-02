@@ -79,3 +79,21 @@ func TestReduceLineReadFromCat(t *testing.T) {
 
 	cmd.Wait()
 }
+
+func TestBoolFieldInStuct(t *testing.T) {
+	InitTest(t)
+	video := VideoConvert{
+		FileName:   "test.mp4",
+		Path:       "test",
+		PlaySource: "http://127.0.0.1/video/test/test.mp4",
+	}
+
+	assert.Nil(t, video.Create())
+
+	vT := VideoConvert{}
+	assert.Nil(t, vT.Query(video.PlaySource))
+
+	assert.Equal(t, false, *vT.Downloaded)
+
+	DropTables()
+}
