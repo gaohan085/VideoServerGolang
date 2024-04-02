@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   create-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
       - uses: ncipollo/release-action@v1
@@ -20,9 +20,9 @@ jobs:
           allowUpdates: true
           generateReleaseNotes: true
           makeLatest: true
-  
+
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         goos: [linux, windows]
@@ -43,6 +43,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           goos: ${{ matrix.goos }}
           goarch: ${{ matrix.goarch }}
+          pre_command: export CGO_ENABLED=1
           binary_name: videoserver
           ldflags: "-X 'go-fiber-react-ts/lib.Version=${{ github.ref_name }}' "
           compress_assets: OFF
