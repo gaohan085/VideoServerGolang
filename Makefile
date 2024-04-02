@@ -1,7 +1,7 @@
 init:
 	@echo "--------------------- INSTALL GO DEPENDENCIES -----------------------"
 	@echo
-	go mod
+	go mod tidy
 	@echo
 	@echo "--------------------- INSTALL NPM DEPENDENCIES ----------------------"
 	@echo
