@@ -23,6 +23,7 @@ func TestUpdateDuration(t *testing.T) {
 	t.Run("获取Duration", func(t *testing.T) {
 		assert.Nil(t, video.Create())
 
+		// nginx 服务运行中测试能通过
 		assert.Nil(t, video.UpdateDuration())
 		assert.Equal(t, 596.961814, video.Duration)
 
@@ -52,7 +53,6 @@ func TestUpdateDuration(t *testing.T) {
 		assert.Equal(t, float64(1), videoT.Progress)
 		assert.NotNil(t, videoT.Duration)
 	})
-
 	Db.Migrator().DropTable(&VideoConvert{})
 }
 

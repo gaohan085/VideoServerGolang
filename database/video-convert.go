@@ -83,8 +83,8 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 	v.OutputName = lib.GetFilenameWithoutExt(v.FileName) + "_cvt.mp4"
 	var script = fmt.Sprintf(`
 	rm -f ffreport.log &&
-	wget %s &&
-	taskset -c 0,1,2 ffmpeg -y -progress ffreport.log -stats_period 2 -i %s -movflags faststart -acodec copy -vcodec libx264 %s
+	wget -nc %s &&
+	taskset -c 0,1,2 ffmpeg -y -progress ffreport.log -stats_period 2 -i %s -movflags faststart -acodec copy -vcodec copy %s
 		`, v.PlaySource, v.FileName, v.OutputName)
 
 	cmd := exec.Command("bash")
@@ -163,8 +163,7 @@ func (v *VideoConvert) DownloadConverted() error {
 	}
 
 	if cmd.ProcessState.Success() {
-		downloaded := true
-		v.Downloaded = &downloaded
+		*v.Downloaded = true
 		fiberlog.Info(fmt.Sprintf("Finish download video %s", v.OutputName))
 		return v.Update()
 	}

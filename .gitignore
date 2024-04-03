@@ -15,3 +15,5 @@ go-fiber-react-ts
 /**/assets/
 *.sh
 log/
+*.mp4
+*.mp4*

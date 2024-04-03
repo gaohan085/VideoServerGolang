@@ -66,7 +66,7 @@ func RemoveErrorSerialNum() error {
 func DownloadConvertedVideo() error {
 	videoConverts := database.VideoConvert{}
 
-	if err := database.Db.Model(&database.VideoConvert{}).Where("downloaded = ? ", false).First(&videoConverts).Error; err != nil {
+	if err := database.Db.Model(&database.VideoConvert{}).Where("status = ? AND downloaded = ? ", "done", false).First(&videoConverts).Error; err != nil {
 		return err
 	}
 
