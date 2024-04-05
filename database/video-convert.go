@@ -84,7 +84,7 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 	var script = fmt.Sprintf(`
 	rm -f ffreport.log &&
 	wget -nc %s &&
-	taskset -c 0,1,2 ffmpeg -y -progress ffreport.log -stats_period 2 -i %s -movflags faststart -acodec copy -vcodec copy %s
+	taskset -c 0,1,2 ffmpeg -y -progress ffreport.log -stats_period 2 -i %s -movflags faststart -acodec copy -vcodec libx264 %s
 		`, v.PlaySource, v.FileName, v.OutputName)
 
 	cmd := exec.Command("bash")
