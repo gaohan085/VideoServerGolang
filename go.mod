@@ -7,7 +7,7 @@ toolchain go1.21.0
 require (
 	github.com/PuerkitoBio/goquery v1.9.1
 	github.com/go-co-op/gocron/v2 v2.2.9
-	github.com/go-faker/faker/v4 v4.4.0
+	github.com/go-faker/faker/v4 v4.4.1
 	github.com/gofiber/contrib/websocket v1.3.0
 	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/gofiber/template/html/v2 v2.1.1
@@ -54,7 +54,7 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f // indirect
-	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
