@@ -4,7 +4,7 @@ import useSWR, { useSWRConfig } from "swr";
 
 import { useWindowDimension } from "../lib";
 
-import styles from "./file-system-sidebar.module.scss";
+import * as styles from "./file-system-sidebar.module.scss";
 
 import {
   DirElement,

@@ -4,7 +4,7 @@ import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
 
 import * as lib from "../lib";
 
-import styles from "./file-element.module.scss";
+import * as styles from "./file-element.module.scss";
 
 import { Context, InteractiveRenameComponent, WsContext, type DirElement } from ".";
 

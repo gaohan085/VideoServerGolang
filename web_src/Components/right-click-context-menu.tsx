@@ -11,7 +11,7 @@ import {
 
 import * as lib from "../lib";
 
-import styles from "./right-click-context-menu.module.scss";
+import * as styles from "./right-click-context-menu.module.scss";
 
 import { Context, type DirElement } from ".";
 

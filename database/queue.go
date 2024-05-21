@@ -2,6 +2,8 @@ package database
 
 import (
 	"errors"
+
+	"gorm.io/gorm"
 )
 
 var ErrVideoConverting = errors.New("video is converting, cannot delete")
@@ -18,7 +20,13 @@ func (qu *VideoQueue) Query() error {
 
 func (qu *VideoQueue) Join(v *VideoConvert) error {
 	v.Status = "pending"
-	return v.Create()
+	if err := v.Create(); errors.Is(err, gorm.ErrDuplicatedKey) {
+		v.Progress = 0
+		*v.Downloaded = false
+		return v.Update()
+	}
+
+	return nil
 }
 
 func (qu *VideoQueue) LeaveQueue(v *VideoConvert) error {
