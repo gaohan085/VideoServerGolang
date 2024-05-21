@@ -4,7 +4,7 @@ import { useLoaderData, useNavigation } from "react-router";
 
 import * as lib from "../lib";
 
-import styles from "./video-boxes-sidebar.module.scss";
+import * as  styles from "./video-boxes-sidebar.module.scss";
 
 import { type VideoInfo, type ResWithActressName, DiskUsage, Spinner } from ".";
 

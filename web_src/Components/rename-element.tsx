@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { FcCancel, FcCheckmark } from "react-icons/fc";
 
-import styles from "./rename-element.module.scss";
+import * as styles from "./rename-element.module.scss";
 
 import { Context, DirElement } from ".";
 

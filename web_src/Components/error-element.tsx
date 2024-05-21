@@ -2,7 +2,7 @@ import { FcCancel } from "react-icons/fc";
 import { motion } from "framer-motion";
 import React from "react";
 
-import styles from "./error-element.module.scss";
+import * as styles from "./error-element.module.scss";
 
 export const ErrorElement: React.FC = () => {
   return (

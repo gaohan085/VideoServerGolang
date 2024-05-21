@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 import * as lib from "../lib";
 
-import styles from "./player.module.scss";
+import * as styles from "./player.module.scss";
 
 const isProduction = process.env.NODE_ENV === "production";
 

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
 import useSWR from "swr";
 
-import styles from "./folder-element.module.scss";
+import * as styles from "./folder-element.module.scss";
 
 import {
   Context,
