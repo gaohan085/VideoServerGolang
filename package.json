@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.5",
-    "axios": "^1.7.0",
+    "axios": "^1.7.2",
     "framer-motion": "^11.2.4",
     "plyr": "^3.7.8",
     "prop-types": "^15.8.1",
