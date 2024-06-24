@@ -6,7 +6,7 @@ toolchain go1.21.0
 
 require (
 	github.com/PuerkitoBio/goquery v1.9.2
-	github.com/go-co-op/gocron/v2 v2.5.0
+	github.com/go-co-op/gocron/v2 v2.7.0
 	github.com/go-faker/faker/v4 v4.4.2
 	github.com/gofiber/contrib/websocket v1.3.1
 	github.com/gofiber/fiber/v2 v2.52.4
