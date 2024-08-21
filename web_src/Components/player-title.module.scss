@@ -1,0 +1,38 @@
+.title {
+  border-left: 3px solid #e85982;
+  border-right: 3px solid #e85982;
+  padding: 0.25rem 1rem;
+  margin-top: 1rem;
+  border-radius: 5px;
+
+  > h4 {
+    margin-block-end: 0em;
+    margin-block-start: 0em;
+  }
+
+  > [class~="info"] {
+    display: flex;
+    justify-content: space-between;
+
+    > a {
+      margin-block-start: 0.6em;
+      margin-block-end: 0em;
+      line-height: 22px;
+      font-size: 14px;
+      font-style: italic;
+      display: block;
+
+      > span {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 20px;
+        margin-right: 3px;
+      }
+
+      &:hover {
+        color: #e85982;
+        text-decoration: underline;
+      }
+    }
+  }
+}

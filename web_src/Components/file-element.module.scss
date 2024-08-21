@@ -4,9 +4,13 @@
   @extend %element;
   > [class~="file-element"] {
     @include base.name();
-    transition: color 0.2s ease-in-out;
-    text-overflow: ellipsis;
-    padding-right: 10px;
+
+    & {
+      transition: color 0.2s ease-in-out;
+      text-overflow: ellipsis;
+      padding-right: 10px;
+    }
+    
     > [class~="name"]:hover {
       color: base.$main-color;
     }

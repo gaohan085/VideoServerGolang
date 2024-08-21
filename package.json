@@ -18,8 +18,9 @@
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
-    "axios": "^1.7.4",
-    "framer-motion": "^11.3.28",
+    "artplayer": "^5.1.7",
+    "axios": "^1.7.3",
+    "framer-motion": "^11.3.23",
     "plyr": "^3.7.8",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
