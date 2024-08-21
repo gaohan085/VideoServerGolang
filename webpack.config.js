@@ -175,7 +175,7 @@ module.exports = () => {
       { react: "React" },
       { "react-dom": "ReactDOM" },
       { axios: "axios" },
-      { plyr: "Plyr" },
+      { artplayer: "Artplayer" },
     ];
     config.devtool = "source-map";
   } else {
