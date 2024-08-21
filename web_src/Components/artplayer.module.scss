@@ -1,0 +1,14 @@
+.artplayer {
+  padding: 18px;
+  > div:nth-child(1) {
+    width: 1120px;
+    height: 630px;
+    z-index: 0;
+
+    @media (width <= 992px) {
+      width: auto;
+      height: auto;
+      aspect-ratio: 16/9;
+    }
+  }
+}

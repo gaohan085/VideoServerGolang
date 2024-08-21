@@ -12,7 +12,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <>
-        <Components.Player />
+        <Components.Art />
         <Outlet />
       </>
     ),
