@@ -6,8 +6,12 @@ import * as lib from "../lib";
 
 import * as styles from "./file-element.module.scss";
 
-import { Context, InteractiveRenameComponent, WsContext, type DirElement } from ".";
-
+import {
+  Context,
+  InteractiveRenameComponent,
+  WsContext,
+  type DirElement,
+} from ".";
 
 const FileElement: React.FC<{
   readonly elem: DirElement;
@@ -16,10 +20,18 @@ const FileElement: React.FC<{
   readonly isSelected?: boolean;
   readonly isPlaying: boolean;
   readonly isRename: boolean;
-  readonly isConverting: boolean
-  readonly progress?: number
+  readonly isConverting: boolean;
+  readonly progress?: number;
 }> = (props) => {
-  const { elem, handleClick, handleCtxMenu, isRename, isPlaying, isConverting, progress } = props;
+  const {
+    elem,
+    handleClick,
+    handleCtxMenu,
+    isRename,
+    isPlaying,
+    isConverting,
+    progress,
+  } = props;
 
   return (
     <motion.div
@@ -30,17 +42,34 @@ const FileElement: React.FC<{
       transition={{ duration: 0.2, ease: "easeIn" }}
     >
       <div
-        className={isConverting ? "file-element convert" : isPlaying ? "file-element playing" : "file-element"}
+        className={
+          isConverting
+            ? "file-element convert"
+            : isPlaying
+              ? "file-element playing"
+              : "file-element"
+        }
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
         title={lib.isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
       >
         <span>
-          {isConverting ? <FcLock /> : lib.isVideo(elem.extName) ? <FcFilmReel /> : <FcQuestions />}
+          {isConverting ? (
+            <FcLock />
+          ) : lib.isVideo(elem.extName) ? (
+            <FcFilmReel />
+          ) : (
+            <FcQuestions />
+          )}
         </span>
 
         {!isRename && <a className="name">{elem.name}</a>}
-        {!!isConverting && <a className="progress">{" "}{(progress! * 100).toFixed(2).toString() + "%"}</a>}
+        {!!isConverting && (
+          <a className="progress">
+            {" "}
+            {(progress! * 100).toFixed(2).toString() + "%"}
+          </a>
+        )}
         {!!isRename && <InteractiveRenameComponent {...elem} />}
       </div>
     </motion.div>
@@ -60,25 +89,30 @@ export const InteractiveFileElement: React.FC<{
   } = useContext(Context);
   const dispatch = lib.redux.useAppDispatch();
   const [isRename, setIsRename] = useState<boolean>(false);
-  const [isConverting, setIsConverting] = useState<boolean>(false)
-  const { convertingElems } = useContext(WsContext)
-  const [progress, setProgress] = useState<number>(0)
+  const [isConverting, setIsConverting] = useState<boolean>(false);
+  const { convertingElems } = useContext(WsContext);
+  const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
-    const filterElem = convertingElems?.filter(video => video.playSource === elem.playSrc)
+    const filterElem = convertingElems?.filter(
+      (video) => video.playSource === elem.playSrc,
+    );
     if (filterElem?.length === 1) {
-      if (filterElem[0].status === "converting" || filterElem[0].status === "pending") {
-        setIsConverting(true)
-        setProgress(filterElem[0].progress)
-        console.log("AAAAadasa")
+      if (
+        filterElem[0].status === "converting" ||
+        filterElem[0].status === "pending"
+      ) {
+        setIsConverting(true);
+        setProgress(filterElem[0].progress);
+        console.log("AAAAadasa");
       } else {
-        setIsConverting(false)
+        setIsConverting(false);
       }
     }
     return () => {
-      setIsConverting(false)
-    }
-  }, [elem, convertingElems, setIsConverting])
+      setIsConverting(false);
+    };
+  }, [elem, convertingElems, setIsConverting]);
 
   const handleClick: React.MouseEventHandler = () => {
     if (!isRename && !isConverting) {

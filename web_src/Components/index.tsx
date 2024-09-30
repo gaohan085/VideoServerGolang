@@ -10,5 +10,5 @@ export * from "./rename-element";
 export * from "./types.d";
 export * from "./player";
 export * from "./video-boxes-sidebar";
-export * from "./websocket"
-export * from "./artplayer"
+export * from "./websocket";
+export * from "./artplayer";

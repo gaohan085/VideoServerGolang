@@ -2,7 +2,7 @@ import React from "react";
 import { FcLink } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import * as lib from "../lib";
-import * as styles from "./player-title.module.scss"
+import * as styles from "./player-title.module.scss";
 
 const Title: React.FC = () => {
   const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
@@ -23,14 +23,17 @@ const Title: React.FC = () => {
             {videoPlaying.actress}
           </Link>
         )}
-        {
-          !!videoPlaying.sourceUrl && <a href={videoPlaying.sourceUrl} target="_blank" rel="noreferrer">
-            <span><FcLink /></span>{"On JavDB"}
+        {!!videoPlaying.sourceUrl && (
+          <a href={videoPlaying.sourceUrl} target="_blank" rel="noreferrer">
+            <span>
+              <FcLink />
+            </span>
+            {"On JavDB"}
           </a>
-        }
+        )}
       </div>
     </div>
   );
 };
 
-export { Title }
+export { Title };

@@ -230,8 +230,8 @@ export const InteractiveCtxMenu: React.FC = () => {
     void axios.post("/api/convert", rightClickElem).then(() => {
       setClicked!(true);
       const { currentPath } = rightClickElem!;
-      void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`)
-    })
+      void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`);
+    });
   };
 
   const handleRename: React.MouseEventHandler = () => {
