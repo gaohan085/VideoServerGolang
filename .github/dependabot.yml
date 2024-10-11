@@ -33,7 +33,6 @@ updates:
           - "eslint-*"
           - "html-webpack-plugin"
           - "mini-css-extract-plugin"
-          - "prettier"
           - "sass"
           - "sass-loader"
           - "style-loader"
@@ -43,6 +42,8 @@ updates:
           - "webpack"
           - "webpack-cli"
           - "webpack-dev-server"
+          - "@eslint/*"
+          - "@stylistic/esling-plugin"
   - package-ecosystem: "gomod"
     schedule:
       interval: "monthly"
