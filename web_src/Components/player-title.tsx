@@ -1,7 +1,9 @@
-import React from "react";
 import { FcLink } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import React from "react";
+
 import * as lib from "../lib";
+
 import * as styles from "./player-title.module.scss";
 
 const Title: React.FC = () => {

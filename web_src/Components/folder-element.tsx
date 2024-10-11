@@ -1,18 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useContext, useEffect, useState } from "react";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
+import React, { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 
 import * as styles from "./folder-element.module.scss";
 
 import {
   Context,
+  type DirectoryProp,
+  type DirElement,
   ErrorElement,
   InteractiveOpenFolderContainer,
   InteractiveRenameComponent,
   Spinner,
-  type DirElement,
-  type DirectoryProp,
 } from ".";
 
 const FolderElement: React.FC<{

@@ -6,7 +6,7 @@ import * as lib from "../lib";
 
 import * as styles from "./video-boxes-sidebar.module.scss";
 
-import { type VideoInfo, type ResWithActressName, DiskUsage, Spinner } from ".";
+import { DiskUsage, type ResWithActressName, Spinner, type VideoInfo } from ".";
 
 export const VideoBox: React.FC<VideoInfo> = (props) => {
   const dispatch = lib.redux.useAppDispatch();

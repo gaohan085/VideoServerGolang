@@ -8,9 +8,9 @@ import * as styles from "./file-element.module.scss";
 
 import {
   Context,
+  type DirElement,
   InteractiveRenameComponent,
   WsContext,
-  type DirElement,
 } from ".";
 
 const FileElement: React.FC<{

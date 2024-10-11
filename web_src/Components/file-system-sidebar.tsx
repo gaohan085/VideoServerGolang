@@ -1,19 +1,19 @@
 import React, { createContext, useEffect, useState } from "react";
-import { FcPrevious } from "react-icons/fc";
 import useSWR, { useSWRConfig } from "swr";
+import { FcPrevious } from "react-icons/fc";
 
 import { useWindowDimension } from "../lib";
 
 import * as styles from "./file-system-sidebar.module.scss";
 
 import {
+  type DirectoryProp,
   DirElement,
   DiskUsage,
   ErrorElement,
   InteractiveCtxMenu,
   InteractiveOpenFolderContainer,
   Spinner,
-  type DirectoryProp,
   type UseStateReturnType,
 } from ".";
 

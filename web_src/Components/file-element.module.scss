@@ -1,4 +1,5 @@
 @use "../base" as base;
+@use "sass:color";
 
 .file {
   @extend %element;
@@ -23,7 +24,8 @@
     }
 
     &[class~="playing"] {
-      color: lighten(base.$main-color, 5%);
+      // color: lighten(base.$main-color, 5%);
+      color: color.scale(base.$main-color, $lightness: 5%);
       text-decoration: underline;
 
       &:hover {
@@ -41,7 +43,8 @@
 
         > [class~="name"] {
           text-decoration: line-through;
-          color: lighten($color: #1c1838, $amount: 50%);
+          // color: lighten($color: #1c1838, $amount: 50%);
+          color: color.scale(#1c1838, $lightness: 50%)
         }
       }
     }

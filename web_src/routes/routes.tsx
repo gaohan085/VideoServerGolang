@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import React from "react";
-import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import * as Components from "../Components";
 import { type ResWithActressName } from "../Components";
+import * as Components from "../Components";
 
 import { ErrorPage } from ".";
 

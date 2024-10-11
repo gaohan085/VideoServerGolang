@@ -3,10 +3,10 @@ import React from "react";
 import * as lib from "../lib";
 
 import {
+  type DirectoryProp,
+  type DirElement,
   InteractiveFileElement,
   InteractiveFolderElement,
-  type DirElement,
-  type DirectoryProp,
 } from ".";
 
 const OpenFolderContainer: React.FC<{
