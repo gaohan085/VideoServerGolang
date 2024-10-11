@@ -16,8 +16,14 @@ interface ScreenOrientation extends EventTarget {
 
 type CSSModuleClasses = Readonly<Record<string, string>>;
 
+
+// declare module "*.module.scss"{
+//   const classes: Record<string, string>;
+//   export default classes;
+// }
+
 declare module "*.css";
-declare module "*.scss";
+declare module "*.module.scss";
 declare module "*.sass";
 declare module "*.less";
 declare module "*.styl";

@@ -146,17 +146,17 @@ const CtxMenu: React.FC<{
 
         {!!elem.isFolder &&
           !openFolder.includes(elem.currentPath + elem.name) && (
-            <li onClick={handleOpenFolder}>
-              <OpenFolder />
-            </li>
-          )}
+          <li onClick={handleOpenFolder}>
+            <OpenFolder />
+          </li>
+        )}
 
         {!!elem.isFolder &&
           openFolder.includes(elem.currentPath + elem.name) && (
-            <li onClick={handleCloseFolder}>
-              <CloseFolder />
-            </li>
-          )}
+          <li onClick={handleCloseFolder}>
+            <CloseFolder />
+          </li>
+        )}
 
         {/* Second list */}
         {!!elem.isFile && lib.isVideo(elem.extName) && (
@@ -230,8 +230,8 @@ export const InteractiveCtxMenu: React.FC = () => {
     void axios.post("/api/convert", rightClickElem).then(() => {
       setClicked!(true);
       const { currentPath } = rightClickElem!;
-      void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`)
-    })
+      void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`);
+    });
   };
 
   const handleRename: React.MouseEventHandler = () => {

@@ -2,10 +2,11 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
+    reviewers:
+      - "gaohan085"
     versioning-strategy: increase
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "monthly"
       time: "12:00"
       timezone: "Asia/Shanghai"
     groups:
@@ -44,11 +45,12 @@ updates:
           - "webpack-dev-server"
   - package-ecosystem: "gomod"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "monthly"
       time: "12:00"
       timezone: "Asia/Shanghai"
     directory: "/"
+    reviewers:
+      - "gaohan085"
     groups:
       golang-dependencies:
         patterns:

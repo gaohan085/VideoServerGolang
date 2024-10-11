@@ -1,18 +1,18 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useContext, useEffect, useState } from "react";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
+import React, { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
 
 import * as styles from "./folder-element.module.scss";
 
 import {
   Context,
+  type DirectoryProp,
+  type DirElement,
   ErrorElement,
   InteractiveOpenFolderContainer,
   InteractiveRenameComponent,
   Spinner,
-  type DirElement,
-  type DirectoryProp,
 } from ".";
 
 const FolderElement: React.FC<{
@@ -68,11 +68,12 @@ const FolderElement: React.FC<{
       <AnimatePresence>
         {!!isOpen && !!subDirectoryData && (
           <motion.div
-            animate={{ maxHeight: 5000, opacity: 1 }}
-            exit={{ maxHeight: 0, opacity: 0 }}
-            initial={{ opacity: 0, maxHeight: 0 }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ height: "calc-size(auto)", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
             style={{ borderLeft: "1px solid #2c2842", marginLeft: "8px" }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            id="animate"
           >
             <InteractiveOpenFolderContainer data={subDirectoryData} />
           </motion.div>

@@ -1,44 +1,14 @@
-import Plyr from "plyr";
 import "plyr/dist/plyr.css";
-import plyrSvg from "plyr/dist/plyr.svg";
 import React, { forwardRef, useEffect, useRef } from "react";
-import { FcLink } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import Plyr from "plyr";
+import plyrSvg from "plyr/dist/plyr.svg";
 
 import * as lib from "../lib";
 
+import { Title } from "./player-title";
 import * as styles from "./player.module.scss";
 
 const isProduction = process.env.NODE_ENV === "production";
-
-const Title: React.FC = () => {
-  const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
-  const serialNumber = videoPlaying.name.match(
-    /([0-9]|[a-z]|[A-Z]){3,}-[0-9]{3,}/g,
-  );
-
-  return (
-    <div className="title">
-      <h4>
-        {!!videoPlaying.name &&
-          `${serialNumber ? serialNumber[0] : videoPlaying.name} ${videoPlaying.title}`}
-        {!videoPlaying.name && "没有正在播放"}
-      </h4>
-      <div className="info">
-        {!!videoPlaying.actress && (
-          <Link to={`/actress/${videoPlaying.actress}`}>
-            {videoPlaying.actress}
-          </Link>
-        )}
-        {
-          !!videoPlaying.sourceUrl && <a href={videoPlaying.sourceUrl} target="_blank" rel="noreferrer">
-            <span><FcLink /></span>{"On JavDB"}
-          </a>
-        }
-      </div>
-    </div>
-  );
-};
 
 const ForwordPlayer = forwardRef(function Player(
   props,
@@ -56,7 +26,9 @@ export const Player: React.FC = () => {
       plyr = mountPlyr(ref.current);
     }
     return () => {
-      if (!ref.current && plyr) plyr.stop(), plyr.destroy();
+      if (!ref.current && plyr) {
+        plyr.stop(); plyr.destroy();
+      };
     };
   }, [ref]);
   return (

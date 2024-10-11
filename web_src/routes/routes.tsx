@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from "axios";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import React from "react";
-import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 
-import * as Components from "../Components";
 import { type ResWithActressName } from "../Components";
+import * as Components from "../Components";
 
 import { ErrorPage } from ".";
 
@@ -20,12 +20,20 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Components.WebSocketLayer><Components.InteractiveFileSysSideBar /></Components.WebSocketLayer>,
+        element: (
+          <Components.WebSocketLayer>
+            <Components.InteractiveFileSysSideBar />
+          </Components.WebSocketLayer>
+        ),
         errorElement: <ErrorPage />,
       },
       {
         path: "/actress/:name",
-        element: <Components.WebSocketLayer><Components.VideoBoxes /> </Components.WebSocketLayer>,
+        element: (
+          <Components.WebSocketLayer>
+            <Components.VideoBoxes />
+          </Components.WebSocketLayer>
+        ),
         loader: async ({ params }) => {
           const data = (
             await axios.get<AxiosResponse<ResWithActressName>>(

@@ -1,4 +1,5 @@
 @use "../base" as base;
+@use "sass:color";
 
 .video-box-sidebar {
   @extend %sidebar;
@@ -43,12 +44,13 @@
     }
 
     &[class~="playing"] {
-      outline: 1px solid lighten(base.$main-color, 15%);
+      // outline: 1px solid lighten(base.$main-color, 15%);
+      outline: 1px solid color.scale(base.$main-color, $lightness: 15%);
     }
 
     &:hover {
       [class~="title"] a {
-        color: lighten(base.$main-color, 10%);
+        color: color.scale(base.$main-color,$lightness: 10%);
       }
     }
   }

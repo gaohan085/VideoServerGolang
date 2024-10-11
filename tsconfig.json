@@ -21,5 +21,8 @@
   ],
   "include": [
     "./web_src/",
+  ],
+  "exclude": [
+    "./node_modules/"
   ]
 }

@@ -4,14 +4,15 @@ import { useLoaderData, useNavigation } from "react-router";
 
 import * as lib from "../lib";
 
-import * as  styles from "./video-boxes-sidebar.module.scss";
+import * as styles from "./video-boxes-sidebar.module.scss";
 
-import { type VideoInfo, type ResWithActressName, DiskUsage, Spinner } from ".";
+import { DiskUsage, type ResWithActressName, Spinner, type VideoInfo } from ".";
 
 export const VideoBox: React.FC<VideoInfo> = (props) => {
   const dispatch = lib.redux.useAppDispatch();
   const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
-  const { title, posterName, serialNumber, playSrc, actress, sourceUrl } = props;
+  const { title, posterName, serialNumber, playSrc, actress, sourceUrl } =
+    props;
   const [isPlaying, setIsplaying] = useState<boolean>(false);
 
   const handleClick = () => {
@@ -26,7 +27,7 @@ export const VideoBox: React.FC<VideoInfo> = (props) => {
         currentPath: "",
         actress: actress,
         poster: posterName,
-        sourceUrl: sourceUrl
+        sourceUrl: sourceUrl,
       }),
     );
   };
@@ -37,8 +38,11 @@ export const VideoBox: React.FC<VideoInfo> = (props) => {
   }, [videoPlaying, playSrc]);
 
   return (
-    <div className={!isPlaying ? "videobox" : "videobox playing"} onClick={handleClick}>
-      <div className="img-box" >
+    <div
+      className={!isPlaying ? "videobox" : "videobox playing"}
+      onClick={handleClick}
+    >
+      <div className="img-box">
         <img src={`/assets/poster/${posterName}`} loading="lazy" />
       </div>
       <div className="title">
