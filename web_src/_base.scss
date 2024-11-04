@@ -34,7 +34,7 @@ $backgrdColor: #090812;
   }
 }
 
-%sidebar {
+%sidebar{
   position: relative;
   display: flex;
   flex-direction: column;
@@ -81,7 +81,7 @@ $backgrdColor: #090812;
 
   &[class~="active"] {
     width: 320px;
-    min-width: 300px;
+    min-width: 320px;
     padding-left: 3px;
     padding-right: 5px;
 

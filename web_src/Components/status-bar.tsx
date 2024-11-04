@@ -42,7 +42,7 @@ export const DiskUsage: React.FC = () => {
   }
 };
 
-export const StatusBar: React.FC = () => {
+const StatusBar: React.FC = () => {
   const { data, isLoading, error } = useSWR<
     { statusCode: number; data: string },
     Error
@@ -64,3 +64,5 @@ export const StatusBar: React.FC = () => {
     </div>
   );
 };
+
+export default StatusBar;

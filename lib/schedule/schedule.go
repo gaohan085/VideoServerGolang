@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/go-co-op/gocron/v2"
-	fiberlog "github.com/gofiber/fiber/v2/log"
 )
 
 func Schedule() error {
@@ -20,21 +19,18 @@ func Schedule() error {
 		schedule.NewJob(
 			gocron.DurationJob(1*time.Minute),
 			gocron.NewTask(func() {
-				fiberlog.Info("Start task 'QueryVideoInfo'")
 				QueryVideoInfo()
 			}),
 		)
 		schedule.NewJob(
 			gocron.DurationRandomJob(30*time.Second, 3*time.Minute),
 			gocron.NewTask(func() {
-				fiberlog.Info("Start task 'DownloadVideoPoster'")
 				DownloadVideoPoster()
 			}),
 		)
 		schedule.NewJob(
 			gocron.DurationJob(5*time.Second),
 			gocron.NewTask(func() {
-				fiberlog.Info("Start task 'GetActress'")
 				GetActress()
 			}),
 		)
@@ -42,7 +38,6 @@ func Schedule() error {
 		schedule.NewJob(
 			gocron.DurationJob(1*time.Minute),
 			gocron.NewTask(func() {
-				fiberlog.Info("Start task 'RemoveErrorSerialNum'")
 				RemoveErrorSerialNum()
 			}),
 		)
@@ -50,16 +45,19 @@ func Schedule() error {
 		schedule.NewJob(
 			gocron.DurationJob(60*time.Second),
 			gocron.NewTask(func() {
-				fiberlog.Info("Start task 'DownloadConvertedVideo'")
 				DownloadConvertedVideo()
 			}),
+		)
+
+		schedule.NewJob(
+			gocron.DailyJob(1, gocron.NewAtTimes(gocron.NewAtTime(0, 0, 0))),
+			gocron.NewTask(CheckVideoExists),
 		)
 
 	case "ffmpeg":
 		schedule.NewJob(
 			gocron.DurationJob(30*time.Second),
 			gocron.NewTask(func() {
-				fiberlog.Info("Start task 'database.StartConvert'")
 				database.StartConvert()
 			}),
 		)

@@ -105,7 +105,7 @@ func FileReaderHandler(c *fiber.Ctx) error {
 		currentPath = path
 	}
 
-	time.Sleep(250 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 	return c.Status(fiber.StatusOK).JSON(&RespBody{
 		StatusCode: 200,
 		Data: &Folder{

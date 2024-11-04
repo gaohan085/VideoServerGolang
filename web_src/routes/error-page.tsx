@@ -3,7 +3,7 @@ import { useRouteError } from "react-router";
 
 import * as styles from "./error-page.module.scss";
 
-export const ErrorPage: React.FC = () => {
+const ErrorPage: React.FC = () => {
   const error = useRouteError();
 
   return (
@@ -19,3 +19,5 @@ export const ErrorPage: React.FC = () => {
     </div>
   );
 };
+
+export default ErrorPage;

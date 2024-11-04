@@ -8,7 +8,7 @@ import * as styles from "./video-boxes-sidebar.module.scss";
 
 import { DiskUsage, type ResWithActressName, Spinner, type VideoInfo } from ".";
 
-export const VideoBox: React.FC<VideoInfo> = (props) => {
+const VideoBox: React.FC<VideoInfo> = (props) => {
   const dispatch = lib.redux.useAppDispatch();
   const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
   const { title, posterName, serialNumber, playSrc, actress, sourceUrl } =
@@ -52,7 +52,7 @@ export const VideoBox: React.FC<VideoInfo> = (props) => {
   );
 };
 
-export const VideoBoxes: React.FC = () => {
+const VideoBoxes: React.FC = () => {
   const { data } = useLoaderData() as ResWithActressName;
   const [isActive, setIsActive] = useState<boolean>(false);
   const toggleActive: React.MouseEventHandler = () => setIsActive(!isActive);
@@ -95,3 +95,5 @@ export const VideoBoxes: React.FC = () => {
     </div>
   );
 };
+
+export default VideoBoxes;

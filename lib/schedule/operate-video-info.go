@@ -1,9 +1,13 @@
 package schedule
 
 import (
+	"fmt"
 	"go-fiber-react-ts/database"
 	"go-fiber-react-ts/lib"
+	"net/http"
 	"strings"
+
+	fiberlog "github.com/gofiber/fiber/v2/log"
 )
 
 func QueryVideoInfo() error {
@@ -72,5 +76,27 @@ func DownloadConvertedVideo() error {
 
 	go videoConverts.DownloadConverted()
 
+	return nil
+}
+
+func CheckVideoExists() error {
+	var videos = []database.VideoInf{}
+	fiberlog.Info("Check videos exists")
+
+	if err := database.Db.Model(&database.VideoInf{}).Order("ID").Find(&videos).Error; err != nil {
+		return err
+	}
+
+	for _, video := range videos {
+		fiberlog.Info(fmt.Sprintf("Checking video %s exists or not", video.SerialNumber))
+		client := http.Client{}
+		req, _ := http.NewRequest("GET", video.PlaySrc, nil)
+		res, _ := client.Do(req)
+
+		if res.StatusCode == 403 {
+			return video.Delete()
+		}
+		continue
+	}
 	return nil
 }

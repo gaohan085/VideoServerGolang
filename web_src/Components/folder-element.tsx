@@ -53,6 +53,7 @@ const FolderElement: React.FC<{
       exit={{ paddingLeft: 12 }}
       initial={{ paddingLeft: 12 }}
       transition={{ duration: 0.2, ease: "easeIn" }}
+      id="folder-animate"
     >
       <a
         className="folder-element"
@@ -68,12 +69,12 @@ const FolderElement: React.FC<{
       <AnimatePresence>
         {!!isOpen && !!subDirectoryData && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ height: "calc-size(auto)", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            initial={{ opacity: 0, height: "calc-size(1px)" }}
+            animate={{ height: "calc-size(max-content)", opacity: 1 }}
+            exit={{ opacity: 0, height: "calc-size(1px)" }}
             style={{ borderLeft: "1px solid #2c2842", marginLeft: "8px" }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            id="animate"
+            id="animate-open-folder-container"
           >
             <InteractiveOpenFolderContainer data={subDirectoryData} />
           </motion.div>
@@ -83,7 +84,7 @@ const FolderElement: React.FC<{
   );
 };
 
-export const InteractiveFolderElement: React.FC<{
+const InteractiveFolderElement: React.FC<{
   readonly elem: DirElement;
 }> = ({ elem }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -164,3 +165,5 @@ export const InteractiveFolderElement: React.FC<{
     />
   );
 };
+
+export default InteractiveFolderElement;

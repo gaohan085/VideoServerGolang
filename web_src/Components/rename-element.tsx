@@ -45,7 +45,7 @@ const RenameComponent: React.FC<{
   );
 };
 
-export const InteractiveRenameComponent: React.FC<DirElement> = (props) => {
+const InteractiveRenameComponent: React.FC<DirElement> = (props) => {
   const { currentPath, name } = props;
   const { setRenameElement, mutateFunc } = useContext(Context);
   const handleSubmit: React.FormEventHandler<RenameForm> = (e) => {
@@ -75,3 +75,5 @@ export const InteractiveRenameComponent: React.FC<DirElement> = (props) => {
     />
   );
 };
+
+export default InteractiveRenameComponent;

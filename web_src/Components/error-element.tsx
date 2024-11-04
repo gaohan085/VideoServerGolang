@@ -4,7 +4,7 @@ import React from "react";
 
 import * as styles from "./error-element.module.scss";
 
-export const ErrorElement: React.FC = () => {
+const ErrorElement: React.FC = () => {
   return (
     <motion.p
       animate={{ paddingLeft: 0 }}
@@ -20,3 +20,5 @@ export const ErrorElement: React.FC = () => {
     </motion.p>
   );
 };
+
+export default ErrorElement;

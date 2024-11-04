@@ -145,6 +145,7 @@ func (v *VideoConvert) ReadProgress(chInter <-chan int, chDone <-chan int) error
 }
 
 func (v *VideoConvert) DownloadConverted() error {
+	fiberlog.Info("Downloading Converted Video " + v.FileName)
 	downloadLink := os.Getenv("FFMPEG_DOWNLOAD_ADDR")
 	rootDir := os.Getenv("ROOT_DIR")
 	var script = fmt.Sprintf(`wget -nc %s -P %s%s/`, downloadLink+v.OutputName, rootDir, v.Path)

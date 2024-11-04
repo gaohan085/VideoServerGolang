@@ -1,19 +1,24 @@
 import axios, { AxiosResponse } from "axios";
+import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import React from "react";
 
-import { type ResWithActressName } from "../Components";
 import * as Components from "../Components";
+import { type ResWithActressName } from "../Components";
 
-import { ErrorPage } from ".";
+const ErrorPage = lazy(() => import("./error-page"));
+const IndexLayout = lazy(() => import("./index-page-layout"));
+const ActressByName = lazy(() => import("./actress-by-name"));
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <>
-        <Components.Player />
-        <Outlet />
+        <Suspense fallback={<Components.Spinner fontSize={30} />}>
+          <Components.Player />
+
+          <Outlet />
+        </Suspense>
       </>
     ),
     errorElement: <ErrorPage />,
@@ -21,18 +26,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <Components.WebSocketLayer>
-            <Components.InteractiveFileSysSideBar />
-          </Components.WebSocketLayer>
+          <IndexLayout />
         ),
         errorElement: <ErrorPage />,
       },
       {
         path: "/actress/:name",
         element: (
-          <Components.WebSocketLayer>
-            <Components.VideoBoxes />
-          </Components.WebSocketLayer>
+          <ActressByName />
         ),
         loader: async ({ params }) => {
           const data = (

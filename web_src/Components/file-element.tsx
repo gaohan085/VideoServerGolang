@@ -40,6 +40,7 @@ const FileElement: React.FC<{
       exit={{ paddingLeft: 15 }}
       initial={{ paddingLeft: 15 }}
       transition={{ duration: 0.2, ease: "easeIn" }}
+      id="animate-file-elem"
     >
       <div
         className={
@@ -70,13 +71,15 @@ const FileElement: React.FC<{
             {(progress! * 100).toFixed(2).toString() + "%"}
           </a>
         )}
-        {!!isRename && <InteractiveRenameComponent {...elem} />}
+        {!!isRename && (
+          <InteractiveRenameComponent {...elem} />
+        )}
       </div>
     </motion.div>
   );
 };
 
-export const InteractiveFileElement: React.FC<{
+const InteractiveFileElement: React.FC<{
   readonly elem: DirElement;
 }> = ({ elem }) => {
   const {
@@ -161,3 +164,5 @@ export const InteractiveFileElement: React.FC<{
     />
   );
 };
+
+export default InteractiveFileElement;

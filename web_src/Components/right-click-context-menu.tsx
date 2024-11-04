@@ -179,7 +179,7 @@ const CtxMenu: React.FC<{
   );
 };
 
-export const InteractiveCtxMenu: React.FC = () => {
+const InteractiveCtxMenu: React.FC = () => {
   const [delConfirm, setDelConfirm] = useState<boolean>(false);
   const {
     rightClickElem,
@@ -266,3 +266,5 @@ export const InteractiveCtxMenu: React.FC = () => {
     </>
   );
 };
+
+export default InteractiveCtxMenu;

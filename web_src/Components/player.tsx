@@ -5,8 +5,9 @@ import plyrSvg from "plyr/dist/plyr.svg";
 
 import * as lib from "../lib";
 
-import { Title } from "./player-title";
 import * as styles from "./player.module.scss";
+
+import { Title } from ".";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -16,28 +17,6 @@ const ForwordPlayer = forwardRef(function Player(
 ) {
   return <video ref={ref}></video>;
 });
-
-export const Player: React.FC = () => {
-  const ref = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    let plyr: Plyr | undefined = undefined;
-    if (ref.current && !plyr) {
-      plyr = mountPlyr(ref.current);
-    }
-    return () => {
-      if (!ref.current && plyr) {
-        plyr.stop(); plyr.destroy();
-      };
-    };
-  }, [ref]);
-  return (
-    <div className={styles.player}>
-      <ForwordPlayer ref={ref} />
-      <Title />
-    </div>
-  );
-};
 
 const mountPlyr = (node: HTMLElement): Plyr => {
   const plyr = new Plyr(node, {
@@ -109,3 +88,27 @@ const mountPlyr = (node: HTMLElement): Plyr => {
 
   return plyr;
 };
+
+export const Player: React.FC = () => {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    let plyr: Plyr | undefined = undefined;
+    if (ref.current && !plyr) {
+      plyr = mountPlyr(ref.current);
+    }
+    return () => {
+      if (!ref.current && plyr) {
+        plyr.stop(); plyr.destroy();
+      };
+    };
+  }, [ref]);
+  return (
+    <div className={styles.player}>
+      <ForwordPlayer ref={ref} />
+      <Title />
+    </div>
+  );
+};
+
+export default Player;

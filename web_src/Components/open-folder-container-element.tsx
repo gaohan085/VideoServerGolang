@@ -27,8 +27,10 @@ const OpenFolderContainer: React.FC<{
   );
 };
 
-export const InteractiveOpenFolderContainer: React.FC<{
+const InteractiveOpenFolderContainer: React.FC<{
   readonly data: DirectoryProp;
 }> = ({ data }) => {
   return <OpenFolderContainer elems={data.childElements} />;
 };
+
+export default InteractiveOpenFolderContainer;

@@ -38,4 +38,5 @@ const Title: React.FC = () => {
   );
 };
 
-export { Title };
+export default Title;
+

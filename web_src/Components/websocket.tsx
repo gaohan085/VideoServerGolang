@@ -18,7 +18,7 @@ export const WsContext = createContext<{
   convertingElems?: VideoStatus[];
 }>({ convertingElems: undefined });
 
-export const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
+const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
   const { children } = props;
   const [convertState, setConvertState] = useState<string | undefined>(
     undefined,
@@ -51,3 +51,5 @@ export const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
     </WsContext.Provider>
   );
 };
+
+export default WebSocketLayer;

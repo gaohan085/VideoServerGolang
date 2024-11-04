@@ -1,6 +1,6 @@
-import React, { createContext, useEffect, useState } from "react";
-import useSWR, { useSWRConfig } from "swr";
+import React, { createContext, Suspense, useEffect, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
+import useSWR, { useSWRConfig } from "swr";
 
 import { useWindowDimension } from "../lib";
 
@@ -8,7 +8,7 @@ import * as styles from "./file-system-sidebar.module.scss";
 
 import {
   type DirectoryProp,
-  DirElement,
+  type DirElement,
   DiskUsage,
   ErrorElement,
   InteractiveCtxMenu,
@@ -26,6 +26,7 @@ const FileSysSideBar: React.FC<{
   readonly handleCtxMenu: React.MouseEventHandler;
   readonly toggleActive: React.MouseEventHandler;
   readonly isActive: boolean;
+  readonly clicked: boolean;
 }> = (props) => {
   const {
     data,
@@ -36,6 +37,7 @@ const FileSysSideBar: React.FC<{
     isActive,
     toggleActive,
     width,
+    clicked
   } = props;
 
   const conditionalElem = (
@@ -45,30 +47,45 @@ const FileSysSideBar: React.FC<{
       ) : isError ? (
         <ErrorElement />
       ) : (
-        data && <InteractiveOpenFolderContainer data={data} />
+        data && (
+          <InteractiveOpenFolderContainer data={data} />
+        )
       )}
     </>
   );
 
   return (
-    <div
-      className={
-        !isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`
-      }
-      onClick={handleClick}
-      onContextMenu={handleCtxMenu}
-    >
-      <span className="arrow" onClick={toggleActive}>
-        <FcPrevious />
-      </span>
+    <Suspense fallback={
+      (<div className={!isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`}>
+        <div className="file-system">
+          <Spinner fontSize={24} />
+        </div>
+      </div>)
+    }>
+      <div
+        className={
+          !isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`
+        }
+        onClick={handleClick}
+        onContextMenu={handleCtxMenu}
+      >
+        <span className="arrow" onClick={toggleActive}>
+          <FcPrevious />
+        </span>
 
-      {!!isActive && (
+        {!!isActive && (
+          <>
+            <div className="file-system">{conditionalElem}</div>
+            {width <= 992 && <DiskUsage />}
+          </>
+        )}
+      </div>
+      {!clicked && (
         <>
-          <div className="file-system">{conditionalElem}</div>
-          {width <= 992 && <DiskUsage />}
+          <InteractiveCtxMenu />
         </>
       )}
-    </div>
+    </Suspense>
   );
 };
 
@@ -86,7 +103,7 @@ export const Context = createContext<{
   mutateFunc?: ReturnType<typeof useSWRConfig>["mutate"];
 }>({});
 
-export const InteractiveFileSysSideBar: React.FC = () => {
+const InteractiveFileSysSideBar: React.FC = () => {
   const [rightClickElem, setRightClickElem] = useState<DirElement | undefined>(
     undefined,
   );
@@ -149,8 +166,10 @@ export const InteractiveFileSysSideBar: React.FC = () => {
         width={width}
         toggleActive={toggleActive}
         isActive={isActive}
+        clicked={clicked!}
       />
-      {!clicked && <InteractiveCtxMenu />}
     </Context.Provider>
   );
 };
+
+export default InteractiveFileSysSideBar;

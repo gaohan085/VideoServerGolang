@@ -166,9 +166,9 @@ module.exports = () => {
     };
     config.plugins?.push(
       new MiniCssExtractPlugin({
-        filename: "css/[contenthash:10].css",
-        chunkFilename: "[id].css",
-        runtime: false,
+        filename: "css/[id].[contenthash:10].css",
+        chunkFilename: "css/[id].[contenthash:10].css",
+        runtime: true,
       }),
     );
     config.externals = [

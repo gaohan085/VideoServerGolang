@@ -9,6 +9,8 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"gorm.io/gorm"
+
+	fiberlog "github.com/gofiber/fiber/v2/log"
 )
 
 var (
@@ -56,6 +58,7 @@ func (v *VideoInf) QueryByVideoName(n string) error {
 }
 
 func (v *VideoInf) GetDetailInfo() error {
+	fiberlog.Info("Getting Video " + v.SerialNumber + " Info.")
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", "https://javdb.com/search?q="+v.SerialNumber+"&f=all", nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
@@ -123,6 +126,7 @@ func (v *VideoInf) DownloadPoster() error {
 	}
 
 	//下载封面文件
+	fiberlog.Info("Downloading Video " + v.SerialNumber + " Poster.")
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", v.SourcePosterUrl, nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
@@ -140,6 +144,7 @@ func (v *VideoInf) DownloadPoster() error {
 }
 
 func (v *VideoInf) GetActress() error {
+	fiberlog.Info("Getting Actress for " + v.SerialNumber)
 	v.Actress = strings.Split(v.PlaySrc, "/")[4]
 	return v.Update()
 }

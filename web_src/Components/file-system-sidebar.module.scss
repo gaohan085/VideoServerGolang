@@ -1,6 +1,7 @@
 @use "../base" as base;
 
 .fileSysSidebar {
+
   @extend %sidebar;
 
   [class~="file-system"] {
