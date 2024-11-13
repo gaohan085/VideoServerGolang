@@ -33,7 +33,7 @@ func SetRoutes(app *fiber.App) {
 	api.Get("/actress/:name", handlers.GetVideosByActress)
 	api.Post("/convert", handlers.ConvertHandler)
 
-	switch os.Getenv("FILELOCATION") {
+	switch os.Getenv("FileLocation") {
 	case "local":
 		api.Get("/*", handlers.FileReaderHandler)
 

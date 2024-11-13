@@ -27,55 +27,13 @@ var content embed.FS
 // main usage -ffmpeg -pro
 
 func Parseflag() {
-	usage := flag.NewFlagSet("usage", flag.ExitOnError)
-	usageFFmpeg := usage.Bool("ffmpeg", false, "-ffmpeg use as ffmpeg server, not provide as main server")
-	usageIsDev := usage.Bool("dev", false, "'-dev' use as development server and '-pro' use as production server")
-	usageIsPro := usage.Bool("pro", false, "'-dev' use as development server and '-pro' use as production server")
-	usageIsLocal := usage.Bool("local", false, "-local to show local file")
-	usageIsRemote := usage.Bool("remote", false, "-remote to get file info from remote")
+	usage := flag.String("usage", "dev", "Web server usage, can be 'pro' 'dev' or 'ffmpeg'. Default: dev")
+	file := flag.String("file", "local", "Where to get file information, can be 'local' or 'remote'. Default: local")
 
-	if len(os.Args) <= 1 {
-		log.Panic("expected 'usage' commands")
-	}
+	flag.Parse()
 
-	switch os.Args[1] {
-	case "usage":
-		usage.Parse(os.Args[2:])
-		if *usageFFmpeg {
-			os.Setenv("USAGE", "ffmpeg")
-		} else {
-			os.Setenv("USAGE", "main")
-		}
-
-		if *usageIsDev && *usageIsPro {
-			log.Panic("'-dev' and '-pro' cannot be provided at same time.")
-		}
-
-		if *usageIsDev {
-			os.Setenv("ENV", "dev")
-
-			if !*usageIsLocal && !*usageIsRemote {
-				log.Panic("Please provide file location '-local' or '-remote'")
-			}
-		}
-
-		if *usageIsPro {
-			os.Setenv("ENV", "pro")
-		}
-
-		if *usageIsLocal && *usageIsRemote {
-			log.Panic("'-local' and '-remote' cannot provide at same time.")
-		}
-
-		if *usageIsLocal {
-			os.Setenv("FILELOCATION", "local")
-		}
-		if *usageIsRemote {
-			os.Setenv("FILELOCATION", "remote")
-		}
-	default:
-		log.Panic("expect command 'usage'")
-	}
+	os.Setenv("USAGE", *usage)
+	os.Setenv("FileLocation", *file)
 }
 
 func main() {
