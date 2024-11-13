@@ -56,6 +56,7 @@ module.exports = [
       },
     },
     rules: {
+      "complexity": ["error", 10],
       'no-unused-vars': 'warn',
       'import-x/no-dynamic-require': 'warn',
       'import-x/no-nodejs-modules': 'warn',
@@ -123,16 +124,17 @@ module.exports = [
           "checksVoidReturn": false
         }
       ],
-      "@typescript-eslint/no-unsafe-member-access": "warn"
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/consistent-type-imports": "error"
     },
   },
   {
     files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
-    plugins:{"@stylistic": stylistic},
-    rules:{
-      "@stylistic/indent":['error', 2],
-      "@stylistic/semi":['error', "always"],
-      "@stylistic/space-before-blocks":['error', "always"]
+    plugins: { "@stylistic": stylistic },
+    rules: {
+      "@stylistic/indent": ['error', 2],
+      "@stylistic/semi": ['error', "always"],
+      "@stylistic/space-before-blocks": ['error', "always"]
     }
   },
   {

@@ -31,6 +31,8 @@ func Parseflag() {
 	usageFFmpeg := usage.Bool("ffmpeg", false, "-ffmpeg use as ffmpeg server, not provide as main server")
 	usageIsDev := usage.Bool("dev", false, "'-dev' use as development server and '-pro' use as production server")
 	usageIsPro := usage.Bool("pro", false, "'-dev' use as development server and '-pro' use as production server")
+	usageIsLocal := usage.Bool("local", false, "-local to show local file")
+	usageIsRemote := usage.Bool("remote", false, "-remote to get file info from remote")
 
 	if len(os.Args) <= 1 {
 		log.Panic("expected 'usage' commands")
@@ -46,15 +48,30 @@ func Parseflag() {
 		}
 
 		if *usageIsDev && *usageIsPro {
-			log.Panic("'-dev' and '-pro' cannot be provided at same time")
+			log.Panic("'-dev' and '-pro' cannot be provided at same time.")
 		}
 
 		if *usageIsDev {
 			os.Setenv("ENV", "dev")
+
+			if !*usageIsLocal && !*usageIsRemote {
+				log.Panic("Please provide file location '-local' or '-remote'")
+			}
 		}
 
 		if *usageIsPro {
 			os.Setenv("ENV", "pro")
+		}
+
+		if *usageIsLocal && *usageIsRemote {
+			log.Panic("'-local' and '-remote' cannot provide at same time.")
+		}
+
+		if *usageIsLocal {
+			os.Setenv("FILELOCATION", "local")
+		}
+		if *usageIsRemote {
+			os.Setenv("FILELOCATION", "remote")
 		}
 	default:
 		log.Panic("expect command 'usage'")

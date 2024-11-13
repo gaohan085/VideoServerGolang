@@ -78,7 +78,7 @@ const config = {
               modules: {
                 localIdentName: isProduction
                   ? "[local]"
-                  : "[path][name]-[local]--[hash:base64:5]",
+                  : "[path]-[local]--[hash:base64:5]",
               },
             },
           },

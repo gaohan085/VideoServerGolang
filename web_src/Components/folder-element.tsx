@@ -1,24 +1,25 @@
-import { AnimatePresence, motion } from "framer-motion";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
-import React, { useContext, useEffect, useState } from "react";
 import useSWR from "swr";
+import { CSSTransition } from "react-transition-group";
 
 import * as styles from "./folder-element.module.scss";
+
 
 import {
   Context,
   type DirectoryProp,
   type DirElement,
   ErrorElement,
-  InteractiveOpenFolderContainer,
   InteractiveRenameComponent,
-  Spinner,
+  OpenFolderContainer,
+  Spinner
 } from ".";
 
 const FolderElement: React.FC<{
   readonly elem: DirElement;
   readonly isLoading: boolean | undefined;
-  readonly isOpen: boolean | undefined;
+  readonly isOpen: boolean;
   readonly isError: boolean | undefined;
   readonly handleClick: React.MouseEventHandler | undefined;
   readonly handleCtxMenu: React.MouseEventHandler | undefined;
@@ -46,14 +47,11 @@ const FolderElement: React.FC<{
     </>
   );
 
+  const nodeRef = useRef(null);
+
   return (
-    <motion.div
-      animate={{ paddingLeft: 0 }}
+    <div
       className={!isOpen ? `${styles.folder}` : `${styles.folder} open`}
-      exit={{ paddingLeft: 12 }}
-      initial={{ paddingLeft: 12 }}
-      transition={{ duration: 0.2, ease: "easeIn" }}
-      id="folder-animate"
     >
       <a
         className="folder-element"
@@ -66,21 +64,21 @@ const FolderElement: React.FC<{
         {!!isRename && <InteractiveRenameComponent {...elem} />}
       </a>
       {!!isError && <ErrorElement />}
-      <AnimatePresence>
-        {!!isOpen && !!subDirectoryData && (
-          <motion.div
-            initial={{ opacity: 0, height: "calc-size(1px)" }}
-            animate={{ height: "calc-size(max-content)", opacity: 1 }}
-            exit={{ opacity: 0, height: "calc-size(1px)" }}
-            style={{ borderLeft: "1px solid #2c2842", marginLeft: "8px" }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            id="animate-open-folder-container"
-          >
-            <InteractiveOpenFolderContainer data={subDirectoryData} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+      <CSSTransition
+        in={!!isOpen && !!subDirectoryData}
+        unmountOnExit
+        classNames={{
+          enter: styles["container-enter"],
+          enterActive: styles["container-enter-active"],
+          exit: styles["container-exit"],
+          exitActive: styles["container-exit-active"]
+        }}
+        timeout={300}
+        nodeRef={nodeRef}
+      >
+        <OpenFolderContainer data={subDirectoryData!} isOpen={isOpen} ref={nodeRef} />
+      </CSSTransition>
+    </div>
   );
 };
 

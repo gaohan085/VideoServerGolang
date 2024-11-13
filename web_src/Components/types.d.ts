@@ -1,5 +1,5 @@
-import { useState } from "react";
-import useSWR from "swr";
+import type { useState } from "react";
+import type useSWR from "swr";
 
 export declare type InterfaceMutateFunc = ReturnType<
   typeof useSWR<{ statusCode: number; data: DirectoryProp } | Error>

@@ -10,7 +10,7 @@ type OrientationLockType =
   | "portrait"
   | "portrait-primary"
   | "portrait-secondary";
-interface ScreenOrientation extends EventTarget {
+declare interface ScreenOrientation extends EventTarget {
   lock(orientation: OrientationLockType): Promise<void>;
 }
 

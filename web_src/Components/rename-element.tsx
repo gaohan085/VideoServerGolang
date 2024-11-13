@@ -4,7 +4,9 @@ import axios from "axios";
 
 import * as styles from "./rename-element.module.scss";
 
-import { Context, DirElement } from ".";
+import { Context } from ".";
+
+import type { DirElement } from ".";
 
 interface RenameElements extends HTMLFormControlsCollection {
   name: HTMLInputElement;

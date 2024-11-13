@@ -1,20 +1,20 @@
-import React from "react";
+import React, { forwardRef, type LegacyRef } from "react";
 
 import * as lib from "../lib";
 
 import {
   type DirectoryProp,
-  type DirElement,
   InteractiveFileElement,
   InteractiveFolderElement,
 } from ".";
 
-const OpenFolderContainer: React.FC<{
-  readonly elems: DirElement[];
-}> = ({ elems }) => {
+export const OpenFolderContainer = forwardRef(function Container(
+  props: { data: DirectoryProp, isOpen: boolean }, ref: LegacyRef<HTMLDivElement>
+) {
+  const { data, isOpen } = props;
   return (
-    <>
-      {elems
+    !!isOpen && <div id="open-folder-container" ref={ref}>
+      {data.childElements
         .sort((a, b) => lib.sortElements(a, b))
         .map((elem, index) => {
           return elem.isFile ? (
@@ -23,14 +23,24 @@ const OpenFolderContainer: React.FC<{
             <InteractiveFolderElement elem={elem} key={index} />
           );
         })}
-    </>
-  );
-};
+    </div>);
+});
 
-const InteractiveOpenFolderContainer: React.FC<{
+export const InteractiveOpenFolderContainer: React.FC<{
   readonly data: DirectoryProp;
 }> = ({ data }) => {
-  return <OpenFolderContainer elems={data.childElements} />;
+  return (
+    <div id="open-folder-container">
+      {data?.childElements
+        .sort((a, b) => lib.sortElements(a, b))
+        .map((elem, index) => {
+          return elem.isFile ? (
+            <InteractiveFileElement elem={elem} key={index} />
+          ) : (
+            <InteractiveFolderElement elem={elem} key={index} />
+          );
+        })}
+    </div>);
 };
 
 export default InteractiveOpenFolderContainer;
