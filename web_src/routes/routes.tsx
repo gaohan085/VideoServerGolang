@@ -1,9 +1,11 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 
 import * as Components from "../Components";
 import { type ResWithActressName } from "../Components";
+
+import type { AxiosResponse } from "axios";
 
 const ErrorPage = lazy(() => import("./error-page"));
 const IndexLayout = lazy(() => import("./index-page-layout"));

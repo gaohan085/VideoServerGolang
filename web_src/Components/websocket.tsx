@@ -1,9 +1,11 @@
 import React, {
   createContext,
-  PropsWithChildren,
   useEffect,
   useState,
 } from "react";
+
+import type {
+  PropsWithChildren} from "react";
 
 export interface VideoStatus {
   fileName: string;

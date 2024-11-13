@@ -47,9 +47,8 @@ const FileSysSideBar: React.FC<{
       ) : isError ? (
         <ErrorElement />
       ) : (
-        data && (
-          <InteractiveOpenFolderContainer data={data} />
-        )
+
+        <InteractiveOpenFolderContainer data={data!} />
       )}
     </>
   );

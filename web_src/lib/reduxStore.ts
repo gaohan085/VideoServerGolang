@@ -1,9 +1,6 @@
 import {
-  Action,
   configureStore,
-  createSlice,
-  PayloadAction,
-  ThunkAction,
+  createSlice
 } from "@reduxjs/toolkit";
 import {
   type TypedUseSelectorHook,
@@ -12,6 +9,11 @@ import {
 } from "react-redux";
 
 import { type DirElement } from "../Components";
+
+import type {
+  Action,
+  PayloadAction,
+  ThunkAction} from "@reduxjs/toolkit";
 
 declare interface PlayingVideo {
   playingVideo: DirElement;

@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import React, { useContext, useEffect, useState } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
 
@@ -34,12 +33,8 @@ const FileElement: React.FC<{
   } = props;
 
   return (
-    <motion.div
-      animate={{ paddingLeft: 0 }}
+    <div
       className={styles.file}
-      exit={{ paddingLeft: 15 }}
-      initial={{ paddingLeft: 15 }}
-      transition={{ duration: 0.2, ease: "easeIn" }}
       id="animate-file-elem"
     >
       <div
@@ -75,11 +70,11 @@ const FileElement: React.FC<{
           <InteractiveRenameComponent {...elem} />
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
-const InteractiveFileElement: React.FC<{
+export const InteractiveFileElement: React.FC<{
   readonly elem: DirElement;
 }> = ({ elem }) => {
   const {
