@@ -45,7 +45,7 @@ const VideoBox: React.FC<VideoInfo> = (props) => {
       <div className="img-box">
         <img src={`/assets/poster/${posterName}`} loading="lazy" />
       </div>
-      <div className="title">
+      <div className="img-box-title">
         <a>{`${serialNumber} ${title}`}</a>
       </div>
     </div>
