@@ -13,7 +13,7 @@ const Title: React.FC = () => {
   );
 
   return (
-    <div className={styles["title"]}>
+    <div className={styles["player-title"]}>
       <h4>
         {!!videoPlaying.name &&
           `${serialNumber ? serialNumber[0] : videoPlaying.name} ${videoPlaying.title}`}

@@ -23,26 +23,34 @@ func SetRoutes(app *fiber.App) {
 
 	app.Get("/api/ws", handlers.Wshandler)
 
-	app.Static("/assets", "./assets/")
-
 	api := app.Group("/api")
-	api.Get("/disk", handlers.DiskUsageHandler)
-	api.Post("/delete", handlers.DeleteHandler)
-	api.Post("/rename", handlers.RenameHandler)
-	api.Get("/version", handlers.VersionHandler)
-	api.Get("/actress/:name", handlers.GetVideosByActress)
-	api.Post("/convert", handlers.ConvertHandler)
-
 	switch os.Getenv("FileLocation") {
 	case "local":
-		api.Get("/*", handlers.FileReaderHandler)
+		app.Static("/assets", "./assets/")
 
+		api.Get("/disk", handlers.DiskUsageHandler)
+		api.Post("/delete", handlers.DeleteHandler)
+		api.Post("/rename", handlers.RenameHandler)
+		api.Get("/version", handlers.VersionHandler)
+		api.Get("/actress/:name", handlers.GetVideosByActress)
+		api.Post("/convert", handlers.ConvertHandler)
+		api.Get("/*", handlers.FileReaderHandler)
 	default:
+		app.Get("/assets/*", func(c *fiber.Ctx) error {
+			path, err := url.QueryUnescape(c.Params("*"))
+			if err != nil {
+				return err
+			}
+
+			return proxy.Do(c, "http://192.168.1.199/assets/"+path)
+		})
+
 		api.Get("/*", func(c *fiber.Ctx) error {
 			path, err := url.QueryUnescape(c.Params("*"))
 			if err != nil {
 				return err
 			}
+
 			return proxy.Do(c, "http://192.168.1.199/api/"+path)
 		})
 
@@ -54,5 +62,4 @@ func SetRoutes(app *fiber.App) {
 		Browse:     true,
 	}))
 	app.Get("/*", handlers.IndexHandler)
-
 }
