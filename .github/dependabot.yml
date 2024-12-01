@@ -15,7 +15,6 @@ updates:
         patterns:
           - "@reduxjs/toolkit"
           - "axios"
-          - "framer-motion"
           - "prop-types"
           - "react*"
           - "redux"
@@ -23,14 +22,26 @@ updates:
       nodejs-development-dependencies:
         dependency-type: "development"
         patterns:
+          - "@eslint/compat"
+          - "@eslint/eslintrc"
+          - "@eslint/js"
           - "@pmmmwh/react-refresh-webpack-plugin"
-          - "@types/*"
+          - "@stylistic/eslint-plugin"
+          - "@types/eslint__js"
+          - "@types/node"
+          - "@types/react"
+          - "@types/react-dom"
+          - "@types/react-transition-group"
           - "@typescript-eslint/eslint-plugin"
           - "@typescript-eslint/parser"
           - "@webpack-cli/generators"
           - "css-loader"
+          - "css-minimizer-webpack-plugin"
           - "eslint"
-          - "eslint-*"
+          - "eslint-import-resolver-typescript"
+          - "eslint-plugin-import-x"
+          - "eslint-plugin-react"
+          - "globals"
           - "html-webpack-plugin"
           - "mini-css-extract-plugin"
           - "sass"
@@ -38,12 +49,13 @@ updates:
           - "style-loader"
           - "swc"
           - "swc-loader"
+          - "terser-webpack-plugin"
+          - "ts-loader"
           - "typescript"
+          - "typescript-eslint"
           - "webpack"
           - "webpack-cli"
           - "webpack-dev-server"
-          - "@eslint/*"
-          - "@stylistic/esling-plugin"
   - package-ecosystem: "gomod"
     schedule:
       interval: "monthly"
@@ -56,5 +68,3 @@ updates:
       golang-dependencies:
         patterns:
           - "*"
-        exclude-patterns:
-          - "gorm.io/driver/postgres"
