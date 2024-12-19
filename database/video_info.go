@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 
@@ -58,8 +59,13 @@ func (v *VideoInf) QueryByVideoName(n string) error {
 }
 
 func (v *VideoInf) GetDetailInfo() error {
+	proxyUrl, err := url.Parse("http://192.168.1.198:10809")
+	if err != nil {
+		return err
+	}
+
 	fiberlog.Info("Getting Video " + v.SerialNumber + " Info.")
-	client := &http.Client{}
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
 	req, _ := http.NewRequest("GET", "https://javdb.com/search?q="+v.SerialNumber+"&f=all", nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 	res, err := client.Do(req)
@@ -127,7 +133,11 @@ func (v *VideoInf) DownloadPoster() error {
 
 	//下载封面文件
 	fiberlog.Info("Downloading Video " + v.SerialNumber + " Poster.")
-	client := &http.Client{}
+	proxyUrl, err := url.Parse("http://192.168.1.198:10809")
+	if err != nil {
+		return err
+	}
+	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
 	req, _ := http.NewRequest("GET", v.SourcePosterUrl, nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 	res, err := client.Do(req)
