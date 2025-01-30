@@ -1,21 +1,15 @@
-import React, { createContext, Suspense, useEffect, useState } from "react";
+import React, { createContext, lazy, Suspense, useEffect, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
 import useSWR, { useSWRConfig } from "swr";
-
 import { useWindowDimension } from "../lib";
+import styles from "./file-system-sidebar.module.scss";
+import { DiskUsage } from "./status-bar";
+import { Spinner } from "./spinner";
+import type { DirectoryProp, DirElement, UseStateReturnType } from "./types";
 
-import * as styles from "./file-system-sidebar.module.scss";
-
-import {
-  type DirectoryProp,
-  type DirElement,
-  DiskUsage,
-  ErrorElement,
-  InteractiveCtxMenu,
-  InteractiveOpenFolderContainer,
-  Spinner,
-  type UseStateReturnType,
-} from ".";
+const LazyErrorElement = lazy(() => import("./error-element"));
+const LazyOpenFolderContainer = lazy(() => import("./open-folder-container-element"));
+const LazyCtxMenu = lazy(() => import("./context-menu"));
 
 const FileSysSideBar: React.FC<{
   readonly data: DirectoryProp | undefined;
@@ -45,10 +39,9 @@ const FileSysSideBar: React.FC<{
       {isLoading ? (
         <Spinner fontSize={24} />
       ) : isError ? (
-        <ErrorElement />
+        <LazyErrorElement />
       ) : (
-
-        <InteractiveOpenFolderContainer data={data!} />
+        <LazyOpenFolderContainer data={data!} isOpen={true} />
       )}
     </>
   );
@@ -81,7 +74,7 @@ const FileSysSideBar: React.FC<{
       </div>
       {!clicked && (
         <>
-          <InteractiveCtxMenu />
+          <LazyCtxMenu />
         </>
       )}
     </Suspense>

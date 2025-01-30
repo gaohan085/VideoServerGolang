@@ -3,9 +3,9 @@ import React, {
   useEffect,
   useState,
 } from "react";
-
 import type {
-  PropsWithChildren} from "react";
+  PropsWithChildren
+} from "react";
 
 export interface VideoStatus {
   fileName: string;

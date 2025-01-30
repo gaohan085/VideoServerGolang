@@ -8,12 +8,10 @@ import {
   FcServices,
   FcStart,
 } from "react-icons/fc";
-
 import * as lib from "../lib";
-
-import * as styles from "./right-click-context-menu.module.scss";
-
-import { Context, type DirElement } from ".";
+import styles from "./context-menu.module.scss";
+import { Context } from "./file-system-sidebar";
+import type { DirElement } from "./types";
 
 const PlayVideo: React.FC = () => {
   return (
@@ -209,7 +207,7 @@ const InteractiveCtxMenu: React.FC = () => {
   };
 
   const handlePlayVideo: React.MouseEventHandler = () => {
-    dispatch(lib.redux.setVideoPlaying(rightClickElem!));
+    dispatch(lib.redux.setVideoPlaying(rightClickElem));
     setClicked!(true);
   };
 

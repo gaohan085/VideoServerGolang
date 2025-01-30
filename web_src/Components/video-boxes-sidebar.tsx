@@ -1,12 +1,11 @@
-import { FcPrevious } from "react-icons/fc";
 import React, { useEffect, useState } from "react";
+import { FcPrevious } from "react-icons/fc";
 import { useLoaderData, useNavigation } from "react-router";
-
 import * as lib from "../lib";
-
-import * as styles from "./video-boxes-sidebar.module.scss";
-
-import { DiskUsage, type ResWithActressName, Spinner, type VideoInfo } from ".";
+import { Spinner } from "./spinner";
+import { DiskUsage } from "./status-bar";
+import styles from "./video-boxes-sidebar.module.scss";
+import type { ResWithActressName, VideoInfo } from "./types";
 
 const VideoBox: React.FC<VideoInfo> = (props) => {
   const dispatch = lib.redux.useAppDispatch();
@@ -53,7 +52,7 @@ const VideoBox: React.FC<VideoInfo> = (props) => {
 };
 
 const VideoBoxes: React.FC = () => {
-  const { data } = useLoaderData() as ResWithActressName;
+  const { data } = useLoaderData<ResWithActressName>();
   const [isActive, setIsActive] = useState<boolean>(false);
   const toggleActive: React.MouseEventHandler = () => setIsActive(!isActive);
   const { width } = lib.useWindowDimension();

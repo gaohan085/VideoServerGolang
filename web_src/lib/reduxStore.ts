@@ -7,9 +7,7 @@ import {
   useDispatch,
   useSelector,
 } from "react-redux";
-
-import { type DirElement } from "../Components";
-
+import { type DirElement } from "../Components/types";
 import type {
   Action,
   PayloadAction,

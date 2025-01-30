@@ -1,14 +1,11 @@
-import "plyr/dist/plyr.css";
-import React, { forwardRef, useEffect, useRef } from "react";
 import Plyr from "plyr";
+import "plyr/dist/plyr.css";
 import plyrSvg from "plyr/dist/plyr.svg";
-
+import React, { forwardRef, lazy, useEffect, useRef } from "react";
 import * as lib from "../lib";
+import styles from "./player.module.scss";
 
-import * as styles from "./player.module.scss";
-
-import { Title } from ".";
-
+const LazyPlayerTitle = lazy(() => import("./player-title"));
 const isProduction = process.env.NODE_ENV === "production";
 
 const ForwordPlayer = forwardRef(function Player(
@@ -106,7 +103,7 @@ export const Player: React.FC = () => {
   return (
     <div className={styles.player}>
       <ForwordPlayer ref={ref} />
-      <Title />
+      <LazyPlayerTitle />
     </div>
   );
 };

@@ -1,20 +1,15 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { lazy, useContext, useEffect, useRef, useState } from "react";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
-import useSWR from "swr";
 import { CSSTransition } from "react-transition-group";
+import useSWR from "swr";
+import { Context } from "./file-system-sidebar";
+import styles from "./folder-element.module.scss";
+import { Spinner } from "./spinner";
+import type { DirectoryProp, DirElement } from "./types";
 
-import * as styles from "./folder-element.module.scss";
-
-
-import {
-  Context,
-  type DirectoryProp,
-  type DirElement,
-  ErrorElement,
-  InteractiveRenameComponent,
-  OpenFolderContainer,
-  Spinner
-} from ".";
+const LazyErrElement = lazy(() => import("./error-element"));
+const LazyRenameComponent = lazy(() => import("./rename-element"));
+const LazyOpenFolderContainer = lazy(() => import("./open-folder-container-element"));
 
 const FolderElement: React.FC<{
   readonly elem: DirElement;
@@ -61,9 +56,9 @@ const FolderElement: React.FC<{
       >
         {ConditionalFolderIcon}
         {!isRename && elem.name}
-        {!!isRename && <InteractiveRenameComponent {...elem} />}
+        {!!isRename && <LazyRenameComponent {...elem} />}
       </a>
-      {!!isError && <ErrorElement />}
+      {!!isError && <LazyErrElement />}
       <CSSTransition
         in={!!isOpen && !!subDirectoryData}
         unmountOnExit
@@ -76,7 +71,7 @@ const FolderElement: React.FC<{
         timeout={300}
         nodeRef={nodeRef}
       >
-        <OpenFolderContainer data={subDirectoryData!} isOpen={isOpen} ref={nodeRef} />
+        <LazyOpenFolderContainer data={subDirectoryData!} isOpen={isOpen} ref={nodeRef}/>
       </CSSTransition>
     </div>
   );

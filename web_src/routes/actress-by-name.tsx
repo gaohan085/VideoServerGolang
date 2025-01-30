@@ -1,12 +1,13 @@
-import React from "react";
+import React, { lazy } from "react";
 
-import * as Components from "../Components";
+const LazyWsLayer = lazy(()=>import("../Components/websocket"));
+const LazyVideoBoxesByActress = lazy(()=>import("../Components/video-boxes-sidebar"));
 
 const ActressByName = () => {
   return (
-    <Components.WebSocketLayer>
-      <Components.VideoBoxes />
-    </Components.WebSocketLayer>
+    <LazyWsLayer>
+      <LazyVideoBoxesByActress />
+    </LazyWsLayer>
   );
 };
 

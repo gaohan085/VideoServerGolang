@@ -1,16 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { lazy, useContext, useEffect, useState } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
-
 import * as lib from "../lib";
+import styles from "./file-element.module.scss";
+import { Context } from "./file-system-sidebar";
+import { WsContext } from "./websocket";
+import type { DirElement } from "./types";
 
-import * as styles from "./file-element.module.scss";
-
-import {
-  Context,
-  type DirElement,
-  InteractiveRenameComponent,
-  WsContext,
-} from ".";
+const LazyRenameComponent = lazy(() => import("./rename-element"));
 
 const FileElement: React.FC<{
   readonly elem: DirElement;
@@ -67,14 +63,14 @@ const FileElement: React.FC<{
           </a>
         )}
         {!!isRename && (
-          <InteractiveRenameComponent {...elem} />
+          <LazyRenameComponent {...elem} />
         )}
       </div>
     </div>
   );
 };
 
-export const InteractiveFileElement: React.FC<{
+const InteractiveFileElement: React.FC<{
   readonly elem: DirElement;
 }> = ({ elem }) => {
   const {

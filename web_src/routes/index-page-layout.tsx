@@ -1,12 +1,13 @@
-import React from "react";
+import React, { lazy } from "react";
 
-import * as Components from "../Components";
+const LazyWsLayer = lazy(()=>import("../Components/websocket"));
+const LazyFileSysSideBar = lazy(()=>import("../Components/file-system-sidebar"));
 
 
 export default function () {
   return (
-    <Components.WebSocketLayer>
-      <Components.InteractiveFileSysSideBar />
-    </Components.WebSocketLayer>
+    <LazyWsLayer>
+      <LazyFileSysSideBar />
+    </LazyWsLayer>
   );
 }
