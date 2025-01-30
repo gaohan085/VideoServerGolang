@@ -2,6 +2,7 @@ package database
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -64,7 +65,7 @@ func (v *VideoInf) GetDetailInfo() error {
 		return err
 	}
 
-	fiberlog.Info("Getting Video " + v.SerialNumber + " Info.")
+	fiberlog.Info(fmt.Sprintf("Getting Video '%s' Info.", v.SerialNumber))
 	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
 	req, _ := http.NewRequest("GET", "https://javdb.com/search?q="+v.SerialNumber+"&f=all", nil)
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")

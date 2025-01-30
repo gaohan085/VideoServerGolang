@@ -87,8 +87,15 @@ func CheckVideoExists() error {
 		return err
 	}
 
+CheckVideoExists:
 	for _, video := range videos {
 		fiberlog.Info(fmt.Sprintf("Checking video %s exists or not", video.SerialNumber))
+
+		if video.PlaySrc == "" {
+			fiberlog.Warn(fmt.Sprintf("Video %s play source not exist.", video.PlaySrc))
+			continue CheckVideoExists
+		}
+
 		client := http.Client{}
 		req, _ := http.NewRequest("GET", video.PlaySrc, nil)
 		res, _ := client.Do(req)
@@ -96,7 +103,7 @@ func CheckVideoExists() error {
 		if res.StatusCode == 403 {
 			return video.Delete()
 		}
-		continue
+		continue CheckVideoExists
 	}
 	return nil
 }
