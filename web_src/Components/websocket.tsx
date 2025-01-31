@@ -2,10 +2,8 @@ import React, {
   createContext,
   useEffect,
   useState,
+  type PropsWithChildren
 } from "react";
-
-import type {
-  PropsWithChildren} from "react";
 
 export interface VideoStatus {
   fileName: string;

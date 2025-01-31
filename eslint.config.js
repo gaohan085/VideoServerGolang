@@ -60,7 +60,7 @@ module.exports = [
       'no-unused-vars': 'warn',
       'import-x/no-dynamic-require': 'warn',
       'import-x/no-nodejs-modules': 'warn',
-      'import-x/no-default-export': 1,
+      'import-x/prefer-default-export': "warn",
       'import-x/default': 0,
       'import-x/order': [
         "error",
@@ -74,7 +74,7 @@ module.exports = [
             "object",
             "type"
           ],
-          "newlines-between": "always"
+          "newlines-between": "never"
         }
       ],
       "@typescript-eslint/no-unsafe-assignment": "off",

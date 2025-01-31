@@ -1,46 +1,26 @@
-import React, { forwardRef, type LegacyRef } from "react";
+import React, { forwardRef, lazy, type LegacyRef } from "react";
+import sortElements from "../lib/sort-elements-by-name";
+import FileElement from "./file-element";
+import type { DirectoryProp } from "./types";
 
-import * as lib from "../lib";
+const LazyFolderElement = lazy(()=>import("./folder-element"));
 
-import {
-  type DirectoryProp,
-  InteractiveFileElement,
-  InteractiveFolderElement,
-} from ".";
-
-export const OpenFolderContainer = forwardRef(function Container(
+const OpenFolderContainer = forwardRef(function Container(
   props: { data: DirectoryProp, isOpen: boolean }, ref: LegacyRef<HTMLDivElement>
 ) {
   const { data, isOpen } = props;
   return (
     !!isOpen && <div id="open-folder-container" ref={ref}>
       {data.childElements
-        .sort((a, b) => lib.sortElements(a, b))
+        .sort((a, b) => sortElements(a, b))
         .map((elem, index) => {
           return elem.isFile ? (
-            <InteractiveFileElement elem={elem} key={index} />
+            <FileElement elem={elem} key={index} />
           ) : (
-            <InteractiveFolderElement elem={elem} key={index} />
+            <LazyFolderElement elem={elem} key={index} />
           );
         })}
     </div>);
 });
 
-export const InteractiveOpenFolderContainer: React.FC<{
-  readonly data: DirectoryProp;
-}> = ({ data }) => {
-  return (
-    <div id="open-folder-container">
-      {data?.childElements
-        .sort((a, b) => lib.sortElements(a, b))
-        .map((elem, index) => {
-          return elem.isFile ? (
-            <InteractiveFileElement elem={elem} key={index} />
-          ) : (
-            <InteractiveFolderElement elem={elem} key={index} />
-          );
-        })}
-    </div>);
-};
-
-export default InteractiveOpenFolderContainer;
+export default OpenFolderContainer;

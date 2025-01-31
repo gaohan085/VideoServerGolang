@@ -1,6 +1,5 @@
 import React from "react";
 import { FcCancel } from "react-icons/fc";
-
 import * as styles from "./error-element.module.scss";
 
 const ErrorElement: React.FC = () => {

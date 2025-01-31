@@ -1,4 +1,4 @@
-export const isVideo = (extName: string): boolean => {
+const isVideo = (extName: string): boolean => {
   const formatList = [
     ".wmv",
     ".asf",
@@ -21,3 +21,5 @@ export const isVideo = (extName: string): boolean => {
 
   return formatList.includes(extName);
 };
+
+export default isVideo;
