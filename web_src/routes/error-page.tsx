@@ -1,6 +1,5 @@
 import React from "react";
 import { useRouteError } from "react-router";
-
 import * as styles from "./error-page.module.scss";
 
 const ErrorPage: React.FC = () => {

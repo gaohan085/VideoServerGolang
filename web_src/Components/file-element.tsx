@@ -1,16 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, lazy } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
-
-import * as lib from "../lib";
-
+import isVideo from "../lib/is-video";
+import * as redux from "../lib/reduxStore";
 import * as styles from "./file-element.module.scss";
+import { Context } from "./file-system-sidebar";
+import { WsContext } from "./websocket";
+import type { DirElement } from "./types";
 
-import {
-  Context,
-  type DirElement,
-  InteractiveRenameComponent,
-  WsContext,
-} from ".";
+const LazyRenameComponent = lazy(()=>import("./rename-element"));
 
 const FileElement: React.FC<{
   readonly elem: DirElement;
@@ -47,12 +44,12 @@ const FileElement: React.FC<{
         }
         onClick={handleClick}
         onContextMenu={handleCtxMenu}
-        title={lib.isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
+        title={isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
       >
         <span>
           {isConverting ? (
             <FcLock />
-          ) : lib.isVideo(elem.extName) ? (
+          ) : isVideo(elem.extName) ? (
             <FcFilmReel />
           ) : (
             <FcQuestions />
@@ -67,14 +64,14 @@ const FileElement: React.FC<{
           </a>
         )}
         {!!isRename && (
-          <InteractiveRenameComponent {...elem} />
+          <LazyRenameComponent {...elem} />
         )}
       </div>
     </div>
   );
 };
 
-export const InteractiveFileElement: React.FC<{
+const InteractiveFileElement: React.FC<{
   readonly elem: DirElement;
 }> = ({ elem }) => {
   const {
@@ -85,7 +82,7 @@ export const InteractiveFileElement: React.FC<{
     renameElement,
     setRenameElement,
   } = useContext(Context);
-  const dispatch = lib.redux.useAppDispatch();
+  const dispatch = redux.useAppDispatch();
   const [isRename, setIsRename] = useState<boolean>(false);
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const { convertingElems } = useContext(WsContext);
@@ -114,7 +111,7 @@ export const InteractiveFileElement: React.FC<{
 
   const handleClick: React.MouseEventHandler = () => {
     if (!isRename && !isConverting) {
-      elem.extName === ".mp4" && dispatch(lib.redux.setVideoPlaying(elem));
+      elem.extName === ".mp4" && dispatch(redux.setVideoPlaying(elem));
       //取消其他正在重命名的元素
       setRenameElement!(undefined);
     }
@@ -136,8 +133,8 @@ export const InteractiveFileElement: React.FC<{
   }, [elem, renameElement, setIsRename]);
 
   //监听正在播放
-  const currentPlayVideo = lib.redux.useAppSelector(
-    lib.redux.selectVideoPlaying,
+  const currentPlayVideo = redux.useAppSelector(
+    redux.selectVideoPlaying,
   );
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   useEffect(() => {
