@@ -171,12 +171,6 @@ module.exports = () => {
         runtime: true,
       }),
     );
-    config.externals = [
-      { react: "React" },
-      { "react-dom": "ReactDOM" },
-      { axios: "axios" },
-      { plyr: "Plyr" },
-    ];
     config.devtool = "source-map";
   } else {
     config.mode = "development";
