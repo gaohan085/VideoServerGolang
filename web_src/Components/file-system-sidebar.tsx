@@ -3,7 +3,7 @@ import { FcPrevious } from "react-icons/fc";
 import useSWR, { useSWRConfig } from "swr";
 import useWindowDimension from "../lib/useWindowDimension";
 import styles from "./file-system-sidebar.module.scss";
-import { type DirectoryProp, type DirElement, type UseStateReturnType } from "./types";
+import { type DirectoryProp, type DirElement, type UseStateReturnType } from "./types.d";
 import { DiskUsage } from "./status-bar";
 import Spinner from "./spinner";
 

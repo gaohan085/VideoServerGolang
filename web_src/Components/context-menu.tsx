@@ -11,7 +11,7 @@ import {
 import isVideo from "../lib/is-video";
 import * as redux from "../lib/reduxStore";
 import styles from "./context-menu.module.scss";
-import { type DirElement } from "./types";
+import { type DirElement } from "./types.d";
 import { Context } from "./file-system-sidebar";
 
 const PlayVideo: React.FC = () => {

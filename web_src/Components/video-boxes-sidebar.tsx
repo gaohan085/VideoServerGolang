@@ -6,7 +6,7 @@ import * as redux from "../lib/reduxStore";
 import styles from "./video-boxes-sidebar.module.scss";
 import Spinner from "./spinner";
 import {DiskUsage} from "./status-bar";
-import type { ResWithActressName, VideoInfo } from "./types";
+import type { ResWithActressName, VideoInfo } from "./types.d";
 
 const VideoBox: React.FC<VideoInfo> = (props) => {
   const dispatch = redux.useAppDispatch();

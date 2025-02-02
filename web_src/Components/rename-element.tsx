@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import axios from "axios";
 import styles from "./rename-element.module.scss";
 import { Context } from "./file-system-sidebar";
-import type { DirElement } from "./types";
+import type { DirElement } from "./types.d";
 
 interface RenameElements extends HTMLFormControlsCollection {
   name: HTMLInputElement;
