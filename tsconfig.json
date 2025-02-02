@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "react",
+    "outDir": "./dist",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "module": "ESNext",
@@ -14,15 +15,13 @@
       "DOM",
       "DOM.Iterable",
       "ESNext"
-    ]
+    ],
+    "skipLibCheck": true
   },
   "files": [
     "web_src/index.ts"
   ],
   "include": [
-    "./web_src/",
+    "./web_src/"
   ],
-  "exclude": [
-    "./node_modules/"
-  ]
 }

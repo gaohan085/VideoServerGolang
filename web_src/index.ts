@@ -11,8 +11,8 @@ head?.appendChild(favicon);
 const appNode = document.getElementById("main");
 void renderApp(appNode!);
 
-if (import.meta.webpackHot) {
-  import.meta.webpackHot.accept("./App.tsx", () => {
+if (import.meta.hot) {
+  import.meta.hot.accept("./App.tsx", () => {
     return;
   });
 }

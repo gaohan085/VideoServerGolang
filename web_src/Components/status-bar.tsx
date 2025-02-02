@@ -1,7 +1,7 @@
 import React from "react";
 import { FcDataProtection, FcSearch } from "react-icons/fc";
 import useSWR from "swr";
-import * as styles from "./status-bar.module.scss";
+import styles from "./status-bar.module.scss";
 
 interface DiskSpace {
   path: string;

@@ -1,23 +1,27 @@
 //eslint.config.js
-const react = require("eslint-plugin-react")
-const js = require("@eslint/js")
-const eslintPluginImportX = require("eslint-plugin-import-x")
-const tsParser = require("@typescript-eslint/parser")
-const tseslint = require("typescript-eslint")
-const globals = require('globals');
-const stylistic = require("@stylistic/eslint-plugin")
+import react from "eslint-plugin-react";
+import eslintjs from "@eslint/js";
+const { configs } = eslintjs;
+import { flatConfigs } from "eslint-plugin-import-x";
+import tsParser from "@typescript-eslint/parser";
+import { configs as _configs } from "typescript-eslint";
+import globals from "globals";
+const { browser } = globals;
+
+import stylistic from "@stylistic/eslint-plugin";
+import { cwd } from "process";
 
 
-module.exports = [
-  js.configs.recommended,
-  eslintPluginImportX.flatConfigs.recommended,
-  eslintPluginImportX.flatConfigs.typescript,
-  ...tseslint.configs.recommendedTypeChecked,
+export default [
+  configs.recommended,
+  flatConfigs.recommended,
+  flatConfigs.typescript,
+  ..._configs.recommendedTypeChecked,
   {
     languageOptions: {
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: __dirname,
+        tsconfigRootDir: cwd(),
       },
     },
   },
@@ -37,22 +41,22 @@ module.exports = [
     ],
   },
   {
-    files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
+    files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
     plugins: {
       react: react,
     },
-    ignores: ['eslint.config.js'],
+    ignores: ["eslint.config.js"],
     languageOptions: {
       parser: tsParser,
-      ecmaVersion: 'latest',
-      sourceType: 'module',
+      ecmaVersion: "latest",
+      sourceType: "module",
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
       },
       globals: {
-        ...globals.browser,
+        ...browser,
       },
     },
     rules: {
@@ -92,8 +96,6 @@ module.exports = [
           "ignoreRestSiblings": false
         }
       ],
-      "no-case-declarations": "off",
-      "@typescript-eslint/prefer-nullish-coalescing": "error",
       "import-x/no-cycle": [
         0,
         {
@@ -101,6 +103,8 @@ module.exports = [
         }
       ],
       "import-x/default": 0,
+      "import-x/no-default-export": 0,
+
       "react/jsx-no-leaked-render": [
         1,
         {
@@ -118,6 +122,18 @@ module.exports = [
           "destructureInSignature": "ignore"
         }
       ],
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": false
+        }
+      ],
+
+      "@typescript-eslint/prefer-nullish-coalescing": "error",
       "@typescript-eslint/no-misused-promises": [
         "error",
         {
@@ -125,16 +141,22 @@ module.exports = [
         }
       ],
       "@typescript-eslint/no-unsafe-member-access": "off",
-      "@typescript-eslint/consistent-type-imports": "error"
+      "@typescript-eslint/consistent-type-imports": "error",
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'inline-type-imports',
+        },
+      ],
     },
   },
   {
-    files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
+    files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
     plugins: { "@stylistic": stylistic },
     rules: {
-      "@stylistic/indent": ['error', 2],
-      "@stylistic/semi": ['error', "always"],
-      "@stylistic/space-before-blocks": ['error', "always"]
+      "@stylistic/indent": ["error", 2],
+      "@stylistic/semi": ["error", "always"],
+      "@stylistic/space-before-blocks": ["error", "always"]
     }
   },
   {
@@ -144,4 +166,4 @@ module.exports = [
       }
     }
   }
-]
+];

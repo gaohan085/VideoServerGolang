@@ -2,14 +2,14 @@ import React, { createContext, lazy, Suspense, useEffect, useState } from "react
 import { FcPrevious } from "react-icons/fc";
 import useSWR, { useSWRConfig } from "swr";
 import useWindowDimension from "../lib/useWindowDimension";
-import * as styles from "./file-system-sidebar.module.scss";
+import styles from "./file-system-sidebar.module.scss";
 import { type DirectoryProp, type DirElement, type UseStateReturnType } from "./types";
 import { DiskUsage } from "./status-bar";
 import Spinner from "./spinner";
 
 const LazyErrElement = lazy(()=>import("./error-element"));
 const LazyOpenFolderContainer = lazy(()=>import("./open-folder-container-element"));
-const LazyCtxMenu = lazy(()=>import("./right-click-context-menu"));
+const LazyCtxMenu = lazy(()=>import("./context-menu"));
 
 const FileSysSideBar: React.FC<{
   readonly data: DirectoryProp | undefined;

@@ -3,7 +3,7 @@ import React, { forwardRef, lazy, useEffect, useRef } from "react";
 import Plyr from "plyr";
 import plyrSvg from "plyr/dist/plyr.svg";
 import * as redux from "../lib/reduxStore";
-import * as styles from "./player.module.scss";
+import styles from "./player.module.scss";
 
 const LazyTitle = lazy(()=>import("./player-title"));
 

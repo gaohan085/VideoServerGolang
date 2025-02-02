@@ -2,7 +2,7 @@ import { FcLink } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import React from "react";
 import * as redux from "../lib/reduxStore";
-import * as styles from "./player-title.module.scss";
+import styles from "./player-title.module.scss";
 
 const Title: React.FC = () => {
   const videoPlaying = redux.useAppSelector(redux.selectVideoPlaying);

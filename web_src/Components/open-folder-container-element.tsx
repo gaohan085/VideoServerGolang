@@ -9,6 +9,7 @@ const OpenFolderContainer = forwardRef(function Container(
   props: { data: DirectoryProp, isOpen: boolean }, ref: LegacyRef<HTMLDivElement>
 ) {
   const { data, isOpen } = props;
+  console.log(data);
   return (
     !!isOpen && <div id="open-folder-container" ref={ref}>
       {data.childElements
