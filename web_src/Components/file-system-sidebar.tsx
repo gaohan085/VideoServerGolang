@@ -1,15 +1,15 @@
 import React, { createContext, lazy, Suspense, useEffect, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
 import useSWR, { useSWRConfig } from "swr";
-import { useWindowDimension } from "../lib";
-import styles from "./file-system-sidebar.module.scss";
+import useWindowDimension from "../lib/useWindowDimension";
+import * as styles from "./file-system-sidebar.module.scss";
+import { type DirectoryProp, type DirElement, type UseStateReturnType } from "./types";
 import { DiskUsage } from "./status-bar";
-import { Spinner } from "./spinner";
-import type { DirectoryProp, DirElement, UseStateReturnType } from "./types";
+import Spinner from "./spinner";
 
-const LazyErrorElement = lazy(() => import("./error-element"));
-const LazyOpenFolderContainer = lazy(() => import("./open-folder-container-element"));
-const LazyCtxMenu = lazy(() => import("./context-menu"));
+const LazyErrElement = lazy(()=>import("./error-element"));
+const LazyOpenFolderContainer = lazy(()=>import("./open-folder-container-element"));
+const LazyCtxMenu = lazy(()=>import("./right-click-context-menu"));
 
 const FileSysSideBar: React.FC<{
   readonly data: DirectoryProp | undefined;
@@ -39,8 +39,9 @@ const FileSysSideBar: React.FC<{
       {isLoading ? (
         <Spinner fontSize={24} />
       ) : isError ? (
-        <LazyErrorElement />
+        <LazyErrElement />
       ) : (
+
         <LazyOpenFolderContainer data={data!} isOpen={true} />
       )}
     </>

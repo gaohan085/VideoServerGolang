@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import { Spinner } from "../Components/spinner";
+import Spinner from "../Components/spinner";
+import type { ResWithActressName } from "../Components/types";
 import type { AxiosResponse } from "axios";
 import type { ResWithActressName } from "../Components/types";
 
@@ -50,6 +51,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-export const Routes = () => {
+const Routes = () => {
   return <RouterProvider router={router} />;
 };
+
+export default Routes;

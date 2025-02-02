@@ -8,10 +8,11 @@ import {
   FcServices,
   FcStart,
 } from "react-icons/fc";
-import * as lib from "../lib";
-import styles from "./context-menu.module.scss";
+import isVideo from "../lib/is-video";
+import * as redux from "../lib/reduxStore";
+import * as styles from "./right-click-context-menu.module.scss";
+import { type DirElement } from "./types";
 import { Context } from "./file-system-sidebar";
-import type { DirElement } from "./types";
 
 const PlayVideo: React.FC = () => {
   return (
@@ -136,7 +137,7 @@ const CtxMenu: React.FC<{
     >
       <ul>
         {/* First list */}
-        {!!elem.isFile && lib.isVideo(elem.extName) && (
+        {!!elem.isFile && isVideo(elem.extName) && (
           <li onClick={handlePlayVideo}>
             <PlayVideo />
           </li>
@@ -157,7 +158,7 @@ const CtxMenu: React.FC<{
         )}
 
         {/* Second list */}
-        {!!elem.isFile && lib.isVideo(elem.extName) && (
+        {!!elem.isFile &&  isVideo(elem.extName) && (
           <li onClick={handleConverVideo}>
             <ProcessVideo />
           </li>
@@ -189,7 +190,7 @@ const InteractiveCtxMenu: React.FC = () => {
     setRenameElement,
   } = useContext(Context);
 
-  const dispatch = lib.redux.useAppDispatch();
+  const dispatch = redux.useAppDispatch();
 
   const handleOpenFolder: React.MouseEventHandler = () => {
     setOpenFolder!(
@@ -207,7 +208,7 @@ const InteractiveCtxMenu: React.FC = () => {
   };
 
   const handlePlayVideo: React.MouseEventHandler = () => {
-    dispatch(lib.redux.setVideoPlaying(rightClickElem));
+    dispatch(redux.setVideoPlaying(rightClickElem!));
     setClicked!(true);
   };
 

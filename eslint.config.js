@@ -61,20 +61,12 @@ export default [
     },
     rules: {
       "complexity": ["error", 10],
-      "quotes": [
-        "warn",
-        "double"
-      ],
-
-      "no-unused-vars": "warn",
-      "no-unused-expressions": "off",
-      "no-case-declarations": "off",
-
-      "import-x/no-dynamic-require": "warn",
-      "import-x/no-nodejs-modules": "warn",
-      "import-x/no-default-export": 1,
-      "import-x/default": 0,
-      "import-x/order": [
+      'no-unused-vars': 'warn',
+      'import-x/no-dynamic-require': 'warn',
+      'import-x/no-nodejs-modules': 'warn',
+      'import-x/prefer-default-export': "warn",
+      'import-x/default': 0,
+      'import-x/order': [
         "error",
         {
           "groups": [
@@ -87,6 +79,21 @@ export default [
             "type"
           ],
           "newlines-between": "never"
+        }
+      ],
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "no-unused-expressions": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+      "quotes": [
+        "warn",
+        "double"
+      ],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": false
         }
       ],
       "import-x/no-cycle": [

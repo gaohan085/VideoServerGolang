@@ -1,19 +1,18 @@
 import {
   configureStore,
-  createSlice
+  createSlice,
+  type Action,
+  type PayloadAction,
+  type ThunkAction
 } from "@reduxjs/toolkit";
 import {
-  type TypedUseSelectorHook,
   useDispatch,
   useSelector,
+  type TypedUseSelectorHook,
 } from "react-redux";
 import { type DirElement } from "../Components/types";
-import type {
-  Action,
-  PayloadAction,
-  ThunkAction} from "@reduxjs/toolkit";
 
-declare interface PlayingVideo {
+interface PlayingVideo {
   playingVideo: DirElement;
 }
 
@@ -32,7 +31,7 @@ const initialState: PlayingVideo = {
   },
 };
 
-export const Slice = createSlice({
+const Slice = createSlice({
   name: "redux",
   initialState,
   reducers: {
@@ -57,9 +56,9 @@ export const Slice = createSlice({
   },
 });
 
-export const { setVideoPlaying, unSetVideoPlaying } = Slice.actions;
+const { setVideoPlaying, unSetVideoPlaying } = Slice.actions;
 
-export function makeStore() {
+function makeStore() {
   return configureStore({
     reducer: {
       redux: Slice.reducer,
@@ -67,13 +66,15 @@ export function makeStore() {
   });
 }
 
-export const store = makeStore();
+const store = makeStore();
 
-export type AppState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-export type AppThunk = ThunkAction<void, AppState, unknown, Action<string>>;
+type AppState = ReturnType<typeof store.getState>;
+type AppDispatch = typeof store.dispatch;
+type AppThunk = ThunkAction<void, AppState, unknown, Action<string>>;
 
-export const selectVideoPlaying = (state: AppState) => state.redux.playingVideo;
+const selectVideoPlaying = (state: AppState) => state.redux.playingVideo;
 
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
+const useAppDispatch = () => useDispatch<AppDispatch>();
+const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
+
+export { Slice, setVideoPlaying, unSetVideoPlaying, makeStore, store, type AppState, type AppDispatch, type AppThunk, selectVideoPlaying, useAppDispatch, useAppSelector };

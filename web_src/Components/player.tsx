@@ -1,11 +1,13 @@
-import Plyr from "plyr";
 import "plyr/dist/plyr.css";
-import plyrSvg from "plyr/dist/plyr.svg";
 import React, { forwardRef, lazy, useEffect, useRef } from "react";
-import * as lib from "../lib";
-import styles from "./player.module.scss";
+import Plyr from "plyr";
+import plyrSvg from "plyr/dist/plyr.svg";
+import * as redux from "../lib/reduxStore";
+import * as styles from "./player.module.scss";
 
-const LazyPlayerTitle = lazy(() => import("./player-title"));
+const LazyTitle = lazy(()=>import("./player-title"));
+
+
 const isProduction = process.env.NODE_ENV === "production";
 
 const ForwordPlayer = forwardRef(function Player(
@@ -66,8 +68,8 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     localStorage.setItem(source, String(currentTime));
   });
 
-  lib.redux.store.subscribe(() => {
-    const videoPlaying = lib.redux.store.getState().redux.playingVideo;
+  redux.store.subscribe(() => {
+    const videoPlaying = redux.store.getState().redux.playingVideo;
     const currPlaySrc = plyr.source as unknown as string;
     if (encodeURI(videoPlaying.playSrc) !== currPlaySrc) {
       plyr.source = {
@@ -86,7 +88,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
   return plyr;
 };
 
-export const Player: React.FC = () => {
+const Player: React.FC = () => {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -103,7 +105,7 @@ export const Player: React.FC = () => {
   return (
     <div className={styles.player}>
       <ForwordPlayer ref={ref} />
-      <LazyPlayerTitle />
+      <LazyTitle />
     </div>
   );
 };

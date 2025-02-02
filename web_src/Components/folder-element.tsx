@@ -1,15 +1,14 @@
 import React, { lazy, useContext, useEffect, useRef, useState } from "react";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
 import { CSSTransition } from "react-transition-group";
-import useSWR from "swr";
+import * as styles from "./folder-element.module.scss";
 import { Context } from "./file-system-sidebar";
-import styles from "./folder-element.module.scss";
-import { Spinner } from "./spinner";
+import Spinner from "./spinner";
+import OpenFolderContainer from "./open-folder-container-element";
 import type { DirectoryProp, DirElement } from "./types";
 
-const LazyErrElement = lazy(() => import("./error-element"));
-const LazyRenameComponent = lazy(() => import("./rename-element"));
-const LazyOpenFolderContainer = lazy(() => import("./open-folder-container-element"));
+const LazyErrElement = lazy(()=>import("./error-element"));
+const LazyRenameElement = lazy(()=>import("./rename-element"));
 
 const FolderElement: React.FC<{
   readonly elem: DirElement;
@@ -56,7 +55,7 @@ const FolderElement: React.FC<{
       >
         {ConditionalFolderIcon}
         {!isRename && elem.name}
-        {!!isRename && <LazyRenameComponent {...elem} />}
+        {!!isRename && <LazyRenameElement {...elem} />}
       </a>
       {!!isError && <LazyErrElement />}
       <CSSTransition

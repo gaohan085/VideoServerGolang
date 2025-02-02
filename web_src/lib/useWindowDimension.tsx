@@ -5,7 +5,7 @@ const getDimension = () => {
   return { width, height };
 };
 
-export const useWindowDimension = () => {
+const useWindowDimension = () => {
   const hasWindow = typeof window !== "undefined";
 
   const [windowDimension, setWindowDimension] = useState<{
@@ -25,3 +25,5 @@ export const useWindowDimension = () => {
 
   return windowDimension;
 };
+
+export default useWindowDimension;

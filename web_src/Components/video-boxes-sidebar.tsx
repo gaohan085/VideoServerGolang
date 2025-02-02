@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
 import { useLoaderData, useNavigation } from "react-router";
-import * as lib from "../lib";
-import { Spinner } from "./spinner";
-import { DiskUsage } from "./status-bar";
-import styles from "./video-boxes-sidebar.module.scss";
+import useWindowDimension from "../lib/useWindowDimension";
+import * as redux from "../lib/reduxStore";
+import * as styles from "./video-boxes-sidebar.module.scss";
+import Spinner from "./spinner";
+import {DiskUsage} from "./status-bar";
 import type { ResWithActressName, VideoInfo } from "./types";
 
 const VideoBox: React.FC<VideoInfo> = (props) => {
-  const dispatch = lib.redux.useAppDispatch();
-  const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
+  const dispatch = redux.useAppDispatch();
+  const videoPlaying = redux.useAppSelector(redux.selectVideoPlaying);
   const { title, posterName, serialNumber, playSrc, actress, sourceUrl } =
     props;
   const [isPlaying, setIsplaying] = useState<boolean>(false);
 
   const handleClick = () => {
     dispatch(
-      lib.redux.setVideoPlaying({
+      redux.setVideoPlaying({
         name: serialNumber,
         title: title,
         playSrc: playSrc,
@@ -55,7 +56,7 @@ const VideoBoxes: React.FC = () => {
   const { data } = useLoaderData<ResWithActressName>();
   const [isActive, setIsActive] = useState<boolean>(false);
   const toggleActive: React.MouseEventHandler = () => setIsActive(!isActive);
-  const { width } = lib.useWindowDimension();
+  const { width } = useWindowDimension();
 
   const navigation = useNavigation();
 

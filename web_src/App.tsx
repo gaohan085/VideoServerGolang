@@ -2,23 +2,26 @@ import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
-import * as lib from "./lib";
-import * as routes from "./routes";
+import * as redux from "./lib/reduxStore";
+import fetcher from "./lib/fetcher";
+import Routes from "./routes/routes";
 
-export const renderApp = (app: HTMLElement): void => {
+const renderApp = (app: HTMLElement): void => {
   createRoot(app).render(
     <StrictMode>
       <SWRConfig
         value={{
           refreshInterval: 120000,
-          fetcher: lib.fetcher,
+          fetcher: fetcher,
           revalidateOnFocus: true,
         }}
       >
-        <Provider store={lib.redux.store}>
-          <routes.Routes />
+        <Provider store={redux.store}>
+          <Routes />
         </Provider>
       </SWRConfig>
     </StrictMode>,
   );
 };
+
+export default renderApp;

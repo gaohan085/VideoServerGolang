@@ -1,12 +1,12 @@
-import React, { lazy } from "react";
+import React, {lazy} from "react";
 
+const LazyVideoBox = lazy(()=>import("../Components/video-boxes-sidebar"));
 const LazyWsLayer = lazy(()=>import("../Components/websocket"));
-const LazyVideoBoxesByActress = lazy(()=>import("../Components/video-boxes-sidebar"));
 
 const ActressByName = () => {
   return (
     <LazyWsLayer>
-      <LazyVideoBoxesByActress />
+      <LazyVideoBox />
     </LazyWsLayer>
   );
 };

@@ -2,9 +2,7 @@ import React, {
   createContext,
   useEffect,
   useState,
-} from "react";
-import type {
-  PropsWithChildren
+  type PropsWithChildren
 } from "react";
 
 export interface VideoStatus {

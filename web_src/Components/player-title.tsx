@@ -1,11 +1,11 @@
 import { FcLink } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import React from "react";
-import * as lib from "../lib";
-import styles from "./player-title.module.scss";
+import * as redux from "../lib/reduxStore";
+import * as styles from "./player-title.module.scss";
 
 const Title: React.FC = () => {
-  const videoPlaying = lib.redux.useAppSelector(lib.redux.selectVideoPlaying);
+  const videoPlaying = redux.useAppSelector(redux.selectVideoPlaying);
   const serialNumber = videoPlaying.name.match(
     /([0-9]|[a-z]|[A-Z]){3,}-[0-9]{3,}/g,
   );

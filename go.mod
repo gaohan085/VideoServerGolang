@@ -5,23 +5,23 @@ go 1.23
 toolchain go1.23.2
 
 require (
-	github.com/PuerkitoBio/goquery v1.10.0
-	github.com/go-co-op/gocron/v2 v2.12.4
+	github.com/PuerkitoBio/goquery v1.10.1
+	github.com/go-co-op/gocron/v2 v2.15.0
 	github.com/go-faker/faker/v4 v4.5.0
-	github.com/gofiber/contrib/websocket v1.3.2
-	github.com/gofiber/fiber/v2 v2.52.5
-	github.com/gofiber/template/html/v2 v2.1.2
+	github.com/gofiber/contrib/websocket v1.3.3
+	github.com/gofiber/fiber/v2 v2.52.6
+	github.com/gofiber/template/html/v2 v2.1.3
 	github.com/joho/godotenv v1.5.1
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/shirou/gopsutil/v3 v3.24.5
 	github.com/stretchr/testify v1.10.0
-	gorm.io/driver/postgres v1.5.10
+	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
 )
 
 require (
 	github.com/andybalholm/brotli v1.1.1 // indirect
-	github.com/andybalholm/cascadia v1.3.2 // indirect
+	github.com/andybalholm/cascadia v1.3.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
@@ -52,11 +52,11 @@ require (
 	github.com/valyala/fasthttp v1.56.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	golang.org/x/crypto v0.28.0 // indirect
+	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c // indirect
-	golang.org/x/net v0.30.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.26.0 // indirect
-	golang.org/x/text v0.19.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
