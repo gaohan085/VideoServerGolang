@@ -1,14 +1,14 @@
 {
   "name": "go-fiber-react-ts",
-  "version": "0.7.9",
+  "version": "0.7.11",
   "description": "My webpack project",
   "main": "./web_src/index.ts",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix --report-unused-disable-directives && tsc -noEmit",
-    "vite:dev": "vite serve",
-    "vite:build": "vite build",
+    "build": "vite build",
+    "serve": "vite serve",
     "vite:preview": "vite preview"
   },
   "keywords": [],

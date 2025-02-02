@@ -36,8 +36,8 @@ jobs:
         with:
           version: 8
           run_install: true
-      - name: Build
-        run: pnpm vite:build
+      - name: Vite Build
+        run: pnpm build
       - uses: wangyoucao577/go-release-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
