@@ -10,7 +10,7 @@ import {
 } from "react-icons/fc";
 import isVideo from "../lib/is-video";
 import * as redux from "../lib/reduxStore";
-import * as styles from "./right-click-context-menu.module.scss";
+import styles from "./context-menu.module.scss";
 import { type DirElement } from "./types";
 import { Context } from "./file-system-sidebar";
 

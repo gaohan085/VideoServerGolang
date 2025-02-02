@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, lazy } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
 import isVideo from "../lib/is-video";
 import * as redux from "../lib/reduxStore";
-import * as styles from "./file-element.module.scss";
+import styles from "./file-element.module.scss";
 import { Context } from "./file-system-sidebar";
 import { WsContext } from "./websocket";
 import type { DirElement } from "./types";

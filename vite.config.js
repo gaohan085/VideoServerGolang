@@ -12,7 +12,7 @@ export default {
     assetsDir: ".",
     cssCodeSplit: true,
     cssMinify: true,
-    chunkSizeWarningLimit: 100,
+    chunkSizeWarningLimit: 244,
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
@@ -21,7 +21,7 @@ export default {
           }
           return "assets/[hash:10][extname]"
         },
-        chunkFileNames: "js/[hash:10].js",
+        chunkFileNames: "js/[name]-[hash:10].js",
         manualChunks: {
           react: ["react"],
           "react-dom": ["react-dom"],
@@ -30,6 +30,9 @@ export default {
           axios: ["axios"],
           swr: ["swr"],
           "react-icons": ["react-icons"],
+          "react-router":["react-router"],
+          "react-router-dom":["react-router-dom"],
+          "react-transition-group":["react-transition-group"]
         },
       },
     },
@@ -43,5 +46,8 @@ export default {
 
   plugins: [
     react()
-  ]
+  ],
+  esbuild: {
+    drop: ["console", "debugger"]
+  }
 }

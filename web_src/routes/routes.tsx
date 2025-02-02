@@ -4,7 +4,6 @@ import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import Spinner from "../Components/spinner";
 import type { ResWithActressName } from "../Components/types";
 import type { AxiosResponse } from "axios";
-import type { ResWithActressName } from "../Components/types";
 
 const ErrorPage = lazy(() => import("./error-page"));
 const IndexLayout = lazy(() => import("./index-page-layout"));

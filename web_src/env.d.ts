@@ -14,3 +14,10 @@ type OrientationLockType =
 declare interface ScreenOrientation extends EventTarget {
   lock(orientation: OrientationLockType): Promise<void>;
 }
+
+type CSSModuleClasses = Readonly<Record<string, stringq>>;
+
+declare module "*.module.scss" {
+  const Classes : CSSModuleClasses;
+  export default Classes;
+}

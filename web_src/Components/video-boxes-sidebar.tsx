@@ -3,7 +3,7 @@ import { FcPrevious } from "react-icons/fc";
 import { useLoaderData, useNavigation } from "react-router";
 import useWindowDimension from "../lib/useWindowDimension";
 import * as redux from "../lib/reduxStore";
-import * as styles from "./video-boxes-sidebar.module.scss";
+import styles from "./video-boxes-sidebar.module.scss";
 import Spinner from "./spinner";
 import {DiskUsage} from "./status-bar";
 import type { ResWithActressName, VideoInfo } from "./types";
