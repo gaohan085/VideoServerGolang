@@ -1,7 +1,7 @@
 import React, { forwardRef, lazy, type LegacyRef } from "react";
 import sortElements from "../lib/sort-elements-by-name";
 import FileElement from "./file-element";
-import type { DirectoryProp } from "./types";
+import type { DirectoryProp } from "./types.d";
 
 const LazyFolderElement = lazy(()=>import("./folder-element"));
 

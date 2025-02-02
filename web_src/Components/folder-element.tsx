@@ -6,7 +6,7 @@ import styles from "./folder-element.module.scss";
 import { Context } from "./file-system-sidebar";
 import Spinner from "./spinner";
 import OpenFolderContainer from "./open-folder-container-element";
-import type { DirectoryProp, DirElement } from "./types";
+import type { DirectoryProp, DirElement } from "./types.d";
 
 const LazyErrElement = lazy(()=>import("./error-element"));
 const LazyRenameElement = lazy(()=>import("./rename-element"));

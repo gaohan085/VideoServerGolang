@@ -2,7 +2,7 @@
 import react from "eslint-plugin-react";
 import eslintjs from "@eslint/js";
 const { configs } = eslintjs;
-import { flatConfigs } from "eslint-plugin-import-x";
+import importPlugin from "eslint-plugin-import";
 import tsParser from "@typescript-eslint/parser";
 import { configs as _configs } from "typescript-eslint";
 import globals from "globals";
@@ -13,9 +13,10 @@ import { cwd } from "process";
 
 
 export default [
+  eslintjs.configs.recommended,
   configs.recommended,
-  flatConfigs.recommended,
-  flatConfigs.typescript,
+  importPlugin.flatConfigs.recommended,
+  importPlugin.flatConfigs.typescript,
   ..._configs.recommendedTypeChecked,
   {
     languageOptions: {
@@ -62,11 +63,13 @@ export default [
     rules: {
       "complexity": ["error", 10],
       'no-unused-vars': 'warn',
-      'import-x/no-dynamic-require': 'warn',
-      'import-x/no-nodejs-modules': 'warn',
-      'import-x/prefer-default-export': "warn",
-      'import-x/default': 0,
-      'import-x/order': [
+      "import/default": 0,
+      "import/no-default-export": 0,
+      'import/no-dynamic-require': 'warn',
+      'import/no-nodejs-modules': 'warn',
+      'import/prefer-default-export': "warn",
+      'import/default': 0,
+      'import/order': [
         "error",
         {
           "groups": [
@@ -96,15 +99,12 @@ export default [
           "ignoreRestSiblings": false
         }
       ],
-      "import-x/no-cycle": [
+      "import/no-cycle": [
         0,
         {
           "ignoreExternal": true
         }
       ],
-      "import-x/default": 0,
-      "import-x/no-default-export": 0,
-
       "react/jsx-no-leaked-render": [
         1,
         {

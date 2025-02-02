@@ -5,7 +5,7 @@ import * as redux from "../lib/reduxStore";
 import styles from "./file-element.module.scss";
 import { Context } from "./file-system-sidebar";
 import { WsContext } from "./websocket";
-import type { DirElement } from "./types";
+import type { DirElement } from "./types.d";
 
 const LazyRenameComponent = lazy(()=>import("./rename-element"));
 
