@@ -1,12 +1,12 @@
-import React, { forwardRef, lazy, type LegacyRef } from "react";
+import React, { forwardRef, lazy, type Ref } from "react";
 import sortElements from "../lib/sort-elements-by-name";
 import FileElement from "./file-element";
 import type { DirectoryProp } from "./types.d";
 
-const LazyFolderElement = lazy(()=>import("./folder-element"));
+const LazyFolderElement = lazy(() => import("./folder-element"));
 
 const OpenFolderContainer = forwardRef(function Container(
-  props: { data: DirectoryProp, isOpen: boolean }, ref: LegacyRef<HTMLDivElement>
+  props: { data: DirectoryProp, isOpen: boolean }, ref: Ref<HTMLDivElement>
 ) {
   const { data, isOpen } = props;
   console.log(data);

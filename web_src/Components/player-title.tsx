@@ -1,6 +1,6 @@
+import React from "react";
 import { FcLink } from "react-icons/fc";
 import { Link } from "react-router-dom";
-import React from "react";
 import * as redux from "../lib/reduxStore";
 import styles from "./player-title.module.scss";
 

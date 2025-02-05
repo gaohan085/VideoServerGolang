@@ -4,8 +4,8 @@ import isVideo from "../lib/is-video";
 import * as redux from "../lib/reduxStore";
 import styles from "./file-element.module.scss";
 import { Context } from "./file-system-sidebar";
-import { WsContext } from "./websocket";
 import type { DirElement } from "./types.d";
+import { WsContext } from "./websocket";
 
 const LazyRenameComponent = lazy(()=>import("./rename-element"));
 

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
 import { useLoaderData, useNavigation } from "react-router";
-import useWindowDimension from "../lib/useWindowDimension";
 import * as redux from "../lib/reduxStore";
-import styles from "./video-boxes-sidebar.module.scss";
+import useWindowDimension from "../lib/useWindowDimension";
 import Spinner from "./spinner";
 import {DiskUsage} from "./status-bar";
 import type { ResWithActressName, VideoInfo } from "./types.d";
+import styles from "./video-boxes-sidebar.module.scss";
 
 const VideoBox: React.FC<VideoInfo> = (props) => {
   const dispatch = redux.useAppDispatch();

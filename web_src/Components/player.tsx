@@ -1,7 +1,7 @@
 import "plyr/dist/plyr.css";
-import React, { forwardRef, lazy, useEffect, useRef } from "react";
 import Plyr from "plyr";
 import plyrSvg from "plyr/dist/plyr.svg";
+import React, { forwardRef, lazy, useEffect, useRef } from "react";
 import * as redux from "../lib/reduxStore";
 import styles from "./player.module.scss";
 

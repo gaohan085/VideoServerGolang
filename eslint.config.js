@@ -73,15 +73,22 @@ export default [
         "error",
         {
           "groups": [
-            "builtin",
+            "type",
+            ["sibling", "parent"],
             "external",
-            "parent",
-            "sibling",
             "index",
             "object",
-            "type"
           ],
-          "newlines-between": "never"
+          "newlines-between": "never",
+        },
+      ],
+      'import/order': [
+        "error",
+        {
+          "alphabetize": {
+            "order": "asc",
+            "caseInsensitive": true,
+          }
         }
       ],
       "@typescript-eslint/no-unsafe-assignment": "off",

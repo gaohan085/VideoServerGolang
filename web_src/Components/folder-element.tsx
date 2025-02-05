@@ -2,10 +2,10 @@ import React, { lazy, useContext, useEffect, useRef, useState } from "react";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
 import { CSSTransition } from "react-transition-group";
 import useSWR from "swr";
-import styles from "./folder-element.module.scss";
 import { Context } from "./file-system-sidebar";
-import Spinner from "./spinner";
+import styles from "./folder-element.module.scss";
 import OpenFolderContainer from "./open-folder-container-element";
+import Spinner from "./spinner";
 import type { DirectoryProp, DirElement } from "./types.d";
 
 const LazyErrElement = lazy(()=>import("./error-element"));
