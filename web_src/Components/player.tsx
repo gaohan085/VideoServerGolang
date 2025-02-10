@@ -5,14 +5,14 @@ import React, { forwardRef, lazy, useEffect, useRef } from "react";
 import * as redux from "../lib/reduxStore";
 import styles from "./player.module.scss";
 
-const LazyTitle = lazy(()=>import("./player-title"));
+const LazyTitle = lazy(() => import("./player-title"));
 
 
 const isProduction = process.env.NODE_ENV === "production";
 
 const ForwordPlayer = forwardRef(function Player(
   props,
-  ref: React.LegacyRef<HTMLVideoElement> | undefined,
+  ref: React.Ref<HTMLVideoElement> | undefined,
 ) {
   return <video ref={ref}></video>;
 });
@@ -99,7 +99,7 @@ const Player: React.FC = () => {
     return () => {
       if (!ref.current && plyr) {
         plyr.stop(); plyr.destroy();
-      };
+      }
     };
   }, [ref]);
   return (
