@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react"
 const isProduction = process.env.NODE_ENV === "production";
 
 /** @type {import("vite").UserConfig} */
-export default {
+const config = {
   root: "./web_src/",
   base: !isProduction ? "/" : "dist",
   build: {
@@ -30,9 +30,9 @@ export default {
           axios: ["axios"],
           swr: ["swr"],
           "react-icons": ["react-icons"],
-          "react-router":["react-router"],
-          "react-router-dom":["react-router-dom"],
-          "react-transition-group":["react-transition-group"]
+          "react-router": ["react-router"],
+          "react-router-dom": ["react-router-dom"],
+          "react-transition-group": ["react-transition-group"]
         },
       },
     },
@@ -47,7 +47,13 @@ export default {
   plugins: [
     react()
   ],
-  esbuild: {
+
+}
+
+if (isProduction) {
+  config.esbuild = {
     drop: ["console", "debugger"]
   }
 }
+
+export default config
