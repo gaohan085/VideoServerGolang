@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, lazy } from "react";
+import React, { lazy, type Ref, useContext, useEffect, useState, forwardRef } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
 import isVideo from "../lib/is-video";
 import * as redux from "../lib/reduxStore";
@@ -7,9 +7,9 @@ import { Context } from "./file-system-sidebar";
 import type { DirElement } from "./types.d";
 import { WsContext } from "./websocket";
 
-const LazyRenameComponent = lazy(()=>import("./rename-element"));
+const LazyRenameComponent = lazy(() => import("./rename-element"));
 
-const FileElement: React.FC<{
+type FileElementProps = {
   readonly elem: DirElement;
   readonly handleClick: React.MouseEventHandler;
   readonly handleCtxMenu: React.MouseEventHandler;
@@ -18,7 +18,12 @@ const FileElement: React.FC<{
   readonly isRename: boolean;
   readonly isConverting: boolean;
   readonly progress?: number;
-}> = (props) => {
+  readonly nodeRef: Ref<HTMLDivElement>;
+};
+
+const ForwardFileElement = forwardRef<HTMLDivElement, FileElementProps
+>((props, ref) => {
+
   const {
     elem,
     handleClick,
@@ -33,6 +38,7 @@ const FileElement: React.FC<{
     <div
       className={styles.file}
       id="animate-file-elem"
+      ref={ref}
     >
       <div
         className={
@@ -69,11 +75,12 @@ const FileElement: React.FC<{
       </div>
     </div>
   );
-};
+});
 
 const InteractiveFileElement: React.FC<{
   readonly elem: DirElement;
-}> = ({ elem }) => {
+  readonly nodeRef: Ref<HTMLDivElement>
+}> = ({ elem, nodeRef }) => {
   const {
     clicked,
     setClicked,
@@ -145,7 +152,7 @@ const InteractiveFileElement: React.FC<{
   }, [currentPlayVideo?.playSrc, elem, setIsPlaying]);
 
   return (
-    <FileElement
+    <ForwardFileElement
       elem={elem}
       handleClick={handleClick}
       handleCtxMenu={handleCtxMenu}
@@ -153,6 +160,7 @@ const InteractiveFileElement: React.FC<{
       isRename={isRename}
       isConverting={isConverting}
       progress={progress}
+      nodeRef={nodeRef}
     />
   );
 };

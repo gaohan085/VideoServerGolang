@@ -7,9 +7,9 @@ import Spinner from "./spinner";
 import { DiskUsage } from "./status-bar";
 import { type DirectoryProp, type DirElement, type UseStateReturnType } from "./types.d";
 
-const LazyErrElement = lazy(()=>import("./error-element"));
-const LazyOpenFolderContainer = lazy(()=>import("./open-folder-container-element"));
-const LazyCtxMenu = lazy(()=>import("./context-menu"));
+const LazyErrElement = lazy(() => import("./error-element"));
+const LazyContainer = lazy(() => import("./container-element"));
+const LazyCtxMenu = lazy(() => import("./context-menu"));
 
 const FileSysSideBar: React.FC<{
   readonly data: DirectoryProp | undefined;
@@ -42,7 +42,7 @@ const FileSysSideBar: React.FC<{
         <LazyErrElement />
       ) : (
 
-        <LazyOpenFolderContainer data={data!} isOpen={true} />
+        <LazyContainer {...data!} />
       )}
     </>
   );
