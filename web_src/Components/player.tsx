@@ -96,9 +96,11 @@ const Player: React.FC = () => {
     if (ref.current && !plyr) {
       plyr = mountPlyr(ref.current);
     }
+
     return () => {
+      console.log("useEffect return ");
       if (!ref.current && plyr) {
-        plyr.stop(); plyr.destroy();
+        plyr.stop();
       }
     };
   }, [ref]);
