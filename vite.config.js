@@ -1,11 +1,12 @@
 import react from "@vitejs/plugin-react"
+import { cwd } from "process"
 
 const isProduction = process.env.NODE_ENV === "production";
 
 /** @type {import("vite").UserConfig} */
 const config = {
   root: "./web_src/",
-  base: !isProduction ? "/" : "dist",
+  base: !isProduction ? "/" : "/dist/",
   build: {
     emptyOutDir: true,
     outDir: "../dist",
@@ -40,7 +41,7 @@ const config = {
   server: {
     host: "0.0.0.0",
     port: 5173,
-    open: true,
+    open: false,
     strictPort: true
   },
 

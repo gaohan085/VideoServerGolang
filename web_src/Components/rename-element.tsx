@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useContext } from "react";
 import { FcCancel, FcCheckmark } from "react-icons/fc";
-import { Context } from "./file-system-sidebar";
+import Context from "./file-sys-context";
 import styles from "./rename-element.module.scss";
 import type { DirElement } from "./types.d";
 

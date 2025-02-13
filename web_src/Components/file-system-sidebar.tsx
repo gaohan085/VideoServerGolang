@@ -1,11 +1,14 @@
-import React, { createContext, lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
+import { CSSTransition } from "react-transition-group";
 import useSWR, { useSWRConfig } from "swr";
 import useWindowDimension from "../lib/useWindowDimension";
+import stylesAni from "./container.module.css";
+import Context from "./file-sys-context";
 import styles from "./file-system-sidebar.module.scss";
 import Spinner from "./spinner";
 import { DiskUsage } from "./status-bar";
-import { type DirectoryProp, type DirElement, type UseStateReturnType } from "./types.d";
+import { type DirectoryProp, type DirElement } from "./types.d";
 
 const LazyErrElement = lazy(() => import("./error-element"));
 const LazyContainer = lazy(() => import("./container-element"));
@@ -33,20 +36,32 @@ const FileSysSideBar: React.FC<{
     width,
     clicked
   } = props;
+  const nodeRef = useRef<HTMLDivElement>(null);
 
   const conditionalElem = (
     <>
-      {isLoading ? (
-        <Spinner fontSize={24} />
-      ) : isError ? (
-        <LazyErrElement />
-      ) : (
-
-        <LazyContainer {...data!} />
+      {!!isLoading && (<Spinner fontSize={24} />)}
+      {!!isError && (<LazyErrElement />)}
+      {!!data && (
+        <CSSTransition
+          noderef={nodeRef}
+          timeout={300}
+          classNames={{
+            enter: stylesAni["container-enter"],
+            enterActive: stylesAni["container-enter-active"],
+            exit: stylesAni["container-exit"],
+            exitActive: stylesAni["container-exit-active"],
+          }}
+          unmountOnExit
+          in
+          onEnter={() => console.log("ENTER")}
+          onExiting={() => console.log("EXIT")}
+        >
+          <><LazyContainer {...data} ref={nodeRef} /></>
+        </CSSTransition>
       )}
     </>
   );
-
   return (
     <Suspense fallback={
       (<div className={!isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`}>
@@ -81,20 +96,6 @@ const FileSysSideBar: React.FC<{
     </Suspense>
   );
 };
-
-export const Context = createContext<{
-  clicked?: UseStateReturnType<boolean>[0];
-  setClicked?: UseStateReturnType<boolean>[1];
-  position?: UseStateReturnType<{ pageX: number; pageY: number }>[0];
-  setPosition?: UseStateReturnType<{ pageX: number; pageY: number }>[1];
-  openFolder?: UseStateReturnType<string>[0];
-  setOpenFolder?: UseStateReturnType<string>[1];
-  rightClickElem?: UseStateReturnType<DirElement>[0];
-  setRightClickElem?: UseStateReturnType<DirElement>[1];
-  renameElement?: UseStateReturnType<DirElement>[0];
-  setRenameElement?: UseStateReturnType<DirElement>[1];
-  mutateFunc?: ReturnType<typeof useSWRConfig>["mutate"];
-}>({});
 
 const InteractiveFileSysSideBar: React.FC = () => {
   const [rightClickElem, setRightClickElem] = useState<DirElement | undefined>(

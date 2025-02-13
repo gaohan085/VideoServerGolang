@@ -1,7 +1,7 @@
 import Plyr from "plyr";
 import "plyr/dist/plyr.css";
 import plyrSvg from "plyr/dist/plyr.svg";
-import React, { createRef, lazy, useEffect } from "react";
+import React, { lazy, useEffect, useRef } from "react";
 import * as redux from "../lib/reduxStore";
 import styles from "./player.module.scss";
 
@@ -83,7 +83,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
 };
 
 const Player: React.FC = () => {
-  const ref = createRef<HTMLVideoElement | null>();
+  const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     let plyr: Plyr | undefined = undefined;

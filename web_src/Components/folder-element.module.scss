@@ -18,3 +18,27 @@
     }
   }
 }
+
+.container-enter {
+  opacity: 0;
+  max-height: auto;
+  padding-left: 15px;
+}
+
+.container-enter-active {
+  opacity: 1;
+  padding-left: 0px;
+  transition: all .3s ease-in-out;
+}
+
+.container-exit {
+  opacity: 1;
+  padding-left: 0px;
+}
+
+.container-exit-active {
+  opacity: 0;
+  height: auto;
+  padding-left: 15px;
+  transition: all .3s ease-in-out;
+}

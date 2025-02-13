@@ -10,6 +10,7 @@ const { browser } = globals;
 
 import stylistic from "@stylistic/eslint-plugin";
 import { cwd } from "process";
+import reactRefresh from "eslint-plugin-react-refresh";
 
 
 export default [
@@ -45,6 +46,7 @@ export default [
     files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
     plugins: {
       react: react,
+      "react-refresh": reactRefresh,
     },
     ignores: ["eslint.config.js"],
     languageOptions: {
@@ -155,6 +157,7 @@ export default [
           fixStyle: 'inline-type-imports',
         },
       ],
+      "react-refresh/only-export-components": "error",
     },
   },
   {

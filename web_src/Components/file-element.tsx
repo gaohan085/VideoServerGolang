@@ -1,11 +1,11 @@
-import React, { lazy, type Ref, useContext, useEffect, useState, forwardRef } from "react";
+import React, { lazy, useContext, useEffect, useState } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
 import isVideo from "../lib/is-video";
 import * as redux from "../lib/reduxStore";
 import styles from "./file-element.module.scss";
-import { Context } from "./file-system-sidebar";
+import Context from "./file-sys-context";
 import type { DirElement } from "./types.d";
-import { WsContext } from "./websocket";
+import WsContext from "./websocket-ctx";
 
 const LazyRenameComponent = lazy(() => import("./rename-element"));
 
@@ -18,11 +18,9 @@ type FileElementProps = {
   readonly isRename: boolean;
   readonly isConverting: boolean;
   readonly progress?: number;
-  readonly nodeRef: Ref<HTMLDivElement>;
 };
 
-const ForwardFileElement = forwardRef<HTMLDivElement, FileElementProps
->((props, ref) => {
+const ForwardFileElement: React.FC<FileElementProps> = (props) => {
 
   const {
     elem,
@@ -38,7 +36,6 @@ const ForwardFileElement = forwardRef<HTMLDivElement, FileElementProps
     <div
       className={styles.file}
       id="animate-file-elem"
-      ref={ref}
     >
       <div
         className={
@@ -75,12 +72,11 @@ const ForwardFileElement = forwardRef<HTMLDivElement, FileElementProps
       </div>
     </div>
   );
-});
+};
 
 const InteractiveFileElement: React.FC<{
-  readonly elem: DirElement;
-  readonly nodeRef: Ref<HTMLDivElement>
-}> = ({ elem, nodeRef }) => {
+  readonly elem: DirElement
+}> = ({ elem }) => {
   const {
     clicked,
     setClicked,
@@ -160,7 +156,6 @@ const InteractiveFileElement: React.FC<{
       isRename={isRename}
       isConverting={isConverting}
       progress={progress}
-      nodeRef={nodeRef}
     />
   );
 };
