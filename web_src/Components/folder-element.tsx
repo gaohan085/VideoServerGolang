@@ -1,17 +1,17 @@
-import React, { lazy, useContext, useEffect, useRef, useState } from "react";
+import React, { lazy, useContext, useEffect, useState, useRef } from "react";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
 import { CSSTransition } from "react-transition-group";
 import useSWR from "swr";
+import Container from "./container-element";
+import Context from "./file-sys-context";
 import styles from "./folder-element.module.scss";
-import { Context } from "./file-system-sidebar";
 import Spinner from "./spinner";
-import OpenFolderContainer from "./open-folder-container-element";
 import type { DirectoryProp, DirElement } from "./types.d";
 
-const LazyErrElement = lazy(()=>import("./error-element"));
-const LazyRenameElement = lazy(()=>import("./rename-element"));
+const LazyErrElement = lazy(() => import("./error-element"));
+const LazyRenameElement = lazy(() => import("./rename-element"));
 
-const FolderElement: React.FC<{
+type FolderElementProps = {
   readonly elem: DirElement;
   readonly isLoading: boolean | undefined;
   readonly isOpen: boolean;
@@ -20,7 +20,10 @@ const FolderElement: React.FC<{
   readonly handleCtxMenu: React.MouseEventHandler | undefined;
   readonly subDirectoryData: DirectoryProp | undefined;
   readonly isRename: boolean;
-}> = (props) => {
+};
+
+const ForwardFolderElement: React.FC<FolderElementProps> = (props) => {
+
   const {
     elem,
     isLoading,
@@ -32,6 +35,8 @@ const FolderElement: React.FC<{
     isRename,
   } = props;
 
+  const nodeRef = useRef<HTMLDivElement>(null);
+  const FolderConditionalClassName = !isOpen ? `${styles.folder}` : `${styles.folder} open`;
   const ConditionalFolderIcon = (
     <>
       {isLoading ? (
@@ -42,11 +47,10 @@ const FolderElement: React.FC<{
     </>
   );
 
-  const nodeRef = useRef(null);
 
   return (
     <div
-      className={!isOpen ? `${styles.folder}` : `${styles.folder} open`}
+      className={FolderConditionalClassName}
     >
       <a
         className="folder-element"
@@ -60,18 +64,20 @@ const FolderElement: React.FC<{
       </a>
       {!!isError && <LazyErrElement />}
       <CSSTransition
-        in={!!isOpen && !!subDirectoryData}
-        unmountOnExit
+        noderef={nodeRef}
+        timeout={300}
         classNames={{
           enter: styles["container-enter"],
           enterActive: styles["container-enter-active"],
           exit: styles["container-exit"],
-          exitActive: styles["container-exit-active"]
+          exitActive: styles["container-exit-active"],
         }}
-        timeout={300}
-        nodeRef={nodeRef}
+        unmountOnExit
+        in={!!isOpen && !!subDirectoryData}
+        onEnter={() => console.log("ENTER")}
+        onExiting={() => console.log("EXIT")}
       >
-        <OpenFolderContainer data={subDirectoryData!} isOpen={isOpen} ref={nodeRef}/>
+        <>{<Container {...subDirectoryData!} ref={nodeRef} />}</>
       </CSSTransition>
     </div>
   );
@@ -146,7 +152,7 @@ const InteractiveFolderElement: React.FC<{
   };
 
   return (
-    <FolderElement
+    <ForwardFolderElement
       elem={elem}
       handleClick={handleClick}
       handleCtxMenu={handleCtxMenu}

@@ -1,9 +1,9 @@
 import React, {
-  createContext,
   useEffect,
   useState,
   type PropsWithChildren
 } from "react";
+import WsContext from "./websocket-ctx";
 
 export interface VideoStatus {
   fileName: string;
@@ -13,10 +13,6 @@ export interface VideoStatus {
   progress: number;
   playSource: string;
 }
-
-export const WsContext = createContext<{
-  convertingElems?: VideoStatus[];
-}>({ convertingElems: undefined });
 
 const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
   const { children } = props;

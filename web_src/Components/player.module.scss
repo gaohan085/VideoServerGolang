@@ -3,7 +3,7 @@
   --plyr-color-main: #e85982;
   transition: all 0.2s ease-in-out;
 
-  @media (width <= 992px) {
+  @media (width <=992px) {
     margin: 12px;
   }
 
@@ -15,5 +15,31 @@
   @media (height < 576px) {
     width: 75vw;
     margin: auto;
+  }
+
+  [class~='plyr__volume'] {
+    max-width: 33px;
+    min-width: 0;
+
+    input[data-plyr="volume"] {
+      display: none;
+      width: 87px;
+      position: absolute;
+      transform: rotate(270deg);
+      top: -42px;
+      left: -33px;
+      height: 25px;
+      padding-left: 18px;
+
+      &:hover {
+        display: block !important;
+      }
+    }
+
+    &:hover {
+      input[data-plyr="volume"] {
+        display: block !important;
+      }
+    }
   }
 }

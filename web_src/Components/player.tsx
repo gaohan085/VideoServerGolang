@@ -1,21 +1,15 @@
-import "plyr/dist/plyr.css";
-import React, { forwardRef, lazy, useEffect, useRef } from "react";
 import Plyr from "plyr";
+import "plyr/dist/plyr.css";
 import plyrSvg from "plyr/dist/plyr.svg";
+import React, { lazy, useEffect, useRef } from "react";
 import * as redux from "../lib/reduxStore";
 import styles from "./player.module.scss";
 
-const LazyTitle = lazy(()=>import("./player-title"));
+const LazyTitle = lazy(() => import("./player-title"));
 
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const ForwordPlayer = forwardRef(function Player(
-  props,
-  ref: React.LegacyRef<HTMLVideoElement> | undefined,
-) {
-  return <video ref={ref}></video>;
-});
 
 const mountPlyr = (node: HTMLElement): Plyr => {
   const plyr = new Plyr(node, {
@@ -96,15 +90,17 @@ const Player: React.FC = () => {
     if (ref.current && !plyr) {
       plyr = mountPlyr(ref.current);
     }
+
     return () => {
+      console.log("useEffect return ");
       if (!ref.current && plyr) {
-        plyr.stop(); plyr.destroy();
-      };
+        plyr.stop();
+      }
     };
   }, [ref]);
   return (
     <div className={styles.player}>
-      <ForwordPlayer ref={ref} />
+      <video ref={ref} />
       <LazyTitle />
     </div>
   );
