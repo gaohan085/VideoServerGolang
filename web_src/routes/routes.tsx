@@ -1,6 +1,4 @@
 import type { AxiosResponse } from "axios";
-
-
 import axios from "axios";
 import React, { lazy, Suspense } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
@@ -10,7 +8,7 @@ import type { ResWithActressName } from "../Components/types";
 const ErrorPage = lazy(() => import("./error-page"));
 const IndexLayout = lazy(() => import("./index-page-layout"));
 const ActressByName = lazy(() => import("./actress-by-name"));
-const LazyPlayer = lazy(()=>import("../Components/player"));
+const LazyPlayer = lazy(() => import("../Components/player"));
 
 const router = createBrowserRouter([
   {
@@ -19,7 +17,6 @@ const router = createBrowserRouter([
       <>
         <Suspense fallback={<Spinner fontSize={30} />}>
           <LazyPlayer />
-
           <Outlet />
         </Suspense>
       </>

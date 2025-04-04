@@ -33,7 +33,7 @@ const config = {
           "react-icons": ["react-icons"],
           "react-router": ["react-router"],
           "react-router-dom": ["react-router-dom"],
-          "react-transition-group": ["react-transition-group"]
+          "motion": ["motion"]
         },
       },
     },
@@ -42,7 +42,15 @@ const config = {
     host: "0.0.0.0",
     port: 5173,
     open: false,
-    strictPort: true
+    strictPort: true,
+    proxy: {
+      "/api/ws": {
+        target: "ws://192.168.1.199",
+        ws: true,
+        rewriteWsOrigin: true
+      },
+      "/api": "http://192.168.1.199",
+    }
   },
 
   plugins: [

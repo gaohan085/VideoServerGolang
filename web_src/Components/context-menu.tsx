@@ -107,18 +107,18 @@ const DeleteConfirm: React.FC<{
   );
 };
 
-const CtxMenu: React.FC<{
+const CtxMenu: React.FC<Readonly<{
   /* 右键点击的元素 */
-  readonly elem: DirElement;
-  readonly openFolder: string;
-  readonly handleOpenFolder: React.MouseEventHandler;
-  readonly handleCloseFolder: React.MouseEventHandler;
-  readonly handleConverVideo?: React.MouseEventHandler;
-  readonly handleDelete: React.MouseEventHandler;
-  readonly handlePlayVideo: React.MouseEventHandler;
-  readonly position: { pageX: number; pageY: number };
-  readonly handleRename: React.MouseEventHandler;
-}> = (props) => {
+  elem: DirElement;
+  openFolder: string;
+  handleOpenFolder: React.MouseEventHandler;
+  handleCloseFolder: React.MouseEventHandler;
+  handleConverVideo?: React.MouseEventHandler;
+  handleDelete: React.MouseEventHandler;
+  handlePlayVideo: React.MouseEventHandler;
+  position: { pageX: number; pageY: number };
+  handleRename: React.MouseEventHandler;
+}>> = (props) => {
   const {
     elem,
     openFolder,

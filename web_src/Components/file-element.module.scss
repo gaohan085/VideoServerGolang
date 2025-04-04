@@ -25,7 +25,7 @@
 
     &[class~="playing"] {
       // color: lighten(base.$main-color, 5%);
-      color: color.scale(base.$main-color, $lightness: 5%);
+      color: color.scale(base.$main-color, $lightness: 25%);
       text-decoration: underline;
 
       &:hover {

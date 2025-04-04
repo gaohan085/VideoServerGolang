@@ -21,9 +21,9 @@ const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
   );
 
   useEffect(() => {
-    const hostname = window.location.hostname;
-    const protrol = window.location.protocol === "https:" ? "wss://" : "ws://";
-    const ws = new WebSocket(protrol + hostname + "/api/ws");
+    // const hostname = window.location.hostname;
+    // const protrol = window.location.protocol === "https:" ? "wss://" : "ws://";
+    const ws = new WebSocket("/api/ws");
     const intervalID = setInterval(() => {
       ws.send("Hello from server");
     }, 3000);
