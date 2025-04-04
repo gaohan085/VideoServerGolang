@@ -1,9 +1,9 @@
-import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
+"use client";
+
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
-import { CSSTransition } from "react-transition-group";
 import useSWR, { useSWRConfig } from "swr";
 import useWindowDimension from "../lib/useWindowDimension";
-import stylesAni from "./container.module.css";
 import Context from "./file-sys-context";
 import styles from "./file-system-sidebar.module.scss";
 import Spinner from "./spinner";
@@ -14,17 +14,17 @@ const LazyErrElement = lazy(() => import("./error-element"));
 const LazyContainer = lazy(() => import("./container-element"));
 const LazyCtxMenu = lazy(() => import("./context-menu"));
 
-const FileSysSideBar: React.FC<{
-  readonly data: DirectoryProp | undefined;
-  readonly isLoading: boolean | undefined;
-  readonly isError: boolean | undefined;
-  readonly handleClick: React.MouseEventHandler;
-  readonly width: number;
-  readonly handleCtxMenu: React.MouseEventHandler;
-  readonly toggleActive: React.MouseEventHandler;
-  readonly isActive: boolean;
-  readonly clicked: boolean;
-}> = (props) => {
+const FileSysSideBar: React.FC<Readonly<{
+  data: DirectoryProp | undefined;
+  isLoading: boolean | undefined;
+  isError: boolean | undefined;
+  handleClick: React.MouseEventHandler;
+  width: number;
+  handleCtxMenu: React.MouseEventHandler;
+  toggleActive: React.MouseEventHandler;
+  isActive: boolean;
+  clicked: boolean;
+}>> = (props) => {
   const {
     data,
     isLoading,
@@ -36,32 +36,17 @@ const FileSysSideBar: React.FC<{
     width,
     clicked
   } = props;
-  const nodeRef = useRef<HTMLDivElement>(null);
 
   const conditionalElem = (
     <>
       {!!isLoading && (<Spinner fontSize={24} />)}
       {!!isError && (<LazyErrElement />)}
       {!!data && (
-        <CSSTransition
-          noderef={nodeRef}
-          timeout={300}
-          classNames={{
-            enter: stylesAni["container-enter"],
-            enterActive: stylesAni["container-enter-active"],
-            exit: stylesAni["container-exit"],
-            exitActive: stylesAni["container-exit-active"],
-          }}
-          unmountOnExit
-          in
-          onEnter={() => console.log("ENTER")}
-          onExiting={() => console.log("EXIT")}
-        >
-          <><LazyContainer {...data} ref={nodeRef} /></>
-        </CSSTransition>
+        <LazyContainer subDirData={data} isOpen />
       )}
     </>
   );
+  
   return (
     <Suspense fallback={
       (<div className={!isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`}>

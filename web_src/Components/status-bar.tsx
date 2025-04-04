@@ -3,7 +3,7 @@ import { FcDataProtection, FcSearch } from "react-icons/fc";
 import useSWR from "swr";
 import styles from "./status-bar.module.scss";
 
-interface DiskSpace {
+type DiskSpace = {
   path: string;
   fstype: string;
   total: number;
@@ -14,7 +14,7 @@ interface DiskSpace {
   inodesUsed: number;
   inodesFree: number;
   inodesUsedPercent: number;
-}
+};
 
 const DiskUsage: React.FC = () => {
   const { data, isLoading, error } = useSWR<
@@ -64,5 +64,5 @@ const StatusBar: React.FC = () => {
   );
 };
 
-export {DiskUsage};
+export { DiskUsage };
 export default StatusBar;

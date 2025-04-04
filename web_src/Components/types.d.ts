@@ -5,7 +5,7 @@ export declare type InterfaceMutateFunc = ReturnType<
   typeof useSWR<{ statusCode: number; data: DirectoryProp } | Error>
 >["mutate"];
 
-declare interface DirElement {
+declare type DirElement = {
   name: string;
   isFile: boolean;
   isFolder: boolean;
@@ -16,13 +16,13 @@ declare interface DirElement {
   title: string;
   actress: string;
   sourceUrl: string;
-}
+};
 
-export declare interface DirectoryProp {
+export declare type DirectoryProp = {
   parentFolder: string; //relative path
   currentPath: string; //relative path
   childElements: DirElement[];
-}
+};
 
 declare type UseStateReturnType<T> = ReturnType<typeof useState<T>>;
 export interface ResWithActressName {
@@ -30,7 +30,7 @@ export interface ResWithActressName {
   data: VideoInfo[];
 }
 
-declare interface VideoInfo {
+declare type VideoInfo = {
   id: number;
   createdAt: number;
   updatedAt: number;
@@ -42,4 +42,4 @@ declare interface VideoInfo {
   sourceUrl: string;
   title: string;
   actress: string;
-}
+};

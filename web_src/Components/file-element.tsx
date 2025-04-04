@@ -1,3 +1,5 @@
+"use client";
+
 import React, { lazy, useContext, useEffect, useState } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
 import isVideo from "../lib/is-video";
@@ -9,19 +11,18 @@ import WsContext from "./websocket-ctx";
 
 const LazyRenameComponent = lazy(() => import("./rename-element"));
 
-type FileElementProps = {
-  readonly elem: DirElement;
-  readonly handleClick: React.MouseEventHandler;
-  readonly handleCtxMenu: React.MouseEventHandler;
-  readonly isSelected?: boolean;
-  readonly isPlaying: boolean;
-  readonly isRename: boolean;
-  readonly isConverting: boolean;
-  readonly progress?: number;
-};
+type FileElementProps = Readonly<{
+  elem: DirElement;
+  handleClick: React.MouseEventHandler;
+  handleCtxMenu: React.MouseEventHandler;
+  isSelected?: boolean;
+  isPlaying: boolean;
+  isRename: boolean;
+  isConverting: boolean;
+  progress?: number;
+}>;
 
-const ForwardFileElement: React.FC<FileElementProps> = (props) => {
-
+const FileElement: React.FC<FileElementProps> = (props) => {
   const {
     elem,
     handleClick,
@@ -35,7 +36,6 @@ const ForwardFileElement: React.FC<FileElementProps> = (props) => {
   return (
     <div
       className={styles.file}
-      id="animate-file-elem"
     >
       <div
         className={
@@ -148,7 +148,7 @@ const InteractiveFileElement: React.FC<{
   }, [currentPlayVideo?.playSrc, elem, setIsPlaying]);
 
   return (
-    <ForwardFileElement
+    <FileElement
       elem={elem}
       handleClick={handleClick}
       handleCtxMenu={handleCtxMenu}

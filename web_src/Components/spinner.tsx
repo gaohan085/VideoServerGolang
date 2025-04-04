@@ -2,7 +2,7 @@ import React from "react";
 import { FcSynchronize } from "react-icons/fc";
 import styles from "./spinner.module.scss";
 
-const Spinner: React.FC<{ readonly fontSize?: number, readonly cssStyles?: Record<string, string> }> = ({
+const Spinner: React.FC<Readonly<{ fontSize?: number, cssStyles?: Record<string, string> }>> = ({
   fontSize, cssStyles
 }) => {
   return (

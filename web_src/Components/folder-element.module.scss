@@ -3,13 +3,16 @@
 .folder {
   @extend %element;
   transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
-  > [class~="folder-element"] {
+
+  >[class~="folder-element"] {
     @include base.name();
+
     & {
       transition: color 0.2s ease-in-out;
       cursor: pointer;
     }
-    > span {
+
+    >span {
       @include base.icon();
     }
 
@@ -19,26 +22,19 @@
   }
 }
 
-.container-enter {
-  opacity: 0;
-  max-height: auto;
-  padding-left: 15px;
-}
-
-.container-enter-active {
-  opacity: 1;
+.container {
   padding-left: 0px;
-  transition: all .3s ease-in-out;
-}
-
-.container-exit {
   opacity: 1;
-  padding-left: 0px;
-}
-
-.container-exit-active {
-  opacity: 0;
-  height: auto;
-  padding-left: 15px;
   transition: all .3s ease-in-out;
+
+  &[class~="preEnter"],
+  [class~="exiting"] {
+    padding-left: 15px;
+    opacity: 0.5;
+    transition: all .3s ease-in-out;
+  }
+
+  &[class~="exited"] {
+    display: none;
+  }
 }
