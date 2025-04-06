@@ -1,5 +1,4 @@
-import react from "@vitejs/plugin-react"
-import { cwd } from "process"
+import react from "@vitejs/plugin-react-swc";
 
 const isProduction = process.env.NODE_ENV === "production";
 
