@@ -4,7 +4,6 @@ import (
 	"net/url"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 
@@ -31,7 +30,7 @@ type DirChildElem struct {
 	SourceUrl   string `json:"sourceUrl"`
 }
 
-func FileReaderHandler(c *fiber.Ctx) error {
+func ApiFileReaderHandler(c *fiber.Ctx) error {
 	path, err := url.QueryUnescape(c.Params("*"))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
@@ -104,8 +103,6 @@ func FileReaderHandler(c *fiber.Ctx) error {
 		parentFolder = path[:strings.LastIndex(path, "/")]
 		currentPath = path
 	}
-
-	time.Sleep(500 * time.Millisecond)
 	return c.Status(fiber.StatusOK).JSON(&RespBody{
 		StatusCode: 200,
 		Data: &Folder{

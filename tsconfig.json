@@ -16,12 +16,14 @@
       "DOM.Iterable",
       "ESNext"
     ],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "isolatedModules": true,
   },
   "files": [
     "web_src/index.ts"
   ],
   "include": [
-    "./web_src/"
+    "./web_src/",
+    "rsbuild.config.ts"
   ],
 }

@@ -3,7 +3,6 @@ package handlers
 import (
 	"go-fiber-react-ts/database"
 	"net/url"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -20,8 +19,6 @@ func GetVideosByActress(c *fiber.Ctx) error {
 	if err := database.Db.Model(&database.VideoInf{}).Where("actress = ? AND poster_name <> ?", actressName, "").Find(&videos).Error; err != nil {
 		return err
 	}
-
-	time.Sleep(250 * time.Millisecond)
 	if len(videos) == 0 {
 		return c.Status(fiber.StatusNotFound).JSON(&RespBody{
 			StatusCode: 404,

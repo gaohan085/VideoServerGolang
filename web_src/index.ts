@@ -10,9 +10,3 @@ head?.appendChild(favicon);
 
 const appNode = document.getElementById("main");
 void renderApp(appNode!);
-
-if (import.meta.hot) {
-  import.meta.hot.accept("./App.tsx", () => {
-    return;
-  });
-}

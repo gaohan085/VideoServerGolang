@@ -7,7 +7,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-func ConvertHandler(ctx *fiber.Ctx) error {
+func ApiConvertHandler(ctx *fiber.Ctx) error {
 	var videoInfo *DirChildElem
 	var queue *database.VideoQueue
 

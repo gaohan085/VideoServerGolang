@@ -7,7 +7,7 @@ import (
 	"github.com/shirou/gopsutil/v3/disk"
 )
 
-func DiskUsageHandler(c *fiber.Ctx) error {
+func ApiDiskUsageHandler(c *fiber.Ctx) error {
 	dir, err := os.Getwd()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{

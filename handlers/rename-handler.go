@@ -24,7 +24,7 @@ func renameErrHandler(e error, c *fiber.Ctx) error {
 	})
 }
 
-func RenameHandler(c *fiber.Ctx) error {
+func ApiRenameHandler(c *fiber.Ctx) error {
 	var renameBody *RenameStruct
 	if err := c.BodyParser(&renameBody); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{

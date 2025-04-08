@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func DeleteHandler(c *fiber.Ctx) error {
+func ApiDeleteHandler(c *fiber.Ctx) error {
 	var fileinfo DirChildElem
 
 	rootDir := os.Getenv("ROOT_DIR")
