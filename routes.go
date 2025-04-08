@@ -28,13 +28,13 @@ func SetRoutes(app *fiber.App) {
 	case "local":
 		app.Static("/assets", "./assets/")
 
-		api.Get("/disk", handlers.DiskUsageHandler)
-		api.Post("/delete", handlers.DeleteHandler)
-		api.Post("/rename", handlers.RenameHandler)
-		api.Get("/version", handlers.VersionHandler)
+		api.Get("/diskusage", handlers.ApiDiskUsageHandler)
+		api.Post("/delete", handlers.ApiDeleteHandler)
+		api.Post("/rename", handlers.ApiRenameHandler)
+		api.Get("/version", handlers.ApiAppVersionHandler)
 		api.Get("/actress/:name", handlers.GetVideosByActress)
-		api.Post("/convert", handlers.ConvertHandler)
-		api.Get("/*", handlers.FileReaderHandler)
+		api.Post("/convert", handlers.ApiConvertHandler)
+		api.Get("/*", handlers.ApiFileReaderHandler)
 	default:
 		app.Get("/assets/*", func(c *fiber.Ctx) error {
 			path, err := url.QueryUnescape(c.Params("*"))
@@ -61,5 +61,5 @@ func SetRoutes(app *fiber.App) {
 		PathPrefix: "dist",
 		Browse:     true,
 	}))
-	app.Get("/*", handlers.IndexHandler)
+	app.Get("/*", handlers.IndexHtmlHandler)
 }

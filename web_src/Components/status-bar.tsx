@@ -20,7 +20,7 @@ const DiskUsage: React.FC = () => {
   const { data, isLoading, error } = useSWR<
     { statusCode: number; data: DiskSpace },
     Error
-  >("/api/disk");
+  >("/api/diskusage");
 
   if (error) return <>Error Fetch Data</>;
   if (isLoading) return <>Loading</>;
