@@ -2,23 +2,35 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import React, { lazy } from "react";
+import useSWR from "swr";
 import sortElements from "../lib/sort-elements-by-name";
-import type { DirectoryProp } from "./types";
+import type { DirectoryProp, DirElement } from "./types";
 
 const LazyFileElement = lazy(() => import("./file-element"));
 const LazyFolderElement = lazy(() => import("./folder-element"));
 
 const Container: React.FC<Readonly<
   {
-    subDirData: DirectoryProp | undefined,
+    elem: Pick<DirElement, "name" | "currentPath">,
     isOpen: boolean
   }
 >> = (props) => {
-  const { isOpen, subDirData } = props;
+  const { isOpen, elem } = props;
+
+  const { data } = useSWR<
+    { statusCode: number; data: DirectoryProp }
+  >(
+    isOpen
+      ? elem.currentPath === ""
+        ? `/api/${elem.name}`
+        : `/api/${elem.currentPath}/${elem.name}`
+      : null,
+  );
+
 
   return (
     <AnimatePresence>
-      {!!isOpen && !!subDirData &&
+      {!!isOpen &&
         <motion.div
           initial={{ height: 0 }}
           animate={{ height: "max-content" }}
@@ -26,7 +38,7 @@ const Container: React.FC<Readonly<
           transition={{ duration: .2, ease: "easeInOut" }}
           id="container"
         >
-          {subDirData.childElements.sort((a, b) => sortElements(a, b)).map(
+          {data?.data.childElements.sort((a, b) => sortElements(a, b)).map(
             (elem, index) => {
               if (elem.isFile) return (
                 <motion.div
