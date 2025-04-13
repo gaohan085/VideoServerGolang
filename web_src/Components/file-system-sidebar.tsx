@@ -1,23 +1,21 @@
 "use client";
 
 import React, { lazy, Suspense, useEffect, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { FcPrevious } from "react-icons/fc";
-import useSWR, { useSWRConfig } from "swr";
+import { useSWRConfig } from "swr";
 import useWindowDimension from "../lib/useWindowDimension";
 import Context from "./file-sys-context";
 import styles from "./file-system-sidebar.module.scss";
 import Spinner from "./spinner";
 import { DiskUsage } from "./status-bar";
-import { type DirectoryProp, type DirElement } from "./types.d";
+import { type DirElement } from "./types.d";
 
 const LazyErrElement = lazy(() => import("./error-element"));
 const LazyContainer = lazy(() => import("./container-element"));
 const LazyCtxMenu = lazy(() => import("./context-menu"));
 
 const FileSysSideBar: React.FC<Readonly<{
-  data: DirectoryProp | undefined;
-  isLoading: boolean | undefined;
-  isError: boolean | undefined;
   handleClick: React.MouseEventHandler;
   width: number;
   handleCtxMenu: React.MouseEventHandler;
@@ -26,9 +24,6 @@ const FileSysSideBar: React.FC<Readonly<{
   clicked: boolean;
 }>> = (props) => {
   const {
-    data,
-    isLoading,
-    isError,
     handleClick,
     handleCtxMenu,
     isActive,
@@ -37,24 +32,8 @@ const FileSysSideBar: React.FC<Readonly<{
     clicked
   } = props;
 
-  const conditionalElem = (
-    <>
-      {!!isLoading && (<Spinner fontSize={24} />)}
-      {!!isError && (<LazyErrElement />)}
-      {!!data && (
-        <LazyContainer subDirData={data} isOpen />
-      )}
-    </>
-  );
-  
   return (
-    <Suspense fallback={
-      (<div className={!isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`}>
-        <div className="file-system">
-          <Spinner fontSize={24} />
-        </div>
-      </div>)
-    }>
+    <>
       <div
         className={
           !isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`
@@ -68,17 +47,21 @@ const FileSysSideBar: React.FC<Readonly<{
 
         {!!isActive && (
           <>
-            <div className="file-system">{conditionalElem}</div>
+            <div className="file-system">
+              <LazyContainer elem={{ name: "", currentPath: "" }} isOpen />
+            </div>
             {width <= 992 && <DiskUsage />}
           </>
         )}
       </div>
-      {!clicked && (
-        <>
-          <LazyCtxMenu />
-        </>
-      )}
-    </Suspense>
+      {
+        !clicked && (
+          <>
+            <LazyCtxMenu />
+          </>
+        )
+      }
+    </>
   );
 };
 
@@ -93,11 +76,6 @@ const InteractiveFileSysSideBar: React.FC = () => {
   const [openFolder, setOpenFolder] = useState<string | undefined>("/");
 
   const { mutate } = useSWRConfig();
-
-  const { data, isLoading, error } = useSWR<
-    { statusCode: number; data: DirectoryProp },
-    Error
-  >("/api");
 
   const handleClick: React.MouseEventHandler = () => {
     setClicked(true);
@@ -136,17 +114,24 @@ const InteractiveFileSysSideBar: React.FC = () => {
         mutateFunc: mutate,
       }}
     >
-      <FileSysSideBar
-        data={data?.data}
-        handleClick={handleClick}
-        handleCtxMenu={handleCtxMenu}
-        isError={!error ? false : true}
-        isLoading={isLoading}
-        width={width}
-        toggleActive={toggleActive}
-        isActive={isActive}
-        clicked={clicked!}
-      />
+      <ErrorBoundary fallback={<LazyErrElement />}>
+        <Suspense fallback={
+          (<div className={!isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`}>
+            <div className="file-system">
+              <Spinner fontSize={24} />
+            </div>
+          </div>)
+        }>
+          <FileSysSideBar
+            handleClick={handleClick}
+            handleCtxMenu={handleCtxMenu}
+            isActive={isActive}
+            clicked={clicked!}
+            toggleActive={toggleActive}
+            width={width}
+          />
+        </Suspense>
+      </ErrorBoundary>
     </Context.Provider>
   );
 };

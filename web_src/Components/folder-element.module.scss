@@ -8,7 +8,6 @@
     @include base.name();
 
     & {
-      transition: color 0.2s ease-in-out;
       cursor: pointer;
     }
 
@@ -18,23 +17,7 @@
 
     &:hover {
       color: base.$main-color;
+      // text-decoration: underline;
     }
-  }
-}
-
-.container {
-  padding-left: 0px;
-  opacity: 1;
-  transition: all .3s ease-in-out;
-
-  &[class~="preEnter"],
-  [class~="exiting"] {
-    padding-left: 15px;
-    opacity: 0.5;
-    transition: all .3s ease-in-out;
-  }
-
-  &[class~="exited"] {
-    display: none;
   }
 }

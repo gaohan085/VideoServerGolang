@@ -16,6 +16,7 @@ const renderApp = (app: HTMLElement): void => {
           refreshInterval: 120000,
           fetcher: fetcher,
           revalidateOnFocus: true,
+          suspense: true
         }}
       >
         <Provider store={redux.store}>

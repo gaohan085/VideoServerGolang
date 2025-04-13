@@ -1,63 +1,62 @@
 "use client";
 
-import React, { lazy, useContext, useEffect, useState } from "react";
+import React, { lazy, Suspense, useContext, useEffect, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
-import useSWR from "swr";
 import Context from "./file-sys-context";
 import styles from "./folder-element.module.scss";
 import Spinner from "./spinner";
-import type { DirectoryProp, DirElement } from "./types.d";
+import type { DirElement } from "./types.d";
 
 const LazyErrElement = lazy(() => import("./error-element"));
 const LazyRenameElement = lazy(() => import("./rename-element"));
 const LazyContainer = lazy(() => import("./container-element"));
 
+const LoadingFileElement: React.FC<{ elem: DirElement }> = props => {
+  const { elem } = props;
+
+  return (
+    <a className="folder-element">
+      <Spinner />
+      {elem.name}
+    </a>
+  );
+};
+
 type FolderElementProps = Readonly<{
   elem: DirElement;
-  isLoading: boolean;
   isOpen: boolean;
-  isError: boolean;
   handleClick: React.MouseEventHandler
   handleCtxMenu: React.MouseEventHandler
-  subDirectoryData: DirectoryProp | undefined;
   isRename: boolean;
 }>;
 
 const FolderElement: React.FC<FolderElementProps> = (props) => {
-
   const {
     elem,
-    isLoading,
     isOpen,
-    isError,
     handleClick,
     handleCtxMenu,
-    subDirectoryData,
     isRename,
   } = props;
-  const ConditionalFolderIcon = (
-    <>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <span>{isOpen ? <FcOpenedFolder /> : <FcFolder />}</span>
-      )}
-    </>
-  );
+
   return (
     <div className={styles.folder}>
-      <a
-        className="folder-element"
-        onClick={handleClick}
-        onContextMenu={handleCtxMenu}
-        title={isOpen ? "收起文件夹" : "打开文件夹"}
-      >
-        {ConditionalFolderIcon}
-        {!isRename && elem.name}
-        {!!isRename && <LazyRenameElement {...elem} />}
-      </a>
-      {!!isError && <LazyErrElement />}
-      <LazyContainer subDirData={subDirectoryData} isOpen={isOpen} />
+      <ErrorBoundary fallback={<LazyErrElement />}>
+        <Suspense fallback={<LoadingFileElement elem={elem} />}>
+          <a
+            className="folder-element"
+            onClick={handleClick}
+            onContextMenu={handleCtxMenu}
+            title={isOpen ? "收起文件夹" : "打开文件夹"}
+          >
+            <span>{isOpen ? <FcOpenedFolder /> : <FcFolder />}</span>
+            {!isRename && elem.name}
+            {!!isRename && <LazyRenameElement {...elem} />}
+          </a>
+          <LazyContainer elem={elem} isOpen={isOpen} />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 };
@@ -66,16 +65,7 @@ const InteractiveFolderElement: React.FC<{
   readonly elem: DirElement;
 }> = ({ elem }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { data, isLoading, error } = useSWR<
-    { statusCode: number; data: DirectoryProp },
-    Error
-  >(
-    isOpen
-      ? elem.currentPath === ""
-        ? `/api/${elem.name}`
-        : `/api/${elem.currentPath}/${elem.name}`
-      : null,
-  );
+
 
   const {
     openFolder,
@@ -133,13 +123,10 @@ const InteractiveFolderElement: React.FC<{
   return (
     <FolderElement
       elem={elem}
+      isOpen={isOpen}
       handleClick={handleClick}
       handleCtxMenu={handleCtxMenu}
-      isError={error ? true : false}
-      isLoading={isLoading}
-      isOpen={isOpen}
       isRename={isRename}
-      subDirectoryData={data?.data}
     />
   );
 };
