@@ -1,6 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import React, { lazy } from "react";
 import useSWR from "swr";
 import sortElements from "../lib/sort-elements-by-name";
@@ -31,7 +32,7 @@ const Container: React.FC<Readonly<
   return (
     <AnimatePresence>
       {!!isOpen &&
-        <motion.div
+        <m.div
           initial={{ height: 0 }}
           animate={{ height: "max-content" }}
           exit={{ height: 0 }}
@@ -41,7 +42,7 @@ const Container: React.FC<Readonly<
           {data?.data.childElements.sort((a, b) => sortElements(a, b)).map(
             (elem, index) => {
               if (elem.isFile) return (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, paddingLeft: "15px" }}
                   animate={{ opacity: 1, paddingLeft: "0px" }}
                   exit={{ opacity: 0, paddingLeft: "15px" }}
@@ -50,10 +51,10 @@ const Container: React.FC<Readonly<
                   key={index}
                 >
                   <LazyFileElement elem={elem} />
-                </motion.div>
+                </m.div>
               );
               if (elem.isFolder) return (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, paddingLeft: "15px" }}
                   animate={{ opacity: 1, paddingLeft: "0px" }}
                   exit={{ opacity: 0, paddingLeft: "15px" }}
@@ -62,10 +63,10 @@ const Container: React.FC<Readonly<
                   key={index}
                 >
                   <LazyFolderElement elem={elem} />
-                </motion.div>
+                </m.div>
               );
             })}
-        </motion.div>}
+        </m.div>}
     </AnimatePresence>
   );
 };
