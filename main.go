@@ -43,12 +43,15 @@ func main() {
 	engine := html.NewFileSystem(http.FS(content), ".html")
 
 	database.SetDB()
-	go schedule.Schedule()
+
+	if !fiber.IsChild() {
+		go schedule.Schedule()
+	}
 
 	app := fiber.New(
 		fiber.Config{
 			Views:        engine,
-			Prefork:      false,
+			Prefork:      true,
 			ServerHeader: "Fiber",
 			ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 				var e *fiber.Error
@@ -80,7 +83,7 @@ func main() {
 	defer file.Close()
 
 	loggerConfigDev := logger.Config{
-		Format:     "[DEBUG] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
+		Format:     "[INFO] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
 		TimeFormat: "2006/Jan/02 Monday 15:04:05",
 		TimeZone:   "Asia/Shanghai",
 	}
