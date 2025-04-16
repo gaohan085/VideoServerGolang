@@ -51,6 +51,10 @@ if (isProduction) {
     },
     filename: {
       js: "[id].js?v=[contenthash:8]"
+    },
+    sourceMap: {
+      js: "source-map",
+      css: true,
     }
   };
 
