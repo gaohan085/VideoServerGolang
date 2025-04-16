@@ -92,7 +92,8 @@ CheckVideoExists:
 		fiberlog.Info(fmt.Sprintf("Checking video %s exists or not", video.SerialNumber))
 
 		if video.PlaySrc == "" {
-			fiberlog.Warn(fmt.Sprintf("Video %s play source not exist.", video.PlaySrc))
+			fiberlog.Warn(fmt.Sprintf("Video %s play source not exist.", video.SerialNumber))
+			video.Delete()
 			continue CheckVideoExists
 		}
 
@@ -100,8 +101,8 @@ CheckVideoExists:
 		req, _ := http.NewRequest("GET", video.PlaySrc, nil)
 		res, _ := client.Do(req)
 
-		if res.StatusCode == 403 {
-			return video.Delete()
+		if res.StatusCode == 404 {
+			video.Delete()
 		}
 		continue CheckVideoExists
 	}
