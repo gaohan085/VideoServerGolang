@@ -3,7 +3,7 @@ import React, {
   useState,
   type PropsWithChildren
 } from "react";
-import WsContext from "./websocket-ctx";
+import WsContext from "./websocket-ctx.ts";
 
 export interface VideoStatus {
   fileName: string;

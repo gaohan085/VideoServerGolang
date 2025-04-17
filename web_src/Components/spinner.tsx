@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+
 import { FcSynchronize } from "react-icons/fc";
 import styles from "./spinner.module.scss";
 

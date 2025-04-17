@@ -11,7 +11,7 @@ import {
   useSelector,
   type TypedUseSelectorHook,
 } from "react-redux";
-import { type DirElement } from "../Components/types.d";
+import type { DirElement } from "../Components/types.d.ts";
 
 interface PlayingVideo {
   playingVideo: DirElement;

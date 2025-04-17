@@ -1,6 +1,6 @@
 import "../assets/Roboto-Regular.ttf";
 import icon from "../assets/favicon.ico";
-import renderApp from "./App";
+import renderApp from "./App.tsx";
 
 const head = document.querySelector("head");
 const favicon = document.createElement("link");

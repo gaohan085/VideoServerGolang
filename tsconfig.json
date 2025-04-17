@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx",
     "outDir": "./dist",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
-    "module": "ESNext",
+    "module": "NodeNext",
     "target": "es5",
     "allowJs": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "nodenext",
     "sourceMap": true,
     "strictNullChecks": true,
     "strict": true,
@@ -18,6 +18,8 @@
     ],
     "skipLibCheck": true,
     "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
   },
   "files": [
     "web_src/index.ts"

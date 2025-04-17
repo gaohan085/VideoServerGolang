@@ -1,5 +1,7 @@
+"use client";
+
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import {
   FcEmptyTrash,
   FcFolder,
@@ -8,11 +10,11 @@ import {
   FcServices,
   FcStart,
 } from "react-icons/fc";
-import isVideo from "../lib/is-video";
-import * as redux from "../lib/reduxStore";
+import isVideo from "../lib/is-video.ts";
+import * as redux from "../lib/reduxStore.ts";
 import styles from "./context-menu.module.scss";
-import Context from "./file-sys-context";
-import { type DirElement } from "./types.d";
+import Context from "./file-sys-context.ts";
+import type { DirElement } from "./types.d.ts";
 
 
 const PlayVideo: React.FC = () => {
