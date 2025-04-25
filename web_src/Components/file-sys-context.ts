@@ -1,6 +1,8 @@
+"use client";
+
 import { createContext } from "react";
 import type { useSWRConfig } from "swr";
-import type { UseStateReturnType, DirElement } from "./types";
+import type { UseStateReturnType, DirElement } from "./types.d.ts";
 
 const Context = createContext<{
   clicked?: UseStateReturnType<boolean>[0];

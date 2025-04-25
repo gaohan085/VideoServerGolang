@@ -1,11 +1,11 @@
 import type { useState } from "react";
 import type useSWR from "swr";
 
-export declare type InterfaceMutateFunc = ReturnType<
+type InterfaceMutateFunc = ReturnType<
   typeof useSWR<{ statusCode: number; data: DirectoryProp } | Error>
 >["mutate"];
 
-declare type DirElement = {
+type DirElement = {
   name: string;
   isFile: boolean;
   isFolder: boolean;
@@ -18,19 +18,19 @@ declare type DirElement = {
   sourceUrl: string;
 };
 
-export declare type DirectoryProp = {
+type DirectoryProp = {
   parentFolder: string; //relative path
   currentPath: string; //relative path
   childElements: DirElement[];
 };
 
-declare type UseStateReturnType<T> = ReturnType<typeof useState<T>>;
-export interface ResWithActressName {
+type UseStateReturnType<T> = ReturnType<typeof useState<T>>;
+type ResWithActressName = {
   statusCode: number;
   data: VideoInfo[];
-}
+};
 
-declare type VideoInfo = {
+type VideoInfo = {
   id: number;
   createdAt: number;
   updatedAt: number;

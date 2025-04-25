@@ -2,10 +2,10 @@ import Plyr from "plyr";
 import "plyr/dist/plyr.css";
 import plyrSvg from "plyr/dist/plyr.svg";
 import React, { lazy, useEffect, useRef } from "react";
-import * as redux from "../lib/reduxStore";
+import * as redux from "../lib/reduxStore.ts";
 import styles from "./player.module.scss";
 
-const LazyTitle = lazy(() => import("./player-title"));
+const LazyTitle = lazy(() => import("./player-title.tsx"));
 
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -92,7 +92,6 @@ const Player: React.FC = () => {
     }
 
     return () => {
-      console.log("useEffect return ");
       if (!ref.current && plyr) {
         plyr.stop();
       }

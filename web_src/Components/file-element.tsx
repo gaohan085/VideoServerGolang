@@ -1,15 +1,15 @@
 "use client";
 
-import React, { lazy, useContext, useEffect, useState } from "react";
+import { lazy, useContext, useEffect, useState } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
-import isVideo from "../lib/is-video";
-import * as redux from "../lib/reduxStore";
+import isVideo from "../lib/is-video.ts";
+import * as redux from "../lib/reduxStore.ts";
 import styles from "./file-element.module.scss";
-import Context from "./file-sys-context";
-import type { DirElement } from "./types.d";
-import WsContext from "./websocket-ctx";
+import Context from "./file-sys-context.ts";
+import type { DirElement } from "./types.d.ts";
+import WsContext from "./websocket-ctx.ts";
 
-const LazyRenameComponent = lazy(() => import("./rename-element"));
+const LazyRenameComponent = lazy(() => import("./rename-element.tsx"));
 
 type FileElementProps = Readonly<{
   elem: DirElement;

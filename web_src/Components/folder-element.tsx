@@ -1,16 +1,16 @@
 "use client";
 
-import React, { lazy, Suspense, useContext, useEffect, useState } from "react";
+import { lazy, Suspense, useContext, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
-import Context from "./file-sys-context";
+import Context from "./file-sys-context.ts";
 import styles from "./folder-element.module.scss";
-import Spinner from "./spinner";
-import type { DirElement } from "./types.d";
+import Spinner from "./spinner.tsx";
+import type { DirElement } from "./types.d.ts";
 
-const LazyErrElement = lazy(() => import("./error-element"));
-const LazyRenameElement = lazy(() => import("./rename-element"));
-const LazyContainer = lazy(() => import("./container-element"));
+const LazyErrElement = lazy(() => import("./error-element.tsx"));
+const LazyRenameElement = lazy(() => import("./rename-element.tsx"));
+const LazyContainer = lazy(() => import("./container-element.tsx"));
 
 const LoadingFileElement: React.FC<{ elem: DirElement }> = props => {
   const { elem } = props;

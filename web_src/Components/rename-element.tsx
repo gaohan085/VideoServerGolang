@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useContext } from "react";
 import { FcCancel, FcCheckmark } from "react-icons/fc";
-import Context from "./file-sys-context";
+import Context from "./file-sys-context.ts";
 import styles from "./rename-element.module.scss";
-import type { DirElement } from "./types.d";
+import type { DirElement } from "./types.d.ts";
 
 interface RenameElements extends HTMLFormControlsCollection {
   name: HTMLInputElement;

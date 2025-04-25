@@ -1,7 +1,8 @@
-import React from "react";
+"use client";
+
+import { Link } from "@tanstack/react-router";
 import { FcLink } from "react-icons/fc";
-import { Link } from "react-router-dom";
-import * as redux from "../lib/reduxStore";
+import * as redux from "../lib/reduxStore.ts";
 import styles from "./player-title.module.scss";
 
 const Title: React.FC = () => {

@@ -1,4 +1,4 @@
-import { type DirElement } from "../Components/types.d";
+import type { DirElement } from "../Components/types.d.ts";
 
 const sortElements = (a: DirElement, b: DirElement) => {
   if (a.isFile && b.isFolder) return 1;

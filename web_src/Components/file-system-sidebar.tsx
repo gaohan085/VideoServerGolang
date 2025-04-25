@@ -1,19 +1,19 @@
 "use client";
 
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FcPrevious } from "react-icons/fc";
 import { useSWRConfig } from "swr";
-import useWindowDimension from "../lib/useWindowDimension";
-import Context from "./file-sys-context";
+import useWindowDimension from "../lib/useWindowDimension.ts";
+import Context from "./file-sys-context.ts";
 import styles from "./file-system-sidebar.module.scss";
-import Spinner from "./spinner";
-import { DiskUsage } from "./status-bar";
-import { type DirElement } from "./types.d";
+import Spinner from "./spinner.tsx";
+import { DiskUsage } from "./status-bar.tsx";
+import type { DirElement } from "./types.d.ts";
 
-const LazyErrElement = lazy(() => import("./error-element"));
-const LazyContainer = lazy(() => import("./container-element"));
-const LazyCtxMenu = lazy(() => import("./context-menu"));
+const LazyErrElement = lazy(() => import("./error-element.tsx"));
+const LazyContainer = lazy(() => import("./container-element.tsx"));
+const LazyCtxMenu = lazy(() => import("./context-menu.tsx"));
 
 const FileSysSideBar: React.FC<Readonly<{
   handleClick: React.MouseEventHandler;
@@ -44,7 +44,6 @@ const FileSysSideBar: React.FC<Readonly<{
         <span className="arrow" onClick={toggleActive}>
           <FcPrevious />
         </span>
-
         {!!isActive && (
           <>
             <div className="file-system">
@@ -54,13 +53,7 @@ const FileSysSideBar: React.FC<Readonly<{
           </>
         )}
       </div>
-      {
-        !clicked && (
-          <>
-            <LazyCtxMenu />
-          </>
-        )
-      }
+      {!clicked && <LazyCtxMenu />}
     </>
   );
 };

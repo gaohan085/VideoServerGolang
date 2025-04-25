@@ -1,15 +1,24 @@
 "use client";
 
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { LazyMotion } from "motion/react";
-import React, { StrictMode } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
-import fetcher from "./lib/fetcher";
-import * as redux from "./lib/reduxStore";
-import Routes from "./routes/routes";
+import fetcher from "./lib/fetcher.ts";
+import * as redux from "./lib/reduxStore.ts";
+import { routeTree } from "./routeTree.gen.ts";
 
-const loadFeatures = () => import("./motionFeatures").then(res => res.default);
+
+const loadFeatures = () => import("./motionFeatures.ts").then(res => res.default);
+const router = createRouter({ routeTree });
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router
+  }
+}
 
 const renderApp = (app: HTMLElement): void => {
   createRoot(app).render(
@@ -24,7 +33,7 @@ const renderApp = (app: HTMLElement): void => {
       >
         <Provider store={redux.store}>
           <LazyMotion features={loadFeatures} strict>
-            <Routes />
+            <RouterProvider router={router} />
           </LazyMotion>
         </Provider>
       </SWRConfig>

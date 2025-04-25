@@ -1,14 +1,13 @@
+import { useLoaderData } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
-import { useLoaderData, useNavigation } from "react-router";
-import * as redux from "../lib/reduxStore";
-import useWindowDimension from "../lib/useWindowDimension";
-import Spinner from "./spinner";
-import {DiskUsage} from "./status-bar";
-import type { ResWithActressName, VideoInfo } from "./types.d";
+import * as redux from "../lib/reduxStore.ts";
+import useWindowDimension from "../lib/useWindowDimension.ts";
+import { DiskUsage } from "./status-bar.tsx";
+import type { ResWithActressName, VideoInfo } from "./types.d.ts";
 import styles from "./video-boxes-sidebar.module.scss";
 
-const VideoBox: React.FC<VideoInfo> = (props) => {
+const VideoWithPoster: React.FC<VideoInfo> = (props) => {
   const dispatch = redux.useAppDispatch();
   const videoPlaying = redux.useAppSelector(redux.selectVideoPlaying);
   const { title, posterName, serialNumber, playSrc, actress, sourceUrl } =
@@ -46,19 +45,19 @@ const VideoBox: React.FC<VideoInfo> = (props) => {
         <img src={`/assets/poster/${posterName}`} loading="lazy" />
       </div>
       <div className="img-box-title">
-        <a>{`${serialNumber} ${title}`}</a>
+        <a>{serialNumber.toUpperCase()}</a>
+        <br />
+        <i >{title}</i>
       </div>
     </div>
   );
 };
 
 const VideoBoxes: React.FC = () => {
-  const { data } = useLoaderData<ResWithActressName>();
   const [isActive, setIsActive] = useState<boolean>(false);
   const toggleActive: React.MouseEventHandler = () => setIsActive(!isActive);
   const { width } = useWindowDimension();
-
-  const navigation = useNavigation();
+  const { data: videoes }: ResWithActressName = useLoaderData({ from: "/actress/$name" });
 
   //监听窗口宽度
   useEffect(() => {
@@ -79,15 +78,9 @@ const VideoBoxes: React.FC = () => {
       {!!isActive && (
         <>
           <div className="video-box-container">
-            {navigation.state === "loading" ? (
-              <Spinner fontSize={24} />
-            ) : (
-              <>
-                {data.map((video, index) => {
-                  return <VideoBox key={index} {...video} />;
-                })}
-              </>
-            )}
+            {videoes.map((video, index) => {
+              return <VideoWithPoster key={index} {...video} />;
+            })}
           </div>
           {width <= 992 && <DiskUsage />}
         </>
