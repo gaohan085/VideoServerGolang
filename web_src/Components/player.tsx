@@ -92,7 +92,6 @@ const Player: React.FC = () => {
     }
 
     return () => {
-      console.log("useEffect return ");
       if (!ref.current && plyr) {
         plyr.stop();
       }

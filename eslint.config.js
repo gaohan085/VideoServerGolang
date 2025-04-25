@@ -19,6 +19,7 @@ export default [
   importPlugin.flatConfigs.recommended,
   importPlugin.flatConfigs.typescript,
   ..._configs.recommendedTypeChecked,
+  reactRefresh.configs.recommended,
   {
     languageOptions: {
       parserOptions: {
@@ -39,14 +40,14 @@ export default [
       "webpack.config.js",
       "vite.config.js",
       "prettier.config.js",
-      "eslint.config.js"
+      "eslint.config.js",
+      "rsbuild.config.ts"
     ],
   },
   {
     files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
     plugins: {
       react: react,
-      "react-refresh": reactRefresh,
     },
     ignores: ["eslint.config.js"],
     languageOptions: {
@@ -69,7 +70,7 @@ export default [
       "import/no-default-export": 0,
       'import/no-dynamic-require': 'warn',
       'import/no-nodejs-modules': 'warn',
-      'import/prefer-default-export': "warn",
+      'import/prefer-default-export': "off",
       'import/default': 0,
       'import/order': [
         "error",
@@ -158,6 +159,10 @@ export default [
         },
       ],
       "react-refresh/only-export-components": "error",
+      "react-refresh/only-export-components": [
+        "error",
+        { "allowConstantExport": true }
+      ],
     },
   },
   {

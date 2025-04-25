@@ -1,6 +1,7 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 import { pluginSass } from "@rsbuild/plugin-sass";
+import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -34,7 +35,32 @@ const config = defineConfig({
       index: "./web_src/index.ts"
     }
   },
-  plugins: [pluginReact(), pluginSass()],
+  plugins: [pluginReact(
+    {
+      swcReactOptions: {
+        refresh: true,
+        runtime: "automatic"
+      }
+    }
+  ), pluginSass()],
+
+  performance: {
+    removeConsole: true,
+    chunkSplit: {
+      strategy: "split-by-module",
+    }
+  },
+
+  tools: {
+    rspack: {
+      plugins: [TanStackRouterRspack({
+        target: "react",
+        autoCodeSplitting: true,
+        routesDirectory: "./web_src/routes",
+        generatedRouteTree: "./web_src/routeTree.gen.ts"
+      })]
+    }
+  }
 });
 
 if (isProduction) {
@@ -50,18 +76,11 @@ if (isProduction) {
       image: "assets",
     },
     filename: {
-      js: "[id].js?v=[contenthash:8]"
+      js: "[name].js?v=[contenthash:8]"
     },
     sourceMap: {
       js: "source-map",
       css: true,
-    }
-  };
-
-  config.performance = {
-    removeConsole: true,
-    chunkSplit: {
-      strategy: "split-by-module",
     }
   };
 }

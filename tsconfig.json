@@ -22,7 +22,7 @@
     "noEmit": true,
   },
   "files": [
-    "web_src/index.ts"
+    "web_src/App.tsx"
   ],
   "include": [
     "./web_src/",

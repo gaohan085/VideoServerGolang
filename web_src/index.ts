@@ -1,3 +1,5 @@
+"use client";
+
 import "../assets/Roboto-Regular.ttf";
 import icon from "../assets/favicon.ico";
 import renderApp from "./App.tsx";

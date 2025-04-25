@@ -17,32 +17,29 @@ type DiskSpace = {
 };
 
 const DiskUsage: React.FC = () => {
-  const { data, isLoading, error } = useSWR<
+  const { data } = useSWR<
     { statusCode: number; data: DiskSpace },
     Error
   >("/api/diskusage");
 
-  if (error) return <>Error Fetch Data</>;
-  if (isLoading) return <>Loading</>;
-  if (data) {
-    const { data: diskspace } = data;
-    return (
-      <p>
-        <FcDataProtection />{" "}
-        {!!data && (
-          <>
-            {`剩余磁盘空间: ${(diskspace.free / (1024 * 1024 * 1024)).toFixed(
-              1,
-            )} GB`}
-          </>
-        )}
-      </p>
-    );
-  }
+
+  const { data: diskspace } = data!;
+  return (
+    <p>
+      <FcDataProtection />{" "}
+      {!!data && (
+        <>
+          {`剩余磁盘空间: ${(diskspace.free / (1024 * 1024 * 1024)).toFixed(
+            1,
+          )} GB`}
+        </>
+      )}
+    </p>
+  );
 };
 
 const StatusBar: React.FC = () => {
-  const { data, isLoading, error } = useSWR<
+  const { data } = useSWR<
     { statusCode: number; data: string },
     Error
   >("/api/version");
@@ -54,9 +51,7 @@ const StatusBar: React.FC = () => {
           <FcSearch />
           <>
             {" "}
-            {!!isLoading && "Loading"}
-            {!!error && "Error Load Data"}
-            {!!data && `当前版本: ${data.data}`}
+            {`当前版本: ${data?.data}`}
           </>
         </p>
       </div>

@@ -44,7 +44,6 @@ const FileSysSideBar: React.FC<Readonly<{
         <span className="arrow" onClick={toggleActive}>
           <FcPrevious />
         </span>
-
         {!!isActive && (
           <>
             <div className="file-system">
@@ -54,13 +53,7 @@ const FileSysSideBar: React.FC<Readonly<{
           </>
         )}
       </div>
-      {
-        !clicked && (
-          <>
-            <LazyCtxMenu />
-          </>
-        )
-      }
+      {!clicked && <LazyCtxMenu />}
     </>
   );
 };
