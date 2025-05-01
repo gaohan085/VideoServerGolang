@@ -17,9 +17,9 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.7.0",
     "@tanstack/react-router": "^1.119.0",
-    "@tanstack/react-router-devtools": "^1.116.0",
+    "@tanstack/react-router-devtools": "^1.119.1",
     "axios": "^1.9.0",
-    "motion": "^12.9.2",
+    "motion": "^12.9.4",
     "plyr": "^3.7.8",
     "prop-types": "^15.8.1",
     "react": "^19.1.0",
