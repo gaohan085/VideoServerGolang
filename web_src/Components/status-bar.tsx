@@ -22,11 +22,11 @@ const DiskUsage: React.FC = () => {
     Error
   >("/api/diskusage");
 
-
   const { data: diskspace } = data!;
   return (
     <p>
-      <FcDataProtection />{" "}
+      <FcDataProtection />
+      {" "}
       {!!data && (
         <>
           {`剩余磁盘空间: ${(diskspace.free / (1024 * 1024 * 1024)).toFixed(

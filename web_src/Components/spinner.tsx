@@ -3,8 +3,8 @@
 import { FcSynchronize } from "react-icons/fc";
 import styles from "./spinner.module.scss";
 
-const Spinner: React.FC<Readonly<{ fontSize?: number, cssStyles?: Record<string, string> }>> = ({
-  fontSize, cssStyles
+const Spinner: React.FC<Readonly<{ fontSize?: number; cssStyles?: Record<string, string> }>> = ({
+  fontSize, cssStyles,
 }) => {
   return (
     <span
@@ -14,7 +14,7 @@ const Spinner: React.FC<Readonly<{ fontSize?: number, cssStyles?: Record<string,
         width: fontSize,
         height: fontSize,
         maxWidth: fontSize,
-        ...cssStyles
+        ...cssStyles,
       }}
     >
       <FcSynchronize />

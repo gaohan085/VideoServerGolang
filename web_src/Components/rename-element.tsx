@@ -26,7 +26,7 @@ const RenameComponent: React.FC<{
         defaultValue={elem.name}
         id="name"
         name="name"
-        onFocus={(e) => e.target.select()}
+        onFocus={e => e.target.select()}
         placeholder={elem.name}
         required
         style={{ width: `${Math.min(elem.name.length * 10 + 30, 135)}px` }}
@@ -51,15 +51,15 @@ const InteractiveRenameComponent: React.FC<DirElement> = (props) => {
     e.preventDefault();
     const newName = e.currentTarget.elements.name.value;
     setRenameElement!(undefined);
-    newName !== name &&
-      void axios
-        .post("/api/rename", { ...props, newName })
-        .then(() => {
-          void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`);
-        })
-        .catch(() => {
-          return;
-        });
+    newName !== name
+    && void axios
+      .post("/api/rename", { ...props, newName })
+      .then(() => {
+        void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`);
+      })
+      .catch(() => {
+        return;
+      });
   };
 
   const handleCancelRename: React.MouseEventHandler = () => {

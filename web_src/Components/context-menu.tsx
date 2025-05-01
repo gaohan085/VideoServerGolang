@@ -16,7 +16,6 @@ import styles from "./context-menu.module.scss";
 import Context from "./file-sys-context.ts";
 import type { DirElement } from "./types.d.ts";
 
-
 const PlayVideo: React.FC = () => {
   return (
     <a>
@@ -146,15 +145,15 @@ const CtxMenu: React.FC<Readonly<{
           </li>
         )}
 
-        {!!elem.isFolder &&
-          !openFolder.includes(elem.currentPath + elem.name) && (
+        {!!elem.isFolder
+          && !openFolder.includes(elem.currentPath + elem.name) && (
           <li onClick={handleOpenFolder}>
             <OpenFolder />
           </li>
         )}
 
-        {!!elem.isFolder &&
-          openFolder.includes(elem.currentPath + elem.name) && (
+        {!!elem.isFolder
+          && openFolder.includes(elem.currentPath + elem.name) && (
           <li onClick={handleCloseFolder}>
             <CloseFolder />
           </li>

@@ -10,7 +10,6 @@ type OrientationLockType =
   | "portrait-primary"
   | "portrait-secondary";
 
-
 declare interface ScreenOrientation extends EventTarget {
   lock(orientation: OrientationLockType): Promise<void>;
 }
@@ -18,6 +17,6 @@ declare interface ScreenOrientation extends EventTarget {
 type CSSModuleClasses = Readonly<Record<string, stringq>>;
 
 declare module "*.module.scss" {
-  const Classes : CSSModuleClasses;
+  const Classes: CSSModuleClasses;
   export default Classes;
 }

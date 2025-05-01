@@ -11,7 +11,7 @@ type DirElement = {
   isFolder: boolean;
   extName: string;
   playSrc: string;
-  currentPath: string; //relative path
+  currentPath: string; // relative path
   poster: string;
   title: string;
   actress: string;
@@ -19,8 +19,8 @@ type DirElement = {
 };
 
 type DirectoryProp = {
-  parentFolder: string; //relative path
-  currentPath: string; //relative path
+  parentFolder: string; // relative path
+  currentPath: string; // relative path
   childElements: DirElement[];
 };
 

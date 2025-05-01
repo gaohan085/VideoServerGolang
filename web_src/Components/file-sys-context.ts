@@ -18,5 +18,4 @@ const Context = createContext<{
   mutateFunc?: ReturnType<typeof useSWRConfig>["mutate"];
 }>({});
 
-
 export default Context;

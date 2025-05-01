@@ -1,7 +1,7 @@
 import React, {
   useEffect,
   useState,
-  type PropsWithChildren
+  type PropsWithChildren,
 } from "react";
 import WsContext from "./websocket-ctx.ts";
 
