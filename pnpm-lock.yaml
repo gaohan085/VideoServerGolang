@@ -70,8 +70,8 @@ importers:
         specifier: ^1.3.14
         version: 1.3.14
       '@rsbuild/plugin-react':
-        specifier: ^1.1.1
-        version: 1.1.1(@rsbuild/core@1.3.14)
+        specifier: ^1.3.0
+        version: 1.3.0(@rsbuild/core@1.3.14)
       '@rsbuild/plugin-sass':
         specifier: ^1.3.1
         version: 1.3.1(@rsbuild/core@1.3.14)
@@ -601,8 +601,8 @@ packages:
     engines: {node: '>=16.10.0'}
     hasBin: true
 
-  '@rsbuild/plugin-react@1.1.1':
-    resolution: {integrity: sha512-gkATKrOQauXMMtrYA5jbTQkhmYTE0VXoknPLtVpiXtwDbBUwgX23LFf1XJ51YOwqYpP7g5SfPEMgD2FENtCq0A==}
+  '@rsbuild/plugin-react@1.3.0':
+    resolution: {integrity: sha512-3LxUoRTGDH9KB5ol5+4792DFJU5w3PKCcbF9QVRbL2Ma31WP/cEETTN7m5uZYyUZN/hOwrxU+ueRNNKD3XtaYQ==}
     peerDependencies:
       '@rsbuild/core': 1.x
 
@@ -672,8 +672,8 @@ packages:
     resolution: {integrity: sha512-VynGOEsVw2s8TAlLf/uESfrgfrq2+rcXB1muPJYBWbsm1Oa6r5qVQhjA5ggM6z/coYPrsVMgovl3Ff7Q7OCp1w==}
     engines: {node: '>=16.0.0'}
 
-  '@rspack/plugin-react-refresh@1.0.3':
-    resolution: {integrity: sha512-gGK197oIZaPFOTYZkWHZMWRdDlu03zIA3zcYuTKn5Ru6FyuQQu3KjprwDORTcYNHXZw188Exh3uhplM/d2ltIQ==}
+  '@rspack/plugin-react-refresh@1.4.1':
+    resolution: {integrity: sha512-bRALP4qEauvrB7RcMQ95rUHu1dw19V6c6uYukUTpA2OZDyMHTQ9cpEe28kaDwH/xsAuDNuYqnUZOW3NdLO/q3A==}
     peerDependencies:
       react-refresh: '>=0.10.0 <1.0.0'
       webpack-hot-middleware: 2.x
@@ -1991,8 +1991,8 @@ packages:
       redux:
         optional: true
 
-  react-refresh@0.16.0:
-    resolution: {integrity: sha512-FPvF2XxTSikpJxcr+bHut2H4gJ17+18Uy20D5/F+SKzFap62R3cM5wH6b8WN3LyGSYeQilLEcJcR1fjBSI2S1A==}
+  react-refresh@0.17.0:
+    resolution: {integrity: sha512-z6F7K9bV85EfseRCp2bzrpyQ0Gkw1uLoCel9XBVWPg/TjRj94SkJzUTGfOa4bs7iJvBWtQG0Wq7wnI0syw3EBQ==}
     engines: {node: '>=0.10.0'}
 
   react-router-dom@7.5.3:
@@ -2920,11 +2920,11 @@ snapshots:
       core-js: 3.41.0
       jiti: 2.4.2
 
-  '@rsbuild/plugin-react@1.1.1(@rsbuild/core@1.3.14)':
+  '@rsbuild/plugin-react@1.3.0(@rsbuild/core@1.3.14)':
     dependencies:
       '@rsbuild/core': 1.3.14
-      '@rspack/plugin-react-refresh': 1.0.3(react-refresh@0.16.0)
-      react-refresh: 0.16.0
+      '@rspack/plugin-react-refresh': 1.4.1(react-refresh@0.17.0)
+      react-refresh: 0.17.0
     transitivePeerDependencies:
       - webpack-hot-middleware
 
@@ -2987,11 +2987,11 @@ snapshots:
 
   '@rspack/lite-tapable@1.0.1': {}
 
-  '@rspack/plugin-react-refresh@1.0.3(react-refresh@0.16.0)':
+  '@rspack/plugin-react-refresh@1.4.1(react-refresh@0.17.0)':
     dependencies:
       error-stack-parser: 2.1.4
       html-entities: 2.6.0
-      react-refresh: 0.16.0
+      react-refresh: 0.17.0
 
   '@rtsao/scc@1.1.0': {}
 
@@ -4512,7 +4512,7 @@ snapshots:
       '@types/react': 19.1.0
       redux: 5.0.1
 
-  react-refresh@0.16.0: {}
+  react-refresh@0.17.0: {}
 
   react-router-dom@7.5.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
