@@ -10,13 +10,12 @@ import fetcher from "./lib/fetcher.ts";
 import * as redux from "./lib/reduxStore.ts";
 import { routeTree } from "./routeTree.gen.ts";
 
-
 const loadFeatures = () => import("./motionFeatures.ts").then(res => res.default);
 const router = createRouter({ routeTree });
 
 declare module "@tanstack/react-router" {
   interface Register {
-    router: typeof router
+    router: typeof router;
   }
 }
 
@@ -28,7 +27,7 @@ const renderApp = (app: HTMLElement): void => {
           refreshInterval: 120000,
           fetcher: fetcher,
           revalidateOnFocus: true,
-          suspense: true
+          suspense: true,
         }}
       >
         <Provider store={redux.store}>

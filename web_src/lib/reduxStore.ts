@@ -1,10 +1,9 @@
-
 import {
   configureStore,
   createSlice,
   type Action,
   type PayloadAction,
-  type ThunkAction
+  type ThunkAction,
 } from "@reduxjs/toolkit";
 import {
   useDispatch,

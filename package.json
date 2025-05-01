@@ -8,8 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix --report-unused-disable-directives && tsc -noEmit",
     "build": "rsbuild build",
-    "serve": "rsbuild dev --config rsbuild.config.ts",
-    "vite:preview": "rsbuild preview"
+    "serve": "rsbuild dev",
+    "rsbuild:preview": "rsbuild preview"
   },
   "keywords": [],
   "author": "",

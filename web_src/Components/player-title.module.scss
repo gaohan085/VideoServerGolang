@@ -1,20 +1,23 @@
-.player-title {
+@use "../_base" as base;
+@use "sass:color";
+
+.video-info {
   border-left: 3px solid #e85982;
   border-right: 3px solid #e85982;
   padding: 0.25rem 1rem;
   margin-top: 1rem;
   border-radius: 5px;
 
-  > h4 {
+  >h4 {
     margin-block-end: 0em;
     margin-block-start: 0em;
   }
 
-  > [class~="info"] {
+  >[class~="info"] {
     display: flex;
     justify-content: space-between;
 
-    > a {
+    >a {
       margin-block-start: 0.6em;
       margin-block-end: 0em;
       line-height: 22px;
@@ -22,7 +25,7 @@
       font-style: italic;
       display: block;
 
-      > span {
+      >span {
         display: inline-block;
         vertical-align: middle;
         font-size: 20px;
@@ -33,6 +36,29 @@
         color: #e85982;
         text-decoration: underline;
       }
+    }
+  }
+}
+
+.tags {
+  height: 20px;
+  margin: 5px 0 5px 0;
+
+  >a {
+    font-size: 13px;
+    margin: 0 4px 0 0;
+    padding: 2px 5px 2px 5px;
+    border-radius: 8px;
+    background-color: color.adjust(base.$backgrdColor, $lightness: 10%);
+
+    &:hover{
+      background-color: color.adjust(base.$backgrdColor, $lightness: 20%);
+    }
+
+    >span {
+      color: #6190c9;
+      font-size: 11px;
+      vertical-align: baseline;
     }
   }
 }

@@ -1,16 +1,16 @@
 //eslint.config.js
-import react from "eslint-plugin-react";
 import eslintjs from "@eslint/js";
-const { configs } = eslintjs;
-import importPlugin from "eslint-plugin-import";
 import tsParser from "@typescript-eslint/parser";
-import { configs as _configs } from "typescript-eslint";
+import importPlugin from "eslint-plugin-import";
+import react from "eslint-plugin-react";
 import globals from "globals";
+import { configs as tsconfigs } from "typescript-eslint";
+const { configs } = eslintjs;
 const { browser } = globals;
 
 import stylistic from "@stylistic/eslint-plugin";
-import { cwd } from "process";
 import reactRefresh from "eslint-plugin-react-refresh";
+import { cwd } from "process";
 
 
 export default [
@@ -18,7 +18,7 @@ export default [
   configs.recommended,
   importPlugin.flatConfigs.recommended,
   importPlugin.flatConfigs.typescript,
-  ..._configs.recommendedTypeChecked,
+  ...tsconfigs.recommendedTypeChecked,
   reactRefresh.configs.recommended,
   {
     languageOptions: {
@@ -37,9 +37,6 @@ export default [
       "/coverage/",
       "/coverage-ts/",
       "**/stress-test/**",
-      "webpack.config.js",
-      "vite.config.js",
-      "prettier.config.js",
       "eslint.config.js",
       "rsbuild.config.ts"
     ],

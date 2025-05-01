@@ -5,6 +5,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { FcPrevious } from "react-icons/fc";
 import { useSWRConfig } from "swr";
 import useWindowDimension from "../lib/useWindowDimension.ts";
+import CtxMenu from "./context-menu.tsx";
 import Context from "./file-sys-context.ts";
 import styles from "./file-system-sidebar.module.scss";
 import Spinner from "./spinner.tsx";
@@ -13,7 +14,6 @@ import type { DirElement } from "./types.d.ts";
 
 const LazyErrElement = lazy(() => import("./error-element.tsx"));
 const LazyContainer = lazy(() => import("./container-element.tsx"));
-const LazyCtxMenu = lazy(() => import("./context-menu.tsx"));
 
 const FileSysSideBar: React.FC<Readonly<{
   handleClick: React.MouseEventHandler;
@@ -29,7 +29,7 @@ const FileSysSideBar: React.FC<Readonly<{
     isActive,
     toggleActive,
     width,
-    clicked
+    clicked,
   } = props;
 
   return (
@@ -53,7 +53,7 @@ const FileSysSideBar: React.FC<Readonly<{
           </>
         )}
       </div>
-      {!clicked && <LazyCtxMenu />}
+      {!clicked && <CtxMenu />}
     </>
   );
 };
@@ -82,7 +82,7 @@ const InteractiveFileSysSideBar: React.FC = () => {
 
   const { width } = useWindowDimension();
 
-  //监听窗口宽度
+  // 监听窗口宽度
   useEffect(() => {
     if (width >= 992) setIsActive(true);
   }, [width, isActive, setIsActive]);
@@ -109,12 +109,15 @@ const InteractiveFileSysSideBar: React.FC = () => {
     >
       <ErrorBoundary fallback={<LazyErrElement />}>
         <Suspense fallback={
-          (<div className={!isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`}>
-            <div className="file-system">
-              <Spinner fontSize={24} />
+          (
+            <div className={!isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`}>
+              <div className="file-system">
+                <Spinner fontSize={24} />
+              </div>
             </div>
-          </div>)
-        }>
+          )
+        }
+        >
           <FileSysSideBar
             handleClick={handleClick}
             handleCtxMenu={handleCtxMenu}

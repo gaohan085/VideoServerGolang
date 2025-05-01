@@ -10,8 +10,8 @@ import styles from "./video-boxes-sidebar.module.scss";
 const VideoWithPoster: React.FC<VideoInfo> = (props) => {
   const dispatch = redux.useAppDispatch();
   const videoPlaying = redux.useAppSelector(redux.selectVideoPlaying);
-  const { title, posterName, serialNumber, playSrc, actress, sourceUrl } =
-    props;
+  const { title, posterName, serialNumber, playSrc, actress, sourceUrl }
+    = props;
   const [isPlaying, setIsplaying] = useState<boolean>(false);
 
   const handleClick = () => {
@@ -47,7 +47,7 @@ const VideoWithPoster: React.FC<VideoInfo> = (props) => {
       <div className="img-box-title">
         <a>{serialNumber.toUpperCase()}</a>
         <br />
-        <i >{title}</i>
+        <i>{title}</i>
       </div>
     </div>
   );
@@ -59,7 +59,7 @@ const VideoBoxes: React.FC = () => {
   const { width } = useWindowDimension();
   const { data: videoes }: ResWithActressName = useLoaderData({ from: "/actress/$name" });
 
-  //监听窗口宽度
+  // 监听窗口宽度
   useEffect(() => {
     if (width >= 992) setIsActive(true);
   }, [width, isActive, setIsActive]);

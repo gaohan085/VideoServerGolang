@@ -7,9 +7,7 @@ import styles from "./player.module.scss";
 
 const LazyTitle = lazy(() => import("./player-title.tsx"));
 
-
 const isProduction = process.env.NODE_ENV === "production";
-
 
 const mountPlyr = (node: HTMLElement): Plyr => {
   const plyr = new Plyr(node, {
@@ -41,7 +39,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     const instance = e.detail.plyr;
     const playSrc = instance.source as unknown as string;
     const historyTime = localStorage.getItem(playSrc);
-    await new Promise((r) => setTimeout(r, 2500));
+    await new Promise(r => setTimeout(r, 2500));
     instance.currentTime = Number(historyTime);
     await instance.play();
   });

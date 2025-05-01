@@ -5,14 +5,14 @@ import { ErrorBoundary } from "react-error-boundary";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
 import Context from "./file-sys-context.ts";
 import styles from "./folder-element.module.scss";
+import RenameElement from "./rename-element.tsx";
 import Spinner from "./spinner.tsx";
 import type { DirElement } from "./types.d.ts";
 
 const LazyErrElement = lazy(() => import("./error-element.tsx"));
-const LazyRenameElement = lazy(() => import("./rename-element.tsx"));
 const LazyContainer = lazy(() => import("./container-element.tsx"));
 
-const LoadingFileElement: React.FC<{ elem: DirElement }> = props => {
+const LoadingFileElement: React.FC<{ elem: DirElement }> = (props) => {
   const { elem } = props;
 
   return (
@@ -26,8 +26,8 @@ const LoadingFileElement: React.FC<{ elem: DirElement }> = props => {
 type FolderElementProps = Readonly<{
   elem: DirElement;
   isOpen: boolean;
-  handleClick: React.MouseEventHandler
-  handleCtxMenu: React.MouseEventHandler
+  handleClick: React.MouseEventHandler;
+  handleCtxMenu: React.MouseEventHandler;
   isRename: boolean;
 }>;
 
@@ -52,7 +52,7 @@ const FolderElement: React.FC<FolderElementProps> = (props) => {
           >
             <span>{isOpen ? <FcOpenedFolder /> : <FcFolder />}</span>
             {!isRename && elem.name}
-            {!!isRename && <LazyRenameElement {...elem} />}
+            {!!isRename && <RenameElement {...elem} />}
           </a>
           <LazyContainer elem={elem} isOpen={isOpen} />
         </Suspense>
@@ -66,7 +66,6 @@ const InteractiveFolderElement: React.FC<{
 }> = ({ elem }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-
   const {
     openFolder,
     setOpenFolder,
@@ -78,7 +77,7 @@ const InteractiveFolderElement: React.FC<{
     setRenameElement,
   } = useContext(Context);
 
-  //TO listen context open folder and change this component isOpen status
+  // TO listen context open folder and change this component isOpen status
   useEffect(() => {
     if (openFolder === elem.currentPath + elem.name && !isOpen) setIsOpen(true);
     else if (openFolder?.includes(elem.name) && isOpen) setIsOpen(true);
@@ -98,7 +97,7 @@ const InteractiveFolderElement: React.FC<{
         setIsOpen(false);
         setOpenFolder!(elem.currentPath);
       }
-      //取消其他正在重命名的元素
+      // 取消其他正在重命名的元素
       setRenameElement!(undefined);
     }
   };
@@ -115,7 +114,7 @@ const InteractiveFolderElement: React.FC<{
       clicked && setClicked!(false);
       setRightClickElem!(elem);
 
-      //取消其他正在重命名的元素
+      // 取消其他正在重命名的元素
       setRenameElement!(undefined);
     }
   };
