@@ -46,7 +46,7 @@ const RenameComponent: React.FC<{
 
 const InteractiveRenameComponent: React.FC<DirElement> = (props) => {
   const { currentPath, name } = props;
-  const { setRenameElement, mutateFunc } = useContext(Context);
+  const { setRenameElement, mutate } = useContext(Context);
   const handleSubmit: React.FormEventHandler<RenameForm> = (e) => {
     e.preventDefault();
     const newName = e.currentTarget.elements.name.value;
@@ -55,7 +55,7 @@ const InteractiveRenameComponent: React.FC<DirElement> = (props) => {
     && void axios
       .post("/api/rename", { ...props, newName })
       .then(() => {
-        void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`);
+        void mutate!(`/api/${currentPath}`);
       })
       .catch(() => {
         return;

@@ -15,7 +15,7 @@ const Context = createContext<{
   setRightClickElem?: UseStateReturnType<DirElement>[1];
   renameElement?: UseStateReturnType<DirElement>[0];
   setRenameElement?: UseStateReturnType<DirElement>[1];
-  mutateFunc?: ReturnType<typeof useSWRConfig>["mutate"];
+  mutate?: ReturnType<typeof useSWRConfig>["mutate"];
 }>({});
 
 export default Context;

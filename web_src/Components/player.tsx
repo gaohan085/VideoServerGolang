@@ -7,13 +7,13 @@ import styles from "./player.module.scss";
 
 const LazyTitle = lazy(() => import("./player-title.tsx"));
 
-const isProduction = process.env.NODE_ENV === "production";
+const isDev = process.env.NODE_ENV !== "production";
 
 const mountPlyr = (node: HTMLElement): Plyr => {
   const plyr = new Plyr(node, {
     autoplay: false,
     autopause: true,
-    debug: !isProduction,
+    debug: isDev,
     controls: [
       "play-large",
       "play",
@@ -84,13 +84,14 @@ const Player: React.FC = () => {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    const currentNode = ref.current;
     let plyr: Plyr | undefined = undefined;
     if (ref.current && !plyr) {
       plyr = mountPlyr(ref.current);
     }
 
     return () => {
-      if (!ref.current && plyr) {
+      if (!currentNode && plyr) {
         plyr.stop();
       }
     };

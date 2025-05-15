@@ -17,4 +17,10 @@ export const Route = createRootRoute({
       <TanStackRouterDevtools />
     </>
   ),
+
+  errorComponent: (e) => (
+    <>
+      {e.error.message}
+    </>
+  )
 });

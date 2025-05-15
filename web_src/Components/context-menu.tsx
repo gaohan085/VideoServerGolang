@@ -145,19 +145,19 @@ const CtxMenu: React.FC<Readonly<{
           </li>
         )}
 
-        {!!elem.isFolder
-          && !openFolder.includes(elem.currentPath + elem.name) && (
-          <li onClick={handleOpenFolder}>
-            <OpenFolder />
-          </li>
-        )}
+        {!!elem.isFolder &&
+          !openFolder.includes(elem.currentPath + elem.name) && (
+            <li onClick={handleOpenFolder}>
+              <OpenFolder />
+            </li>
+          )}
 
-        {!!elem.isFolder
-          && openFolder.includes(elem.currentPath + elem.name) && (
-          <li onClick={handleCloseFolder}>
-            <CloseFolder />
-          </li>
-        )}
+        {!!elem.isFolder &&
+          openFolder.includes(elem.currentPath + elem.name) && (
+            <li onClick={handleCloseFolder}>
+              <CloseFolder />
+            </li>
+          )}
 
         {/* Second list */}
         {!!elem.isFile && isVideo(elem.extName) && (
@@ -188,7 +188,7 @@ const InteractiveCtxMenu: React.FC = () => {
     setOpenFolder,
     setClicked,
     openFolder,
-    mutateFunc,
+    mutate,
     setRenameElement,
   } = useContext(Context);
 
@@ -222,7 +222,7 @@ const InteractiveCtxMenu: React.FC = () => {
   const handleConfirmDel: React.MouseEventHandler = () => {
     void axios.post("/api/delete", rightClickElem).then(() => {
       const { currentPath } = rightClickElem!;
-      void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`);
+      void mutate!(`/api/${currentPath}`);
       setClicked!(true);
     });
   };
@@ -231,7 +231,7 @@ const InteractiveCtxMenu: React.FC = () => {
     void axios.post("/api/convert", rightClickElem).then(() => {
       setClicked!(true);
       const { currentPath } = rightClickElem!;
-      void mutateFunc!(currentPath === "" ? "/api" : `/api/${currentPath}`);
+      void mutate!(`/api/${currentPath}`);
     });
   };
 
