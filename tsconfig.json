@@ -26,6 +26,6 @@
   ],
   "include": [
     "./web_src/",
-    "rsbuild.config.ts"
+    "rsbuild.*.config.ts"
   ],
 }

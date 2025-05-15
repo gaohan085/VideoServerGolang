@@ -104,7 +104,7 @@ const InteractiveFileSysSideBar: React.FC = () => {
         setOpenFolder,
         renameElement,
         setRenameElement,
-        mutateFunc: mutate,
+        mutate: mutate,
       }}
     >
       <ErrorBoundary fallback={<LazyErrElement />}>

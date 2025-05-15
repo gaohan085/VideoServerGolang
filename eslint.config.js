@@ -11,7 +11,7 @@ const { browser } = globals;
 import stylistic from "@stylistic/eslint-plugin";
 import reactRefresh from "eslint-plugin-react-refresh";
 import { cwd } from "process";
-
+import reactHooks from 'eslint-plugin-react-hooks';
 
 export default [
   eslintjs.configs.recommended,
@@ -20,6 +20,7 @@ export default [
   importPlugin.flatConfigs.typescript,
   ...tsconfigs.recommendedTypeChecked,
   reactRefresh.configs.recommended,
+  reactHooks.configs['recommended-latest'],
   {
     languageOptions: {
       parserOptions: {

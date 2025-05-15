@@ -4,6 +4,8 @@ import { pluginSass } from "@rsbuild/plugin-sass";
 import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack";
 
 const isProduction = process.env.NODE_ENV === "production";
+const isTestDEL = process.env.NODE_ENV === "TestDEL";
+const isDEV = process.env.NODE_ENV === "development";
 
 const config = defineConfig({
   root: "./",
@@ -13,18 +15,6 @@ const config = defineConfig({
     port: 5173,
     open: false,
     strictPort: true,
-    proxy: {
-      "/api": {
-        target: "http://192.168.1.199"
-      },
-      "/api/ws": {
-        target: "http://192.168.1.199",
-        ws: true
-      },
-      "/assets": {
-        target: "http://192.168.1.199"
-      }
-    },
   },
 
   html: {
@@ -60,29 +50,14 @@ const config = defineConfig({
         generatedRouteTree: "./web_src/routeTree.gen.ts"
       })]
     }
+  },
+
+  output: {
+    injectStyles: !isProduction,
+    cssModules: {
+      localIdentName: "[path][name]__[local]-[hash:base64:6]"
+    }
   }
 });
-
-if (isProduction) {
-  config.output = {
-    cleanDistPath: true,
-    distPath: {
-      root: "./dist",
-      html: "./",
-      js: "js",
-      css: "css",
-      font: "assets",
-      svg: "assets",
-      image: "assets",
-    },
-    filename: {
-      js: "[name].js?v=[contenthash:8]"
-    },
-    sourceMap: {
-      js: "source-map",
-      css: true,
-    }
-  };
-}
 
 export default config;
