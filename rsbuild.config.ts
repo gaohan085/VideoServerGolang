@@ -4,8 +4,6 @@ import { pluginSass } from "@rsbuild/plugin-sass";
 import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack";
 
 const isProduction = process.env.NODE_ENV === "production";
-const isTestDEL = process.env.NODE_ENV === "TestDEL";
-const isDEV = process.env.NODE_ENV === "development";
 
 const config = defineConfig({
   root: "./",
@@ -33,13 +31,6 @@ const config = defineConfig({
       }
     }
   ), pluginSass()],
-
-  performance: {
-    removeConsole: true,
-    chunkSplit: {
-      strategy: "split-by-module",
-    }
-  },
 
   tools: {
     rspack: {

@@ -23,4 +23,11 @@ config.output = {
   }
 };
 
+config.performance = {
+  removeConsole: true,
+  chunkSplit: {
+    strategy: "split-by-module",
+  }
+};
+
 export default config;
