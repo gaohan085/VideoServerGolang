@@ -96,10 +96,14 @@ func main() {
 
 	switch usage {
 	case "ffmpeg":
-		app.Use(logger.New(loggerConfigPro))
+		app.Use(logger.New(loggerConfigDev))
+
+	case "dev":
+		app.Use(logger.New(loggerConfigDev))
+		SetRoutes(app)
 
 	default:
-		app.Use(logger.New(loggerConfigDev))
+		app.Use(logger.New(loggerConfigPro))
 		SetRoutes(app)
 	}
 
