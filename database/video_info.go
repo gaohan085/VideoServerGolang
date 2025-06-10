@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -10,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/jackc/pgx/v5"
 	"gorm.io/gorm"
 
 	fiberlog "github.com/gofiber/fiber/v2/log"
@@ -38,29 +40,91 @@ type VideoInf struct {
 }
 
 func (v *VideoInf) Create() error {
-	return Db.Create(&v).Error
+	query := `
+		INSERT INTO video_infos (
+			serial_num,
+			title,
+			source_url,
+			poster_name,
+			source_poster_url,
+			actress,
+			play_src
+		)
+		VALUES
+		($1, $2, $3, $4, $5, $6, $7);
+	`
+	_, err := PgxConn.Exec(context.Background(), query,
+		v.SerialNumber, v.Title, v.SourceUrl, v.PosterName, v.SourcePosterUrl, v.Actress, v.PlaySrc,
+	)
+	return err
+}
+
+func (v *VideoInf) Query() error {
+	query := `
+		SELECT 
+			serial_num,
+			title,
+			source_url,
+			poster_name,
+			source_poster_url,
+			actress,
+			play_src
+		FROM 
+			video_infos 
+		WHERE 
+			serial_num = $1;
+	`
+	err := PgxConn.QueryRow(context.Background(), query, v.SerialNumber).Scan(
+		&v.SerialNumber,
+		&v.Title,
+		&v.SourceUrl,
+		&v.PosterName,
+		&v.SourcePosterUrl,
+		&v.Actress,
+		&v.PlaySrc,
+	)
+	if err == pgx.ErrNoRows {
+		return ErrVideoNotFound
+	}
+
+	return err
 }
 
 func (v *VideoInf) Update() error {
-	return Db.Save(&v).Error
+	query := `
+		UPDATE video_infos
+		SET 
+			title = $1,
+			source_url = $2,
+			poster_name = $3,
+			source_poster_url = $4,
+			actress = $5,
+			play_src = $6		
+		WHERE
+			serial_num = $7;
+	`
+	_, err := PgxConn.Exec(context.Background(), query, v.Title, v.SourceUrl, v.PosterName, v.SourcePosterUrl, v.Actress, v.PlaySrc, v.SerialNumber)
+	return err
 }
 
 func (v *VideoInf) Delete() error {
-	return Db.Delete(&v).Error
+	query := `
+		DELETE FROM TABLE 
+			video_infos
+		WHERE
+			serial_num = $1;	
+	`
+	_, err := PgxConn.Exec(context.Background(), query, v.SerialNumber)
+	return err
 }
 
-func (v *VideoInf) QueryByVideoName(n string) error {
-	if err := Db.Model(&VideoInf{}).Where(&VideoInf{SerialNumber: n}).First(&v).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return ErrVideoNotFound
-		}
-		return err
-	}
-	return nil
+func (v *VideoInf) QueryByVideoSerialNum(n string) error {
+	v.SerialNumber = n
+	return v.Query()
 }
 
 func (v *VideoInf) GetDetailInfo() error {
-	proxyUrl, err := url.Parse("http://192.168.1.198:10809")
+	proxyUrl, err := url.Parse("http://192.168.1.199:10809")
 	if err != nil {
 		return err
 	}
@@ -131,10 +195,11 @@ func (v *VideoInf) DownloadPoster() error {
 	if err != nil {
 		return err
 	}
+	defer file.Close()
 
 	//下载封面文件
 	fiberlog.Info("Downloading Video " + v.SerialNumber + " Poster.")
-	proxyUrl, err := url.Parse("http://192.168.1.198:10809")
+	proxyUrl, err := url.Parse("http://192.168.1.199:10809")
 	if err != nil {
 		return err
 	}
@@ -149,7 +214,6 @@ func (v *VideoInf) DownloadPoster() error {
 
 	//将res.body 写入文件
 	io.Copy(file, res.Body)
-	defer file.Close()
 
 	return v.Update()
 }

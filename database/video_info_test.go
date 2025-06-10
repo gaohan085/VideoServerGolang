@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -9,7 +10,13 @@ import (
 )
 
 func TestVideoInfo(t *testing.T) {
-	InitTest(t)
+	// InitTest(t)
+	PgxConnDatabase()
+	t.Run("创建表", func(t *testing.T) {
+		err := CreateVideoInfoTable()
+
+		assert.Nil(t, err)
+	})
 	t.Run("测试创建文件信息", func(t *testing.T) {
 
 		video := &VideoInf{
@@ -18,16 +25,23 @@ func TestVideoInfo(t *testing.T) {
 			SourceUrl:       faker.Username(),
 			SourcePosterUrl: faker.Username(),
 			Title:           faker.Username(),
+			Actress:         faker.Username(),
+			PlaySrc:         faker.Username(),
 		}
 		var videoResu VideoInf
 
 		err := video.Create()
-		Db.Model(&VideoInf{}).Where(&VideoInf{SerialNumber: video.SerialNumber}).Find(&videoResu)
+		// Db.Model(&VideoInf{}).Where(&VideoInf{SerialNumber: video.SerialNumber}).Find(&videoResu)
+		videoResu.SerialNumber = video.SerialNumber
+		errQ := videoResu.Query()
 
 		assert.Nil(t, err)
+		assert.Nil(t, errQ)
 		assert.Equal(t, video.SerialNumber, videoResu.SerialNumber)
-
 		assert.Equal(t, video.PosterName, videoResu.PosterName)
+		assert.Equal(t, video.SourceUrl, videoResu.SourceUrl)
+		assert.Equal(t, video.Title, videoResu.Title)
+		assert.Equal(t, video.Actress, videoResu.Actress)
 	})
 
 	t.Run("测试通过文件名读取文件信息", func(t *testing.T) {
@@ -41,7 +55,7 @@ func TestVideoInfo(t *testing.T) {
 		err := video.Create()
 		assert.Nil(t, err)
 
-		errQ := videoResu.QueryByVideoName(video.SerialNumber)
+		errQ := videoResu.QueryByVideoSerialNum(video.SerialNumber)
 		assert.Nil(t, errQ)
 
 		assert.Equal(t, video, videoResu)
@@ -51,7 +65,7 @@ func TestVideoInfo(t *testing.T) {
 		var video = new(VideoInf)
 		var videoName = faker.Name()
 
-		err := video.QueryByVideoName(videoName)
+		err := video.QueryByVideoSerialNum(videoName)
 		assert.NotNil(t, err)
 		assert.Equal(t, ErrVideoNotFound, err)
 		assert.Equal(t, uint(0), video.ID)
@@ -95,8 +109,10 @@ func TestVideoInfo(t *testing.T) {
 				SerialNumber: unit.SerialNum,
 			}
 
-			err := video.GetDetailInfo()
+			errCreate := video.Create()
+			assert.Nil(t, errCreate)
 
+			err := video.GetDetailInfo()
 			assert.Nil(t, err)
 			assert.Equal(t, unit.SourceUrl, video.SourceUrl)
 			assert.Equal(t, unit.SourcePosterUrl, video.SourcePosterUrl)
@@ -109,7 +125,10 @@ func TestVideoInfo(t *testing.T) {
 				SerialNumber: "adn-187",
 			}
 
-			video.QueryByVideoName(video.SerialNumber)
+			errG := video.GetDetailInfo()
+			assert.Nil(t, errG)
+
+			video.QueryByVideoSerialNum(video.SerialNumber)
 			errD := video.DownloadPoster()
 
 			assert.Nil(t, errD)
@@ -153,5 +172,6 @@ func TestVideoInfo(t *testing.T) {
 
 	})
 
-	DropTables()
+	DROPTABLE()
+	defer PgxConn.Close(context.Background())
 }
