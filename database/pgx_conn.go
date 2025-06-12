@@ -2,6 +2,8 @@ package database
 
 import (
 	"context"
+	"log"
+	"os"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -9,14 +11,14 @@ import (
 var PgxConn *pgx.Conn
 
 func PgxConnDatabase() error {
-	url := "postgres://gaohan:gh961004@192.168.1.199:5432/video_server_pgx_test"
+	url := os.Getenv("PGX_CONN")
 	conn, err := pgx.Connect(context.Background(), url)
 	if err != nil {
-		return err
+		log.Panic(err.Error())
 	}
 
 	PgxConn = conn
-
+	CreateVideoInfoTable()
 	return nil
 }
 

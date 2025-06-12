@@ -12,7 +12,6 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/jackc/pgx/v5"
-	"gorm.io/gorm"
 
 	fiberlog "github.com/gofiber/fiber/v2/log"
 )
@@ -26,17 +25,14 @@ var (
 )
 
 type VideoInf struct {
-	ID              uint           `gorm:"primaryKey" faker:"-" json:"id"`
-	CreatedAt       int            `faker:"-" json:"createdAt"`
-	UpdatedAt       int            `faker:"-" json:"updatedAt"`
-	DeletedAt       gorm.DeletedAt `gorm:"index" faker:"-" json:"deletedAt"`
-	Title           string         `json:"title"`
-	SerialNumber    string         `json:"serialNumber" gorm:"unique"` //视频文件名
-	SourceUrl       string         `json:"sourceUrl"`                  //来源网站信息
-	PosterName      string         `json:"posterName"`                 //封面图片本地链接
-	SourcePosterUrl string         `json:"sourcePosterUrl"`
-	Actress         string         `json:"actress"`
-	PlaySrc         string         `json:"playSrc"`
+	ID              uint   `faker:"-" json:"id"`
+	Title           string `json:"title"`
+	SerialNumber    string `json:"serialNumber"`    //视频文件名
+	SourceUrl       string `json:"sourceUrl"`       //Info来源地址
+	PosterName      string `json:"posterName"`      //封面图片本地链接
+	SourcePosterUrl string `json:"sourcePosterUrl"` //封面图片来源地址
+	Actress         string `json:"actress"`
+	PlaySrc         string `json:"playSrc"` //本地播放连接
 }
 
 func (v *VideoInf) Create() error {
@@ -222,4 +218,129 @@ func (v *VideoInf) GetActress() error {
 	fiberlog.Info("Getting Actress for " + v.SerialNumber)
 	v.Actress = strings.Split(v.PlaySrc, "/")[4]
 	return v.Update()
+}
+
+func GetVideosToGetInfo() ([]VideoInf, error) { //DONE test
+	videos := []VideoInf{}
+
+	query := `
+		SELECT 
+			serial_num,
+			title,
+			source_url,
+			poster_name,
+			source_poster_url,
+			actress,
+			play_src
+		FROM 
+			video_infos
+		WHERE
+			source_url = ''
+		OR
+			source_url IS NULL;
+	`
+
+	rows, err := PgxConn.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		video := VideoInf{}
+		rows.Scan(
+			&video.SerialNumber,
+			&video.Title,
+			&video.SourceUrl,
+			&video.PosterName,
+			&video.SourcePosterUrl,
+			&video.Actress,
+			&video.PlaySrc,
+		)
+
+		videos = append(videos, video)
+	}
+
+	return videos, nil
+}
+
+func GetVideosToDownloadPoster() ([]VideoInf, error) { //DONE test
+	videos := []VideoInf{}
+
+	query := `
+		SELECT 
+			serial_num,
+			title,
+			source_url,
+			poster_name,
+			source_poster_url,
+			actress,
+			play_src
+		FROM 
+			video_infos
+		WHERE
+			source_poster_url IS NOT NULL
+		AND
+			(poster_name = '' OR poster_name IS NULL);
+	`
+
+	rows, err := PgxConn.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		video := VideoInf{}
+		rows.Scan(
+			&video.SerialNumber,
+			&video.Title,
+			&video.SourceUrl,
+			&video.PosterName,
+			&video.SourcePosterUrl,
+			&video.Actress,
+			&video.PlaySrc,
+		)
+
+		videos = append(videos, video)
+	}
+
+	return videos, nil
+}
+
+func GetAllVideosRecord() ([]VideoInf, error) { //DONE test
+	videos := []VideoInf{}
+
+	query := `
+		SELECT
+			serial_num,
+			title,
+			source_url,
+			poster_name,
+			source_poster_url,
+			actress,
+			play_src
+		FROM 
+			video_infos;
+	`
+
+	rows, err := PgxConn.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		video := VideoInf{}
+		rows.Scan(
+			&video.SerialNumber,
+			&video.Title,
+			&video.SourceUrl,
+			&video.PosterName,
+			&video.SourcePosterUrl,
+			&video.Actress,
+			&video.PlaySrc,
+		)
+
+		videos = append(videos, video)
+	}
+
+	return videos, nil
 }
