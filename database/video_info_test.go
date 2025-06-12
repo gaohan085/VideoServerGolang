@@ -11,6 +11,7 @@ import (
 
 func TestVideoInfo(t *testing.T) {
 	// InitTest(t)
+	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.199:5432/video_server_pgx_test")
 	PgxConnDatabase()
 	t.Run("创建表", func(t *testing.T) {
 		err := CreateVideoInfoTable()
@@ -170,6 +171,73 @@ func TestVideoInfo(t *testing.T) {
 			assert.Equal(t, unit.Actress, video.Actress)
 		}
 
+	})
+
+	DROPTABLE()
+	defer PgxConn.Close(context.Background())
+}
+
+func TestGetVideos(t *testing.T) {
+	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.199:5432/video_server_pgx_test")
+	PgxConnDatabase()
+
+	videos := []VideoInf{
+		{
+			Title:           faker.Username(),
+			SerialNumber:    faker.Username(),
+			SourceUrl:       faker.Username(),
+			PosterName:      faker.Username(),
+			SourcePosterUrl: faker.Username(),
+			Actress:         faker.Username(),
+			PlaySrc:         faker.Username(),
+		},
+		{
+			Title:           faker.Username(),
+			SerialNumber:    faker.Username(),
+			SourceUrl:       faker.Username(),
+			SourcePosterUrl: faker.Username(),
+			Actress:         faker.Username(),
+			PlaySrc:         faker.Username(),
+		},
+		{
+			Title:           faker.Username(),
+			SerialNumber:    faker.Username(),
+			PosterName:      faker.Username(),
+			SourcePosterUrl: faker.Username(),
+			Actress:         faker.Username(),
+			PlaySrc:         faker.Username(),
+		},
+	}
+
+	t.Run("创建多条视频信息记录并保存到数据库", func(t *testing.T) {
+		for _, video := range videos {
+			err := video.Create()
+
+			assert.Nil(t, err)
+		}
+	})
+
+	t.Run("查询需要获取视频信息的记录", func(t *testing.T) {
+		videosQ, err := GetVideosToGetInfo()
+
+		assert.Nil(t, err)
+		assert.Len(t, videosQ, 1)
+		assert.Equal(t, videos[2], videosQ[0])
+	})
+
+	t.Run("查询需要下载封面的视频记录", func(t *testing.T) {
+		videosQ, err := GetVideosToDownloadPoster()
+
+		assert.Nil(t, err)
+		assert.Len(t, videosQ, 1)
+		assert.Equal(t, videos[1], videosQ[0])
+	})
+
+	t.Run("查询所有视频记录", func(t *testing.T) {
+		videosQ, err := GetAllVideosRecord()
+
+		assert.Nil(t, err)
+		assert.Len(t, videosQ, 3)
 	})
 
 	DROPTABLE()
