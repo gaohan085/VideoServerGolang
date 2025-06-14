@@ -115,7 +115,7 @@ func CreateVideoDetailedInfoTable() error {
 
 func DROPVideoDetailsTable() error {
 	_, err := PgxPool.Exec(Ctx,
-		`DROP TABLE IF EXISTS video_details, tags, actors CASCADE`,
+		`DROP TABLE IF EXISTS video_details, tags, actors, video_tags, video_actors CASCADE`,
 	)
 	return err
 }
@@ -174,6 +174,76 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 		if err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (v *VideoDetailedInfo) Query() error {
+
+	query := `
+		SELECT 
+			id,
+			serial_number,
+			title,
+			release_date,
+			duration,
+			director,
+			publisher,
+			series,
+			rank
+		FROM video_details
+		WHERE serial_number = $1;
+	`
+	if err := PgxPool.QueryRow(Ctx, query, v.SerialNumber).Scan(
+		&v.ID,
+		&v.SerialNumber,
+		&v.Title,
+		&v.ReleaseDate,
+		&v.Duration,
+		&v.Director,
+		&v.Publisher,
+		&v.Series,
+		&v.Rank,
+	); err != nil {
+		return err
+	}
+
+	queryTags := `
+		SELECT t.name
+		FROM tags t
+		JOIN video_tags vt ON t.id = vt.tag_id
+		WHERE vt.video_id = $1;
+	`
+	tagRows, err := PgxPool.Query(Ctx, queryTags, v.ID)
+	if err != nil {
+		return err
+	}
+
+	for tagRows.Next() {
+		tag := Tag{}
+		if err := tagRows.Scan(&tag.TagName); err != nil {
+			return err
+		}
+		v.Tags = append(v.Tags, tag)
+	}
+
+	queryActors := `
+		SELECT a.name, a.sex
+		FROM actors a
+		JOIN video_actors va ON a.id = va.actor_id
+		WHERE va.video_id = $1;
+	`
+	actorRows, err := PgxPool.Query(Ctx, queryActors, v.ID)
+	if err != nil {
+		return err
+	}
+	for actorRows.Next() {
+		actor := Actor{}
+		if err := actorRows.Scan(&actor.ActorName, &actor.Sex); err != nil {
+			return err
+		}
+		v.Actors = append(v.Actors, actor)
 	}
 
 	return nil

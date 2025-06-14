@@ -38,7 +38,6 @@ func TestCreateReturnID(t *testing.T) {
 	})
 
 	releaseDate, _ := time.Parse("2006-01-02", "2025-04-10")
-
 	info := VideoDetailedInfo{
 		SerialNumber: "START-284",
 		Title:        "デートをドタキャンし弟の看病をする事になった姉は超不機嫌になりながらアナル丸見えのデカ尻騎乗位プレスでヌキまくった MINAMO ",
@@ -55,6 +54,15 @@ func TestCreateReturnID(t *testing.T) {
 	t.Run("保存视频详细信息", func(t *testing.T) {
 
 		assert.Nil(t, info.Create())
+	})
+
+	t.Run("查询视频详细信息", func(t *testing.T) {
+		video := &VideoDetailedInfo{}
+		video.SerialNumber = info.SerialNumber
+
+		assert.Nil(t, video.Query())
+
+		assert.Equal(t, &info, video)
 	})
 
 	t.Run("删除表", func(t *testing.T) {
