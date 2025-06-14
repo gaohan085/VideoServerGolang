@@ -1,7 +1,6 @@
 package database
 
 import (
-	"context"
 	"os"
 	"testing"
 
@@ -172,15 +171,21 @@ func TestVideoInfo(t *testing.T) {
 		}
 
 	})
+	t.Run("删除表", func(t *testing.T) {
+		assert.Nil(t, DROPVideoInfoTable())
+	})
 
-	DROPTABLE()
-	defer PgxConn.Close(context.Background())
 }
 
-func TestGetVideos(t *testing.T) {
+func TestGetVideo(t *testing.T) {
+
 	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.199:5432/video_server_pgx_test")
 	PgxConnDatabase()
+	t.Run("创建表", func(t *testing.T) {
+		err := CreateVideoInfoTable()
 
+		assert.Nil(t, err)
+	})
 	videos := []VideoInf{
 		{
 			Title:           faker.Username(),
@@ -239,7 +244,7 @@ func TestGetVideos(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Len(t, videosQ, 3)
 	})
-
-	DROPTABLE()
-	defer PgxConn.Close(context.Background())
+	t.Run("删除表", func(t *testing.T) {
+		assert.Nil(t, DROPVideoInfoTable())
+	})
 }

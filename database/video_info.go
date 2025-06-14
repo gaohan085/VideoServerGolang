@@ -1,7 +1,6 @@
 package database
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -35,6 +34,33 @@ type VideoInf struct {
 	PlaySrc         string `json:"playSrc"` //本地播放连接
 }
 
+func CreateVideoInfoTable() error { //DONE test
+	query := `
+	CREATE TABLE IF NOT EXISTS video_infos (
+		id SERIAL PRIMARY KEY,
+		serial_num TEXT NOT NULL UNIQUE,
+		title TEXT,
+		source_url TEXT,
+		poster_name TEXT,
+		source_poster_url TEXT,
+		actress TEXT,
+		play_src TEXT
+	);
+	`
+	_, err := PgxPool.Exec(Ctx, query)
+	return err
+}
+
+// ⚠ ⚠ ⚠ 只能在测试环境中使用
+func DROPVideoInfoTable() error {
+	query := `
+		DROP TABLE IF EXISTS
+			video_infos;
+	`
+	_, err := PgxPool.Exec(Ctx, query)
+	return err
+}
+
 func (v *VideoInf) Create() error {
 	query := `
 		INSERT INTO video_infos (
@@ -49,7 +75,7 @@ func (v *VideoInf) Create() error {
 		VALUES
 		($1, $2, $3, $4, $5, $6, $7);
 	`
-	_, err := PgxConn.Exec(context.Background(), query,
+	_, err := PgxPool.Exec(Ctx, query,
 		v.SerialNumber, v.Title, v.SourceUrl, v.PosterName, v.SourcePosterUrl, v.Actress, v.PlaySrc,
 	)
 	return err
@@ -70,7 +96,7 @@ func (v *VideoInf) Query() error {
 		WHERE 
 			serial_num = $1;
 	`
-	err := PgxConn.QueryRow(context.Background(), query, v.SerialNumber).Scan(
+	err := PgxPool.QueryRow(Ctx, query, v.SerialNumber).Scan(
 		&v.SerialNumber,
 		&v.Title,
 		&v.SourceUrl,
@@ -99,7 +125,7 @@ func (v *VideoInf) Update() error {
 		WHERE
 			serial_num = $7;
 	`
-	_, err := PgxConn.Exec(context.Background(), query, v.Title, v.SourceUrl, v.PosterName, v.SourcePosterUrl, v.Actress, v.PlaySrc, v.SerialNumber)
+	_, err := PgxPool.Exec(Ctx, query, v.Title, v.SourceUrl, v.PosterName, v.SourcePosterUrl, v.Actress, v.PlaySrc, v.SerialNumber)
 	return err
 }
 
@@ -110,7 +136,7 @@ func (v *VideoInf) Delete() error {
 		WHERE
 			serial_num = $1;	
 	`
-	_, err := PgxConn.Exec(context.Background(), query, v.SerialNumber)
+	_, err := PgxPool.Exec(Ctx, query, v.SerialNumber)
 	return err
 }
 
@@ -240,7 +266,7 @@ func GetVideosToGetInfo() ([]VideoInf, error) { //DONE test
 			source_url IS NULL;
 	`
 
-	rows, err := PgxConn.Query(context.Background(), query)
+	rows, err := PgxPool.Query(Ctx, query)
 	if err != nil {
 		return nil, err
 	}
@@ -283,7 +309,7 @@ func GetVideosToDownloadPoster() ([]VideoInf, error) { //DONE test
 			(poster_name = '' OR poster_name IS NULL);
 	`
 
-	rows, err := PgxConn.Query(context.Background(), query)
+	rows, err := PgxPool.Query(Ctx, query)
 	if err != nil {
 		return nil, err
 	}
@@ -322,7 +348,7 @@ func GetAllVideosRecord() ([]VideoInf, error) { //DONE test
 			video_infos;
 	`
 
-	rows, err := PgxConn.Query(context.Background(), query)
+	rows, err := PgxPool.Query(Ctx, query)
 	if err != nil {
 		return nil, err
 	}
