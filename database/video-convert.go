@@ -49,7 +49,6 @@ func CreateVideoConvertRecordTable() error { //TODO test
 
 func DROPVideoConvertRecordTable() error {
 	query := `
-		DROP TABLE
 			video_converts;
 	`
 	_, err := PgxPool.Exec(Ctx, query)
