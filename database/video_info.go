@@ -332,6 +332,50 @@ func GetVideosToDownloadPoster() ([]VideoInf, error) { //DONE test
 	return videos, nil
 }
 
+func GetVideosToGetActress() ([]VideoInf, error) { //TODO test
+	videos := []VideoInf{}
+
+	query := `
+		SELECT
+			serial_num,
+			title,
+			source_url,
+			poster_name,
+			source_poster_url,
+			actress,
+			play_src
+		FROM 
+			video_infos
+		WHERE
+			source_url IS NOT NULL
+			AND play_src IS NOT NULL
+			AND actress = "" OR actress IS NULL
+		ORDER BY id;
+	`
+
+	rows, err := PgxPool.Query(Ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		video := VideoInf{}
+		rows.Scan(
+			&video.SerialNumber,
+			&video.Title,
+			&video.SourceUrl,
+			&video.PosterName,
+			&video.SourcePosterUrl,
+			&video.Actress,
+			&video.PlaySrc,
+		)
+
+		videos = append(videos, video)
+	}
+
+	return videos, nil
+}
+
 func GetAllVideosRecord() ([]VideoInf, error) { //DONE test
 	videos := []VideoInf{}
 
@@ -345,10 +389,57 @@ func GetAllVideosRecord() ([]VideoInf, error) { //DONE test
 			actress,
 			play_src
 		FROM 
-			video_infos;
+			video_infos
+		ORDER BY id;
 	`
 
 	rows, err := PgxPool.Query(Ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		video := VideoInf{}
+		rows.Scan(
+			&video.SerialNumber,
+			&video.Title,
+			&video.SourceUrl,
+			&video.PosterName,
+			&video.SourcePosterUrl,
+			&video.Actress,
+			&video.PlaySrc,
+		)
+
+		videos = append(videos, video)
+	}
+
+	return videos, nil
+}
+
+func GetVideosByActress(name string) ([]VideoInf, error) { //TODO test
+	videos := []VideoInf{}
+
+	query := `
+		SELECT
+			serial_num,
+			title,
+			source_url,
+			poster_name,
+			source_poster_url,
+			actress,
+			play_src
+		FROM 
+			video_infos
+		WHERE
+			actress = $1 
+		AND (
+			poster_name IS NOT NULL
+			OR poster_name <> ''
+			)
+		ORDER BY id;
+	`
+
+	rows, err := PgxPool.Query(Ctx, query, name)
 	if err != nil {
 		return nil, err
 	}

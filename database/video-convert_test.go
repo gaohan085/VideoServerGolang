@@ -6,7 +6,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"sync"
 	"testing"
 
 	"github.com/go-faker/faker/v4"
@@ -82,33 +81,35 @@ func TestVideoConvertCRUD(t *testing.T) {
 
 	})
 
-	DROPVideoConvertRecordTable()
+	t.Run("删除表", func(t *testing.T) {
+		assert.Nil(t, DROPVideoConvertRecordTable())
+	})
 
 	t.SkipNow()
-	t.Run("转换视频", func(t *testing.T) {
-		var wg sync.WaitGroup
-		chInter, chDone := make(chan int, 1024), make(chan int, 1024)
-
-		wg.Add(1)
-		go func(chInter chan<- int, chDone chan<- int) {
-			video.ConvertOnFFmpegServer(chInter, chDone)
-			defer wg.Done()
-		}(chInter, chDone)
-		wg.Add(1)
-		go func(chInter <-chan int, chDone <-chan int) {
-			video.ReadProgress(chInter, chDone)
-			defer wg.Done()
-		}(chInter, chDone)
-		wg.Wait()
-
-		videoT := VideoConvert{}
-
-		err := Db.Model(VideoConvert{}).Where(&VideoConvert{FileName: video.FileName, Path: videoT.Path}).First(&videoT).Error
-		assert.Nil(t, err)
-		assert.Equal(t, "done", videoT.Status)
-		assert.Equal(t, float64(1), videoT.Progress)
-		assert.NotNil(t, videoT.Duration)
-	})
+	// 	t.Run("转换视频", func(t *testing.T) {
+	// 		var wg sync.WaitGroup
+	// 		chInter, chDone := make(chan int, 1024), make(chan int, 1024)
+	//
+	// 		wg.Add(1)
+	// 		go func(chInter chan<- int, chDone chan<- int) {
+	// 			video.ConvertOnFFmpegServer(chInter, chDone)
+	// 			defer wg.Done()
+	// 		}(chInter, chDone)
+	// 		wg.Add(1)
+	// 		go func(chInter <-chan int, chDone <-chan int) {
+	// 			video.ReadProgress(chInter, chDone)
+	// 			defer wg.Done()
+	// 		}(chInter, chDone)
+	// 		wg.Wait()
+	//
+	// 		videoT := VideoConvert{}
+	//
+	// 		err := Db.Model(VideoConvert{}).Where(&VideoConvert{FileName: video.FileName, Path: videoT.Path}).First(&videoT).Error
+	// 		assert.Nil(t, err)
+	// 		assert.Equal(t, "done", videoT.Status)
+	// 		assert.Equal(t, float64(1), videoT.Progress)
+	// 		assert.NotNil(t, videoT.Duration)
+	// 	})
 
 }
 

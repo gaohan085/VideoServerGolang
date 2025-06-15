@@ -14,6 +14,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/template/html/v2"
+	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
 
 	"go-fiber-react-ts/database"
@@ -38,11 +39,14 @@ func Parseflag() {
 
 func main() {
 	Parseflag()
+	database.PgxConnDatabase()
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	usage := os.Getenv("USAGE")
-
 	engine := html.NewFileSystem(http.FS(content), ".html")
-
-	database.SetDB()
 
 	if !fiber.IsChild() {
 		go schedule.Schedule()
@@ -110,4 +114,6 @@ func main() {
 	if err := app.Listen("127.0.0.1:3000"); err != nil {
 		log.Fatal(err)
 	}
+
+	defer database.PgxPool.Close()
 }

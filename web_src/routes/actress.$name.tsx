@@ -21,7 +21,7 @@ const ActressNameComponent: React.FC = () => {
 };
 
 export const Route = createFileRoute("/actress/$name")({
-  component: ActressNameComponent,
+  component: () => <ActressNameComponent />,
   loader: async ({ params: { name } }) => (await fetcher(`/api/actress/${name}`)),
   pendingComponent: () => <Spinner fontSize={24} />,
   errorComponent: e => (

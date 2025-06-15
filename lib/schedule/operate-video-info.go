@@ -11,12 +11,10 @@ import (
 )
 
 func QueryVideoInfo() error {
-	videos := []database.VideoInf{}
-
-	if err := database.Db.Model(&database.VideoInf{}).Where("source_url = ?", "").Order("ID").Find(&videos).Error; err != nil {
+	videos, err := database.GetVideosToGetInfo()
+	if err != nil {
 		return err
 	}
-
 	if len(videos) != 0 {
 		return videos[0].GetDetailInfo()
 	}
@@ -25,9 +23,8 @@ func QueryVideoInfo() error {
 }
 
 func DownloadVideoPoster() error {
-	videos := []database.VideoInf{}
-
-	if err := database.Db.Model(&database.VideoInf{}).Where("source_poster_url <> ? AND poster_name = ?", "", "").Order("ID").Find(&videos).Error; err != nil {
+	videos, err := database.GetVideosToDownloadPoster()
+	if err != nil {
 		return err
 	}
 
@@ -39,9 +36,8 @@ func DownloadVideoPoster() error {
 }
 
 func GetActress() error {
-	videos := []database.VideoInf{}
-
-	if err := database.Db.Model(&database.VideoInf{}).Where("source_url <> ? AND play_src <> ? AND actress = ?", "", "", "").Order("ID").Find(&videos).Error; err != nil {
+	videos, err := database.GetVideosToGetActress()
+	if err != nil {
 		return err
 	}
 
@@ -52,9 +48,8 @@ func GetActress() error {
 }
 
 func RemoveErrorSerialNum() error {
-	videos := []database.VideoInf{}
-
-	if err := database.Db.Model(&database.VideoInf{}).Order("ID").Find(&videos).Error; err != nil {
+	videos, err := database.GetAllVideosRecord()
+	if err != nil {
 		return err
 	}
 
@@ -68,9 +63,8 @@ func RemoveErrorSerialNum() error {
 }
 
 func DownloadConvertedVideo() error {
-	videoConverts := database.VideoConvert{}
-
-	if err := database.Db.Model(&database.VideoConvert{}).Where("status = ? AND downloaded = ? ", "done", false).First(&videoConverts).Error; err != nil {
+	videoConverts, err := database.GetVideoNeedDownload()
+	if err != nil {
 		return err
 	}
 
@@ -80,10 +74,8 @@ func DownloadConvertedVideo() error {
 }
 
 func CheckVideoExists() error {
-	var videos = []database.VideoInf{}
-	fiberlog.Info("Check videos exists")
-
-	if err := database.Db.Model(&database.VideoInf{}).Order("ID").Find(&videos).Error; err != nil {
+	videos, err := database.GetAllVideosRecord()
+	if err != nil {
 		return err
 	}
 

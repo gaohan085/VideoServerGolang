@@ -49,6 +49,7 @@ func CreateVideoConvertRecordTable() error { //TODO test
 
 func DROPVideoConvertRecordTable() error {
 	query := `
+		DROP TABLE IF EXISTS
 			video_converts;
 	`
 	_, err := PgxPool.Exec(Ctx, query)
@@ -276,4 +277,90 @@ func (v *VideoConvert) DownloadConverted() error {
 	}
 
 	return nil
+}
+
+func (v *VideoConvert) Delete() error {
+	_, err := PgxPool.Exec(Ctx, `
+		DELETE FROM video_converts
+		WHERE play_source = $1;
+	`, v.PlaySource)
+	return err
+}
+
+func GetAllVideoNeedConvert() ([]VideoConvert, error) {
+	videos := []VideoConvert{}
+	rows, err := PgxPool.Query(Ctx, `
+		SELECT 
+			filename,
+			path,
+			status,
+			duration,
+			progress,
+			play_source,
+			output_name,
+			downloaded
+		FROM video_converts 
+		ORDER BY id;
+	`)
+	if err != nil {
+		return []VideoConvert{}, err
+	}
+
+	for rows.Next() {
+		video := VideoConvert{}
+
+		if err := rows.Scan(
+			&video.FileName,
+			video.Path,
+			video.Status,
+			video.Duration,
+			video.Progress,
+			video.PlaySource,
+			video.OutputName,
+			video.Downloaded,
+		); err != nil {
+			return []VideoConvert{}, err
+		}
+
+		videos = append(videos, video)
+	}
+
+	return videos, nil
+}
+
+func GetVideoNeedDownload() (*VideoConvert, error) {
+	video := VideoConvert{}
+
+	query := `
+		SELECT
+			filename,
+			path,
+			status,
+			duration,
+			progress,
+			play_source,
+			output_name,
+			downloaded
+		FROM
+			video_converts
+		WHERE
+			status = $1 AND downloaded = $2
+		ORDER BY id
+		LIMIT 1;
+	`
+
+	if err := PgxPool.QueryRow(Ctx, query, "done", false).Scan(
+		&video.FileName,
+		&video.Path,
+		&video.Status,
+		&video.Duration,
+		&video.Progress,
+		&video.PlaySource,
+		&video.OutputName,
+		&video.Downloaded,
+	); err != nil {
+		return nil, err
+	}
+
+	return &video, nil
 }

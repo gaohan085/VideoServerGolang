@@ -31,7 +31,6 @@ func TestVideoInfo(t *testing.T) {
 		var videoResu VideoInf
 
 		err := video.Create()
-		// Db.Model(&VideoInf{}).Where(&VideoInf{SerialNumber: video.SerialNumber}).Find(&videoResu)
 		videoResu.SerialNumber = video.SerialNumber
 		errQ := videoResu.Query()
 

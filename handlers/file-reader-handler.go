@@ -68,7 +68,7 @@ func ApiFileReaderHandler(c *fiber.Ctx) error {
 		video := new(database.VideoInf)
 		serialNum := strings.ToLower(lib.GetSerialNumReg(entry.Name()))
 		if !entry.IsDir() && lib.IsVideo(&extName) && serialNum != "" {
-			if err := video.QueryByVideoName(serialNum); err == database.ErrVideoNotFound {
+			if err := video.QueryByVideoSerialNum(serialNum); err == database.ErrVideoNotFound {
 				video.SerialNumber = serialNum
 				video.Create()
 			} else if video.PlaySrc == "" || video.PlaySrc != playSrc {

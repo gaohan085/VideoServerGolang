@@ -331,7 +331,7 @@ func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
 
 	tag := &Tag{Name: name}
 	if err := tag.Query(); err != nil {
-		return []VideoDetailedInfo{}, err
+		return nil, err
 	}
 
 	rows, err := PgxPool.Query(Ctx, `
@@ -341,18 +341,18 @@ func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
 		WHERE vt.tag_id = $1;
 	`, tag.ID)
 	if err != nil {
-		return []VideoDetailedInfo{}, err
+		return nil, err
 	}
 
 	for rows.Next() {
 		video := &VideoDetailedInfo{}
 
 		if err := rows.Scan(&video.ID); err != nil {
-			return []VideoDetailedInfo{}, err
+			return nil, err
 		}
 
 		if err := video.Query(); err != nil {
-			return []VideoDetailedInfo{}, err
+			return nil, err
 		}
 
 		videos = append(videos, *video)
@@ -366,7 +366,7 @@ func QueryVideoByActor(name string) ([]VideoDetailedInfo, error) {
 
 	actor := &Actor{Name: name}
 	if err := actor.Query(); err != nil {
-		return []VideoDetailedInfo{}, err
+		return nil, err
 	}
 
 	rows, err := PgxPool.Query(Ctx, `
@@ -376,18 +376,18 @@ func QueryVideoByActor(name string) ([]VideoDetailedInfo, error) {
 		WHERE va.actor_id = $1;
 	`, actor.ID)
 	if err != nil {
-		return []VideoDetailedInfo{}, err
+		return nil, err
 	}
 
 	for rows.Next() {
 		video := &VideoDetailedInfo{}
 
 		if err := rows.Scan(&video.ID); err != nil {
-			return []VideoDetailedInfo{}, err
+			return nil, err
 		}
 
 		if err := video.Query(); err != nil {
-			return []VideoDetailedInfo{}, err
+			return nil, err
 		}
 
 		videos = append(videos, *video)

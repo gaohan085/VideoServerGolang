@@ -11,7 +11,7 @@ import (
 )
 
 func DoHttpProxyRequest(link string) (io.ReadCloser, error) {
-	proxyUrl, err := url.Parse("http://192.168.1.198:10809")
+	proxyUrl, err := url.Parse("http://192.168.1.199:10809")
 	if err != nil {
 		return nil, err
 	}

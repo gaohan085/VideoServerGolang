@@ -14,10 +14,12 @@ func GetVideosByActress(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	var videos []database.VideoInf
-
-	if err := database.Db.Model(&database.VideoInf{}).Where("actress = ? AND poster_name <> ?", actressName, "").Find(&videos).Error; err != nil {
-		return err
+	videos, err := database.GetVideosByActress(actressName)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
+			StatusCode: fiber.StatusInternalServerError,
+			Data:       err.Error(),
+		})
 	}
 	if len(videos) == 0 {
 		return c.Status(fiber.StatusNotFound).JSON(&RespBody{
