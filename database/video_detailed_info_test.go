@@ -18,7 +18,7 @@ func TestCreateReturnID(t *testing.T) {
 		assert.Nil(t, err)
 	})
 	t.Run("保存tag到数据库成功后tag.id不为空", func(t *testing.T) {
-		tag := Tag{TagName: faker.Username()}
+		tag := Tag{Name: faker.Username()}
 
 		err := tag.Create()
 
@@ -28,8 +28,8 @@ func TestCreateReturnID(t *testing.T) {
 
 	t.Run("创建演员信息成功后返回actor.id", func(t *testing.T) {
 		actor := Actor{
-			ActorName: faker.Username(),
-			Sex:       "male",
+			Name: faker.Username(),
+			Sex:  "male",
 		}
 
 		assert.Nil(t, actor.Create())
@@ -46,8 +46,8 @@ func TestCreateReturnID(t *testing.T) {
 		Director:     "坂井シベリア",
 		Publisher:    "SOD Create",
 		Rank:         "4.43",
-		Tags:         []Tag{{TagName: "素人作品"}, {TagName: "4K"}, {TagName: "戲劇"}},
-		Actors:       []Actor{{ActorName: "MINAMO", Sex: "female"}},
+		Tags:         []Tag{{Name: "素人作品"}, {Name: "4K"}, {Name: "戲劇"}},
+		Actors:       []Actor{{Name: "MINAMO", Sex: "female"}},
 		Series:       "aaaa",
 	}
 
@@ -56,7 +56,7 @@ func TestCreateReturnID(t *testing.T) {
 		assert.Nil(t, info.Create())
 	})
 
-	t.Run("查询视频详细信息", func(t *testing.T) {
+	t.Run("使用序列号查询视频详细信息", func(t *testing.T) {
 		video := &VideoDetailedInfo{}
 		video.SerialNumber = info.SerialNumber
 
@@ -65,6 +65,43 @@ func TestCreateReturnID(t *testing.T) {
 		assert.Equal(t, &info, video)
 	})
 
+	t.Run("使用id查询视频详细信息", func(t *testing.T) {
+		video := &VideoDetailedInfo{}
+		video.ID = info.ID
+
+		assert.Nil(t, video.Query())
+
+		assert.Equal(t, &info, video)
+	})
+
+	t.Run("使用tag名称查询视频", func(t *testing.T) {
+		info2 := VideoDetailedInfo{
+			SerialNumber: "START-285",
+			Title:        "デートをドタキャンし弟の看病をする事になった姉は超不機嫌になりながらアナル丸見えのデカ尻騎乗位プレスでヌキまくった MINAMO ",
+			ReleaseDate:  releaseDate,
+			Duration:     153,
+			Director:     "坂井シベリア",
+			Publisher:    "SOD Create",
+			Rank:         "4.43",
+			Tags:         []Tag{{Name: "素人作品"}, {Name: "4K"}, {Name: "戲劇"}},
+			Actors:       []Actor{{Name: "MINAMO", Sex: "female"}},
+			Series:       "aaaa",
+		}
+
+		info2.Create()
+
+		videos, err := QueryVideosByTag("戲劇")
+
+		assert.Nil(t, err)
+		assert.Len(t, videos, 2)
+	})
+
+	t.Run("使用演员名称查找视频", func(t *testing.T) {
+		videos, err := QueryVideoByActor("MINAMO")
+
+		assert.Nil(t, err)
+		assert.Len(t, videos, 2, "查询结果包含2条视频信息")
+	})
 	t.Run("删除表", func(t *testing.T) {
 		assert.Nil(t, DROPVideoDetailsTable())
 	})

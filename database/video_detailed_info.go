@@ -7,12 +7,12 @@ import (
 )
 
 type Tag struct {
-	ID      int
-	TagName string `json:"tag"`
+	ID   int
+	Name string `json:"tag"`
 }
 
 func (t *Tag) Create() error {
-	query := `
+	return PgxPool.QueryRow(Ctx, `
 		INSERT INTO tags (
 			name
 		)
@@ -21,18 +21,25 @@ func (t *Tag) Create() error {
 		)
 		ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
 		RETURNING id;
-	`
-	return PgxPool.QueryRow(Ctx, query, t.TagName).Scan(&t.ID)
+	`, t.Name).Scan(&t.ID)
+}
+
+func (t *Tag) Query() error {
+	return PgxPool.QueryRow(Ctx, `
+		SELECT id, name
+		FROM tags 
+		WHERE name = $1 OR id = $2;
+	`, t.Name, t.ID).Scan(&t.ID, &t.Name)
 }
 
 type Actor struct {
-	ID        int
-	ActorName string `json:"actorName"`
-	Sex       string `json:"sex"`
+	ID   int
+	Name string `json:"actorName"`
+	Sex  string `json:"sex"`
 }
 
 func (ac *Actor) Create() error {
-	query := `
+	return PgxPool.QueryRow(Ctx, `
 		INSERT INTO actors (
 			name, sex
 		)
@@ -41,9 +48,15 @@ func (ac *Actor) Create() error {
 		)
 		ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
 		RETURNING id;
-	`
+	`, ac.Name, ac.Sex).Scan(&ac.ID)
+}
 
-	return PgxPool.QueryRow(Ctx, query, ac.ActorName, ac.Sex).Scan(&ac.ID)
+func (ac *Actor) Query() error {
+	return PgxPool.QueryRow(Ctx, `
+		SELECT id, name, sex
+		FROM actors
+		WHERE id = $1 OR name = $2;
+	`, ac.ID, ac.Name).Scan(&ac.ID, &ac.Name, &ac.Sex)
 }
 
 type VideoDetailedInfo struct {
@@ -155,7 +168,11 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 		tag.Create()
 
 		_, err := PgxPool.Exec(Ctx, `
-			INSERT INTO video_tags (video_id, tag_id) VALUES ($1, $2)
+			INSERT INTO video_tags (
+			video_id, tag_id
+			) 
+			VALUES ($1, $2)
+			ON CONFLICT (video_id,tag_id) DO NOTHING;
 		`, v.ID, tag.ID)
 		if err != nil {
 			return err
@@ -167,7 +184,11 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 
 		_, err := PgxPool.Exec(Ctx,
 			`
-			INSERT INTO video_actors (video_id, actor_id) VALUES ($1, $2)
+			INSERT INTO video_actors (
+			video_id, actor_id
+			) 
+			VALUES ($1, $2)
+			ON CONFLICT (video_id,actor_id) DO NOTHING;
 		`,
 			v.ID, actor.ID,
 		)
@@ -180,8 +201,7 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 }
 
 func (v *VideoDetailedInfo) Query() error {
-
-	query := `
+	if err := PgxPool.QueryRow(Ctx, `
 		SELECT 
 			id,
 			serial_number,
@@ -193,9 +213,8 @@ func (v *VideoDetailedInfo) Query() error {
 			series,
 			rank
 		FROM video_details
-		WHERE serial_number = $1;
-	`
-	if err := PgxPool.QueryRow(Ctx, query, v.SerialNumber).Scan(
+		WHERE id = $1 OR serial_number = $2;
+	`, v.ID, v.SerialNumber).Scan(
 		&v.ID,
 		&v.SerialNumber,
 		&v.Title,
@@ -209,42 +228,169 @@ func (v *VideoDetailedInfo) Query() error {
 		return err
 	}
 
-	queryTags := `
+	tagRows, err := PgxPool.Query(Ctx, `
 		SELECT t.name
 		FROM tags t
 		JOIN video_tags vt ON t.id = vt.tag_id
 		WHERE vt.video_id = $1;
-	`
-	tagRows, err := PgxPool.Query(Ctx, queryTags, v.ID)
+	`, v.ID)
 	if err != nil {
 		return err
 	}
-
 	for tagRows.Next() {
 		tag := Tag{}
-		if err := tagRows.Scan(&tag.TagName); err != nil {
+		if err := tagRows.Scan(&tag.Name); err != nil {
 			return err
 		}
 		v.Tags = append(v.Tags, tag)
 	}
 
-	queryActors := `
+	actorRows, err := PgxPool.Query(Ctx, `
 		SELECT a.name, a.sex
 		FROM actors a
 		JOIN video_actors va ON a.id = va.actor_id
 		WHERE va.video_id = $1;
-	`
-	actorRows, err := PgxPool.Query(Ctx, queryActors, v.ID)
+	`, v.ID)
 	if err != nil {
 		return err
 	}
 	for actorRows.Next() {
 		actor := Actor{}
-		if err := actorRows.Scan(&actor.ActorName, &actor.Sex); err != nil {
+		if err := actorRows.Scan(&actor.Name, &actor.Sex); err != nil {
 			return err
 		}
 		v.Actors = append(v.Actors, actor)
 	}
 
 	return nil
+}
+
+func (v *VideoDetailedInfo) Update() error {
+	if err := PgxPool.QueryRow(Ctx, `
+		UPDATE video_details
+		SET
+			title = $1,
+			release_date = $2,
+			duration=$3,
+			director=$4,
+			publisher=$5,
+			series=$6,
+			rank=$7
+		WHERE 
+			serial_number = $8
+		RETURNING id
+	`, v.Title,
+		v.ReleaseDate,
+		v.Duration,
+		v.Publisher,
+		v.Series,
+		v.Rank,
+		v.SerialNumber,
+	).Scan(&v.ID); err != nil {
+		return err
+	}
+
+	for _, tag := range v.Tags {
+		tag.Create()
+
+		_, err := PgxPool.Exec(Ctx, `
+			INSERT INTO video_tags (
+			video_id, tag_id
+			) 
+			VALUES ($1, $2)
+			ON CONFLICT (video_id,tag_id) DO NOTHING;
+		`, v.ID, tag.ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	for _, actor := range v.Actors {
+		actor.Create()
+
+		_, err := PgxPool.Exec(Ctx,
+			`
+			INSERT INTO video_actors (
+			video_id, actor_id
+			) 
+			VALUES ($1, $2)
+			ON CONFLICT (video_id,actor_id) DO NOTHING;
+		`,
+			v.ID, actor.ID,
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
+	videos := []VideoDetailedInfo{}
+
+	tag := &Tag{Name: name}
+	if err := tag.Query(); err != nil {
+		return []VideoDetailedInfo{}, err
+	}
+
+	rows, err := PgxPool.Query(Ctx, `
+		SELECT video.id
+		FROM video_details video
+		JOIN video_tags vt ON video.id = vt.video_id
+		WHERE vt.tag_id = $1;
+	`, tag.ID)
+	if err != nil {
+		return []VideoDetailedInfo{}, err
+	}
+
+	for rows.Next() {
+		video := &VideoDetailedInfo{}
+
+		if err := rows.Scan(&video.ID); err != nil {
+			return []VideoDetailedInfo{}, err
+		}
+
+		if err := video.Query(); err != nil {
+			return []VideoDetailedInfo{}, err
+		}
+
+		videos = append(videos, *video)
+	}
+
+	return videos, nil
+}
+
+func QueryVideoByActor(name string) ([]VideoDetailedInfo, error) {
+	videos := []VideoDetailedInfo{}
+
+	actor := &Actor{Name: name}
+	if err := actor.Query(); err != nil {
+		return []VideoDetailedInfo{}, err
+	}
+
+	rows, err := PgxPool.Query(Ctx, `
+		SELECT video.id
+		FROM video_details video
+		JOIN video_actors va ON video.id = va.video_id
+		WHERE va.actor_id = $1;
+	`, actor.ID)
+	if err != nil {
+		return []VideoDetailedInfo{}, err
+	}
+
+	for rows.Next() {
+		video := &VideoDetailedInfo{}
+
+		if err := rows.Scan(&video.ID); err != nil {
+			return []VideoDetailedInfo{}, err
+		}
+
+		if err := video.Query(); err != nil {
+			return []VideoDetailedInfo{}, err
+		}
+
+		videos = append(videos, *video)
+	}
+	return videos, nil
 }
