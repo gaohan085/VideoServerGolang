@@ -99,6 +99,8 @@ func ApiFileReaderHandler(c *fiber.Ctx) error {
 		if !entry.IsDir() {
 			elem.SetPlaySrcANDCurrentPath(path)
 			elem.SetFieldValueFromDB()
+		} else {
+			elem.CurrentPath = path
 		}
 
 		elems = append(elems, elem)
