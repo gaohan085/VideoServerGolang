@@ -11,39 +11,19 @@ import (
 )
 
 func QueryVideoInfo() error {
-	videos, err := database.GetVideosToGetInfo()
+	video, err := database.GetVideoToGetInfo()
 	if err != nil {
 		return err
 	}
-	if len(videos) != 0 {
-		return videos[0].GetDetailInfo()
-	}
-	return nil
+	return video.GetDetailInfo()
 }
 
 func DownloadVideoPoster() error {
-	videos, err := database.GetVideosToDownloadPoster()
+	video, err := database.GetVideoToDownloadPoster()
 	if err != nil {
 		return err
 	}
-
-	if len(videos) != 0 {
-		return videos[0].DownloadPoster()
-	}
-
-	return nil
-}
-
-func GetActress() error {
-	videos, err := database.GetVideosToGetActress()
-	if err != nil {
-		return err
-	}
-
-	if len(videos) != 0 {
-		return videos[0].GetActress()
-	}
-	return nil
+	return video.DownloadPoster()
 }
 
 func RemoveErrorSerialNum() error {
