@@ -72,7 +72,8 @@ func (v *VideoConvert) Create() error {
 			downloaded
 		)
 		VALUES
-			($1,$2,$3,$4,$5,$6,$7,$8);
+			($1,$2,$3,$4,$5,$6,$7,$8)
+		ON CONFLICT (play_source) DO UPDATE SET play_source = EXCLUDED.play_source;
 	`
 	_, err := PgxPool.Exec(Ctx, query,
 		v.FileName,
