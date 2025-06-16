@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -10,7 +9,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func DoHttpProxyRequest(link string) (io.ReadCloser, error) {
+func DoHttpProxyRequest(link string) (*http.Response, error) {
 	proxyUrl, err := url.Parse("http://192.168.1.199:10809")
 	if err != nil {
 		return nil, err
@@ -26,7 +25,7 @@ func DoHttpProxyRequest(link string) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	return res.Body, nil
+	return res, nil
 }
 
 func ParseDocument(link string) (VideoDetailedInfo, error) {
@@ -35,11 +34,11 @@ func ParseDocument(link string) (VideoDetailedInfo, error) {
 		return VideoDetailedInfo{}, err
 	}
 
-	defer res.Close()
+	defer res.Body.Close()
 
 	Info := VideoDetailedInfo{}
 
-	doc, err := goquery.NewDocumentFromReader(res)
+	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		return VideoDetailedInfo{}, err
 	}
