@@ -74,7 +74,6 @@ func main() {
 	)
 
 	//Global fiberlog
-	fiberlog.SetLevel(fiberlog.LevelInfo)
 	file, _ := os.OpenFile("./log/record.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	iw := io.MultiWriter(os.Stdout, file)
 	fiberlog.SetOutput(iw)
@@ -88,12 +87,12 @@ func main() {
 
 	loggerConfigDev := logger.Config{
 		Format:     "[INFO] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
-		TimeFormat: "2006/Jan/02 Monday 15:04:05",
+		TimeFormat: "2006/Jan/02 15:04:05",
 		TimeZone:   "Asia/Shanghai",
 	}
 	loggerConfigPro := logger.Config{
 		Format:     "[${time}] ${ip} ${status} ${latency} ${method} ${path} - ${ua}\n",
-		TimeFormat: "2006/Jan/02 Monday 15:04:05",
+		TimeFormat: "2006/Jan/02 15:04:05",
 		TimeZone:   "Asia/Shanghai",
 		Output:     file,
 	}
@@ -114,6 +113,4 @@ func main() {
 	if err := app.Listen("127.0.0.1:3000"); err != nil {
 		log.Fatal(err)
 	}
-
-	defer database.PgxPool.Close()
 }
