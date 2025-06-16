@@ -222,19 +222,17 @@ func TestGetVideo(t *testing.T) {
 	})
 
 	t.Run("查询需要获取视频信息的记录", func(t *testing.T) {
-		videosQ, err := GetVideosToGetInfo()
+		videoQ, err := GetVideoToGetInfo()
 
 		assert.Nil(t, err)
-		assert.Len(t, videosQ, 1)
-		assert.Equal(t, videos[2], videosQ[0])
+		assert.Equal(t, videos[2], *videoQ)
 	})
 
 	t.Run("查询需要下载封面的视频记录", func(t *testing.T) {
-		videosQ, err := GetVideosToDownloadPoster()
+		videoQ, err := GetVideoToDownloadPoster()
 
 		assert.Nil(t, err)
-		assert.Len(t, videosQ, 1)
-		assert.Equal(t, videos[1], videosQ[0])
+		assert.Equal(t, videos[1], *videoQ)
 	})
 
 	t.Run("查询所有视频记录", func(t *testing.T) {
