@@ -18,7 +18,6 @@ func QueryVideoInfo() error {
 	if len(videos) != 0 {
 		return videos[0].GetDetailInfo()
 	}
-
 	return nil
 }
 

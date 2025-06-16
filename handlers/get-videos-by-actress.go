@@ -7,6 +7,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type VideoByActress struct {
+	database.VideoInf
+	PosterUrl string `json:"posterUrl"`
+}
+
+func (va *VideoByActress) SetPosterUrl() {
+	va.PosterUrl = "/assets/poster/" + va.PosterName
+}
+
 // @router /api/actress/:name
 func GetVideosByActress(c *fiber.Ctx) error {
 	encodeURIname := c.Params("name")
@@ -27,8 +36,20 @@ func GetVideosByActress(c *fiber.Ctx) error {
 			Data:       videos,
 		})
 	}
+
+	videosByAct := []VideoByActress{}
+
+	for _, video := range videos {
+		videoByAct := VideoByActress{
+			VideoInf:  video,
+			PosterUrl: "",
+		}
+		videoByAct.SetPosterUrl()
+		videosByAct = append(videosByAct, videoByAct)
+	}
+
 	return c.Status(fiber.StatusOK).JSON(&RespBody{
 		StatusCode: 200,
-		Data:       videos,
+		Data:       videosByAct,
 	})
 }

@@ -147,17 +147,17 @@ const CtxMenu: React.FC<Readonly<{
 
         {!!elem.isFolder &&
           !openFolder.includes(elem.currentPath + elem.name) && (
-            <li onClick={handleOpenFolder}>
-              <OpenFolder />
-            </li>
-          )}
+          <li onClick={handleOpenFolder}>
+            <OpenFolder />
+          </li>
+        )}
 
         {!!elem.isFolder &&
           openFolder.includes(elem.currentPath + elem.name) && (
-            <li onClick={handleCloseFolder}>
-              <CloseFolder />
-            </li>
-          )}
+          <li onClick={handleCloseFolder}>
+            <CloseFolder />
+          </li>
+        )}
 
         {/* Second list */}
         {!!elem.isFile && isVideo(elem.extName) && (

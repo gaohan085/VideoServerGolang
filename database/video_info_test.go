@@ -243,6 +243,14 @@ func TestGetVideo(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Len(t, videosQ, 3)
 	})
+
+	t.Run("测试查询不存在的sn", func(t *testing.T) {
+		video := &VideoInf{SerialNumber: "aaa"}
+
+		err := video.Query()
+
+		assert.Equal(t, ErrVideoNotFound, err)
+	})
 	t.Run("删除表", func(t *testing.T) {
 		assert.Nil(t, DROPVideoInfoTable())
 	})

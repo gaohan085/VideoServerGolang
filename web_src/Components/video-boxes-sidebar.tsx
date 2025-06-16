@@ -10,22 +10,18 @@ import styles from "./video-boxes-sidebar.module.scss";
 const VideoWithPoster: React.FC<VideoInfo> = (props) => {
   const dispatch = redux.useAppDispatch();
   const videoPlaying = redux.useAppSelector(redux.selectVideoPlaying);
-  const { title, posterName, serialNumber, playSrc, actress, sourceUrl }
+  const { title, posterUrl, playSrc, actress, sourceUrl, serialNumber }
     = props;
   const [isPlaying, setIsplaying] = useState<boolean>(false);
 
   const handleClick = () => {
     dispatch(
       redux.setVideoPlaying({
-        name: serialNumber,
+        sn: serialNumber,
         title: title,
         playSrc: playSrc,
-        extName: "",
-        isFile: true,
-        isFolder: false,
-        currentPath: "",
         actress: actress,
-        poster: posterName,
+        posterUrl: posterUrl,
         sourceUrl: sourceUrl,
       }),
     );
@@ -42,7 +38,7 @@ const VideoWithPoster: React.FC<VideoInfo> = (props) => {
       onClick={handleClick}
     >
       <div className="img-box">
-        <img src={`/assets/poster/${posterName}`} loading="lazy" />
+        <img src={posterUrl} loading="lazy" />
       </div>
       <div className="img-box-title">
         <a>{serialNumber.toUpperCase()}</a>
@@ -57,7 +53,7 @@ const VideoBoxes: React.FC = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const toggleActive: React.MouseEventHandler = () => setIsActive(!isActive);
   const { width } = useWindowDimension();
-  const { data: videoes }: ResWithActressName = useLoaderData({ from: "/actress/$name" });
+  const { data: videos }: ResWithActressName = useLoaderData({ from: "/actress/$name" });
 
   // 监听窗口宽度
   useEffect(() => {
@@ -78,7 +74,7 @@ const VideoBoxes: React.FC = () => {
       {!!isActive && (
         <>
           <div className="video-box-container">
-            {videoes.map((video, index) => {
+            {videos.map((video, index) => {
               return <VideoWithPoster key={index} {...video} />;
             })}
           </div>

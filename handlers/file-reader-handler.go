@@ -19,6 +19,7 @@ type Folder struct {
 
 type DirChildElem struct {
 	Name        string `json:"name"`
+	Sn          string `json:"sn"`
 	IsFile      bool   `json:"isFile"`
 	IsFolder    bool   `json:"isFolder"`
 	IsVideo     bool   `json:"isVideo"`
@@ -49,9 +50,9 @@ func (d *DirChildElem) SetPlaySrcANDCurrentPath(path string) {
 }
 
 func (d *DirChildElem) SetFieldValueFromDB() error {
-	sn := strings.ToLower(lib.GetSerialNumReg(d.Name))
-	if sn != "" {
-		video := database.VideoInf{SerialNumber: sn}
+	d.Sn = strings.ToLower(lib.GetSerialNumReg(d.Name))
+	if d.Sn != "" {
+		video := database.VideoInf{SerialNumber: d.Sn}
 		err := video.Query()
 		if err == database.ErrVideoNotFound {
 			video.PlaySrc = d.PlaySrc

@@ -81,7 +81,7 @@ func (v *VideoInf) Create() error {
 	return err
 }
 
-func (v *VideoInf) Query() error {
+func (v *VideoInf) Query() error { //TODO test query video not exist
 	query := `
 		SELECT 
 			serial_num,
@@ -145,7 +145,7 @@ func (v *VideoInf) QueryByVideoSerialNum(n string) error {
 	return v.Query()
 }
 
-func (v *VideoInf) GetDetailInfo() error {
+func (v *VideoInf) GetDetailInfo() error { //TODO Rewrite
 	proxyUrl, err := url.Parse("http://192.168.1.199:10809")
 	if err != nil {
 		return err
@@ -190,7 +190,7 @@ func (v *VideoInf) GetDetailInfo() error {
 	return v.Update()
 }
 
-func (v *VideoInf) DownloadPoster() error {
+func (v *VideoInf) DownloadPoster() error { //TODO Rewrite
 	//获取当前路径
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -205,7 +205,7 @@ func (v *VideoInf) DownloadPoster() error {
 	}
 
 	//获取封面文件名称
-	if v.SourceUrl == "-" {
+	if v.SourceUrl == "-" { //TODO DELETE
 		v.PosterName = ""
 		return v.Update()
 	}
@@ -261,9 +261,8 @@ func GetVideosToGetInfo() ([]VideoInf, error) { //DONE test
 		FROM 
 			video_infos
 		WHERE
-			source_url = ''
-		OR
-			source_url IS NULL;
+			(source_url = ''
+			OR source_url IS NULL);
 	`
 
 	rows, err := PgxPool.Query(Ctx, query)
@@ -349,7 +348,7 @@ func GetVideosToGetActress() ([]VideoInf, error) { //TODO test
 		WHERE
 			source_url IS NOT NULL
 			AND play_src IS NOT NULL
-			AND actress = "" OR actress IS NULL
+			AND (actress = '' OR actress IS NULL)
 		ORDER BY id;
 	`
 

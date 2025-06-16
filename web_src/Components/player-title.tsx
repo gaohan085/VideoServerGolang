@@ -42,20 +42,16 @@ import styles from "./player-title.module.scss";
 
 const VideoInfo: React.FC = () => {
   const videoPlaying = redux.useAppSelector(redux.selectVideoPlaying);
-  const serialNumber = videoPlaying.name.match(
-    /([0-9]|[a-z]|[A-Z]){3,}-[0-9]{3,}/g,
-  );
-
   const tags = ["标签1", "标签2"];
 
-  useTitle(`${serialNumber ? serialNumber[0] : videoPlaying.name} ${videoPlaying.title}`)
+  useTitle(`${videoPlaying.sn} ${videoPlaying.title}`);
 
   return (
     <div className={styles["video-info"]}>
       <h4>
-        {!!videoPlaying.name
-          && `${serialNumber ? serialNumber[0] : videoPlaying.name} ${videoPlaying.title}`}
-        {!videoPlaying.name && "没有正在播放"}
+        {!!videoPlaying.playSrc
+          && `${videoPlaying.sn.toUpperCase()} ${videoPlaying.title}`}
+        {!videoPlaying.sn && "没有正在播放"}
       </h4>
       {/* <Tags tags={tags} /> */}
       <div className="info">

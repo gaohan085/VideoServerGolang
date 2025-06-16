@@ -13,18 +13,14 @@ import {
 import type { DirElement } from "../Components/types.d.ts";
 
 interface PlayingVideo {
-  playingVideo: DirElement;
+  playingVideo: Omit<DirElement, "name"| "isFile" | "isFolder" | "isVideo" | "extName" | "currentPath">;
 }
 
 const initialState: PlayingVideo = {
   playingVideo: {
-    name: "",
-    isFile: false,
-    isFolder: false,
-    extName: "",
-    currentPath: "",
+    sn: "",
     playSrc: "",
-    poster: "",
+    posterUrl: "",
     title: "",
     actress: "",
     sourceUrl: "",
@@ -35,19 +31,15 @@ const Slice = createSlice({
   name: "redux",
   initialState,
   reducers: {
-    setVideoPlaying(state, action: PayloadAction<DirElement>) {
+    setVideoPlaying(state, action: PayloadAction<Omit<DirElement, "name"| "isFile" | "isFolder" | "isVideo" | "extName" | "currentPath">>) {
       state.playingVideo = action.payload;
     },
 
     unSetVideoPlaying(state) {
       state.playingVideo = {
-        name: "",
-        isFile: false,
-        isFolder: false,
-        extName: "",
-        currentPath: "",
+        sn: "",
         playSrc: "",
-        poster: "",
+        posterUrl: "",
         title: "",
         actress: "",
         sourceUrl: "",
