@@ -4,13 +4,12 @@ import (
 	"context"
 	"log"
 	"os"
-	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var PgxPool *pgxpool.Pool
-var Ctx, _ = context.WithTimeout(context.Background(), 120*time.Second)
+var Ctx = context.Background()
 
 func PgxConnDatabase() error {
 	url := os.Getenv("PGX_CONN")
