@@ -49,17 +49,9 @@ const FileElement: React.FC<FileElementProps> = (props) => {
         title={isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
       >
         <span>
-          {isConverting
-            ? (
-              <FcLock />
-            )
-            : isVideo(elem.extName)
-              ? (
-                <FcFilmReel />
-              )
-              : (
-                <FcQuestions />
-              )}
+          {
+            isConverting ? <FcLock />: elem.isVideo ? <FcFilmReel /> : <FcQuestions />
+          }
         </span>
 
         {!isRename && <a className="name">{elem.name}</a>}

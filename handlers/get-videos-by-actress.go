@@ -7,6 +7,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type VideoByActress struct {
+	database.VideoInf
+	PosterUrl string `json:"posterUrl"`
+}
+
+func (va *VideoByActress) SetPosterUrl() {
+	va.PosterUrl = "/assets/poster/" + va.PosterName
+}
+
 // @router /api/actress/:name
 func GetVideosByActress(c *fiber.Ctx) error {
 	encodeURIname := c.Params("name")
@@ -14,10 +23,12 @@ func GetVideosByActress(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	var videos []database.VideoInf
-
-	if err := database.Db.Model(&database.VideoInf{}).Where("actress = ? AND poster_name <> ?", actressName, "").Find(&videos).Error; err != nil {
-		return err
+	videos, err := database.GetVideosByActress(actressName)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
+			StatusCode: fiber.StatusInternalServerError,
+			Data:       err.Error(),
+		})
 	}
 	if len(videos) == 0 {
 		return c.Status(fiber.StatusNotFound).JSON(&RespBody{
@@ -25,8 +36,20 @@ func GetVideosByActress(c *fiber.Ctx) error {
 			Data:       videos,
 		})
 	}
+
+	videosByAct := []VideoByActress{}
+
+	for _, video := range videos {
+		videoByAct := VideoByActress{
+			VideoInf:  video,
+			PosterUrl: "",
+		}
+		videoByAct.SetPosterUrl()
+		videosByAct = append(videosByAct, videoByAct)
+	}
+
 	return c.Status(fiber.StatusOK).JSON(&RespBody{
 		StatusCode: 200,
-		Data:       videos,
+		Data:       videosByAct,
 	})
 }

@@ -1,7 +1,6 @@
 package database
 
 import (
-	"context"
 	"log"
 	"os"
 
@@ -9,7 +8,6 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var Ctx = context.Background()
 var RedisClient *redis.Client
 
 func SetRedisClient() {

@@ -10,9 +10,7 @@ import (
 )
 
 func Schedule() error {
-
 	fiberlog.Info("Schedule Loaded Successfully.")
-
 	schedule, err := gocron.NewScheduler()
 	if err != nil {
 		return err
@@ -23,19 +21,13 @@ func Schedule() error {
 		schedule.NewJob(
 			gocron.DurationJob(1*time.Minute),
 			gocron.NewTask(func() {
-				QueryVideoInfo()
-			}),
-		)
-		schedule.NewJob(
-			gocron.DurationRandomJob(30*time.Second, 3*time.Minute),
-			gocron.NewTask(func() {
-				DownloadVideoPoster()
-			}),
-		)
-		schedule.NewJob(
-			gocron.DurationJob(5*time.Second),
-			gocron.NewTask(func() {
-				GetActress()
+				fiberlog.Info("Start to get video info.")
+				if err := QueryVideoInfo(); err != nil {
+					fiberlog.Info(err.Error())
+				}
+				if err := DownloadVideoPoster(); err != nil {
+					fiberlog.Info(err.Error())
+				}
 			}),
 		)
 

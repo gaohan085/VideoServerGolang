@@ -9,7 +9,14 @@ import (
 )
 
 func TestVideoInfo(t *testing.T) {
-	InitTest(t)
+	// InitTest(t)
+	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.199:5432/video_server_pgx_test")
+	PgxConnDatabase()
+	t.Run("创建表", func(t *testing.T) {
+		err := CreateVideoInfoTable()
+
+		assert.Nil(t, err)
+	})
 	t.Run("测试创建文件信息", func(t *testing.T) {
 
 		video := &VideoInf{
@@ -18,16 +25,22 @@ func TestVideoInfo(t *testing.T) {
 			SourceUrl:       faker.Username(),
 			SourcePosterUrl: faker.Username(),
 			Title:           faker.Username(),
+			Actress:         faker.Username(),
+			PlaySrc:         faker.Username(),
 		}
 		var videoResu VideoInf
 
 		err := video.Create()
-		Db.Model(&VideoInf{}).Where(&VideoInf{SerialNumber: video.SerialNumber}).Find(&videoResu)
+		videoResu.SerialNumber = video.SerialNumber
+		errQ := videoResu.Query()
 
 		assert.Nil(t, err)
+		assert.Nil(t, errQ)
 		assert.Equal(t, video.SerialNumber, videoResu.SerialNumber)
-
 		assert.Equal(t, video.PosterName, videoResu.PosterName)
+		assert.Equal(t, video.SourceUrl, videoResu.SourceUrl)
+		assert.Equal(t, video.Title, videoResu.Title)
+		assert.Equal(t, video.Actress, videoResu.Actress)
 	})
 
 	t.Run("测试通过文件名读取文件信息", func(t *testing.T) {
@@ -41,7 +54,7 @@ func TestVideoInfo(t *testing.T) {
 		err := video.Create()
 		assert.Nil(t, err)
 
-		errQ := videoResu.QueryByVideoName(video.SerialNumber)
+		errQ := videoResu.QueryByVideoSerialNum(video.SerialNumber)
 		assert.Nil(t, errQ)
 
 		assert.Equal(t, video, videoResu)
@@ -51,7 +64,7 @@ func TestVideoInfo(t *testing.T) {
 		var video = new(VideoInf)
 		var videoName = faker.Name()
 
-		err := video.QueryByVideoName(videoName)
+		err := video.QueryByVideoSerialNum(videoName)
 		assert.NotNil(t, err)
 		assert.Equal(t, ErrVideoNotFound, err)
 		assert.Equal(t, uint(0), video.ID)
@@ -95,8 +108,10 @@ func TestVideoInfo(t *testing.T) {
 				SerialNumber: unit.SerialNum,
 			}
 
-			err := video.GetDetailInfo()
+			errCreate := video.Create()
+			assert.Nil(t, errCreate)
 
+			err := video.GetDetailInfo()
 			assert.Nil(t, err)
 			assert.Equal(t, unit.SourceUrl, video.SourceUrl)
 			assert.Equal(t, unit.SourcePosterUrl, video.SourcePosterUrl)
@@ -109,7 +124,10 @@ func TestVideoInfo(t *testing.T) {
 				SerialNumber: "adn-187",
 			}
 
-			video.QueryByVideoName(video.SerialNumber)
+			errG := video.GetDetailInfo()
+			assert.Nil(t, errG)
+
+			video.QueryByVideoSerialNum(video.SerialNumber)
 			errD := video.DownloadPoster()
 
 			assert.Nil(t, errD)
@@ -152,6 +170,86 @@ func TestVideoInfo(t *testing.T) {
 		}
 
 	})
+	t.Run("删除表", func(t *testing.T) {
+		assert.Nil(t, DROPVideoInfoTable())
+	})
 
-	DropTables()
+}
+
+func TestGetVideo(t *testing.T) {
+
+	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.199:5432/video_server_pgx_test")
+	PgxConnDatabase()
+	t.Run("创建表", func(t *testing.T) {
+		err := CreateVideoInfoTable()
+
+		assert.Nil(t, err)
+	})
+	videos := []VideoInf{
+		{
+			Title:           faker.Username(),
+			SerialNumber:    faker.Username(),
+			SourceUrl:       faker.Username(),
+			PosterName:      faker.Username(),
+			SourcePosterUrl: faker.Username(),
+			Actress:         faker.Username(),
+			PlaySrc:         faker.Username(),
+		},
+		{
+			Title:           faker.Username(),
+			SerialNumber:    faker.Username(),
+			SourceUrl:       faker.Username(),
+			SourcePosterUrl: faker.Username(),
+			Actress:         faker.Username(),
+			PlaySrc:         faker.Username(),
+		},
+		{
+			Title:           faker.Username(),
+			SerialNumber:    faker.Username(),
+			PosterName:      faker.Username(),
+			SourcePosterUrl: faker.Username(),
+			Actress:         faker.Username(),
+			PlaySrc:         faker.Username(),
+		},
+	}
+
+	t.Run("创建多条视频信息记录并保存到数据库", func(t *testing.T) {
+		for _, video := range videos {
+			err := video.Create()
+
+			assert.Nil(t, err)
+		}
+	})
+
+	t.Run("查询需要获取视频信息的记录", func(t *testing.T) {
+		videoQ, err := GetVideoToGetInfo()
+
+		assert.Nil(t, err)
+		assert.Equal(t, videos[2], *videoQ)
+	})
+
+	t.Run("查询需要下载封面的视频记录", func(t *testing.T) {
+		videoQ, err := GetVideoToDownloadPoster()
+
+		assert.Nil(t, err)
+		assert.Equal(t, videos[1], *videoQ)
+	})
+
+	t.Run("查询所有视频记录", func(t *testing.T) {
+		videosQ, err := GetAllVideosRecord()
+
+		assert.Nil(t, err)
+		assert.Len(t, videosQ, 3)
+	})
+
+	t.Run("测试查询不存在的sn", func(t *testing.T) {
+		video := &VideoInf{SerialNumber: "aaa"}
+
+		err := video.Query()
+
+		assert.Equal(t, ErrVideoNotFound, err)
+	})
+	t.Run("删除表", func(t *testing.T) {
+		assert.Nil(t, DROPVideoInfoTable())
+	})
 }

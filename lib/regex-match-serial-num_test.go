@@ -51,6 +51,10 @@ func TestGetSerialNumByRegex(t *testing.T) {
 			input:    "4k2.com@cawd-623",
 			expected: "cawd-623",
 		},
+		{
+			input:    "",
+			expected: "",
+		},
 	}
 
 	for _, c := range cases {

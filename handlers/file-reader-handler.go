@@ -19,15 +19,59 @@ type Folder struct {
 
 type DirChildElem struct {
 	Name        string `json:"name"`
+	Sn          string `json:"sn"`
 	IsFile      bool   `json:"isFile"`
 	IsFolder    bool   `json:"isFolder"`
+	IsVideo     bool   `json:"isVideo"`
 	ExtName     string `json:"extName"`
 	PlaySrc     string `json:"playSrc"`
 	CurrentPath string `json:"currentPath"` //不含末尾 "/"
-	Poster      string `json:"poster"`
+	PosterUrl   string `json:"posterUrl"`
 	Title       string `json:"title"`
 	Actress     string `json:"actress"`
 	SourceUrl   string `json:"sourceUrl"`
+}
+
+// 只设置 Name, IsFile, IsFolder, ExtName
+func (d *DirChildElem) SetValueFromfsEntry(entry os.DirEntry) {
+	d.Name = entry.Name()
+	d.IsFile = !entry.IsDir()
+	d.IsFolder = entry.IsDir()
+	if d.IsFile {
+		d.ExtName = entry.Name()[strings.LastIndex(entry.Name(), "."):]
+	}
+	d.IsVideo = lib.IsVideo(&d.ExtName)
+}
+
+func (d *DirChildElem) SetPlaySrcANDCurrentPath(path string) {
+	nginx := os.Getenv("NGINX_SERVE_ADDRESS")
+	d.CurrentPath = path
+	d.PlaySrc = nginx + path + "/" + d.Name
+}
+
+func (d *DirChildElem) SetFieldValueFromDB() error {
+	d.Sn = strings.ToLower(lib.GetSerialNumReg(d.Name))
+	if d.Sn != "" {
+		video := database.VideoInf{SerialNumber: d.Sn}
+		err := video.Query()
+		if err == database.ErrVideoNotFound {
+			video.PlaySrc = d.PlaySrc
+			//数据库中无记录，应先创建再获取actress
+			video.Create()
+			return video.GetActress()
+		}
+		if video.PlaySrc != d.PlaySrc {
+			video.PlaySrc = d.PlaySrc
+			video.GetActress()
+			return video.Update()
+		}
+		d.PosterUrl = "/assets/poster/" + video.PosterName
+		d.Title = video.Title
+		d.Actress = video.Actress
+		d.SourceUrl = video.SourceUrl
+	}
+
+	return nil
 }
 
 func ApiFileReaderHandler(c *fiber.Ctx) error {
@@ -40,7 +84,6 @@ func ApiFileReaderHandler(c *fiber.Ctx) error {
 	}
 
 	rootDir := os.Getenv("ROOT_DIR")
-	nginxServAddr := os.Getenv("NGINX_SERVE_ADDRESS")
 	entries, err := os.ReadDir(rootDir + path)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(&RespBody{
@@ -49,50 +92,22 @@ func ApiFileReaderHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	var elems = make([]DirChildElem, len(entries))
+	var elems = []DirChildElem{}
 
-	for index, entry := range entries {
-		var extName string
-
-		if strings.Contains(entry.Name(), ".") {
-			extName = entry.Name()[strings.LastIndex(entry.Name(), "."):]
-		}
-		var playSrc string
-		if lib.IsVideo(&extName) {
-			playSrc = nginxServAddr + path + "/" + entry.Name()
+	for _, entry := range entries {
+		elem := DirChildElem{}
+		elem.SetValueFromfsEntry(entry)
+		if !entry.IsDir() {
+			elem.SetPlaySrcANDCurrentPath(path)
+			elem.SetFieldValueFromDB()
 		} else {
-			playSrc = ""
+			elem.CurrentPath = path
 		}
 
-		//从数据库读取视频封面文件名
-		video := new(database.VideoInf)
-		serialNum := strings.ToLower(lib.GetSerialNumReg(entry.Name()))
-		if !entry.IsDir() && lib.IsVideo(&extName) && serialNum != "" {
-			if err := video.QueryByVideoName(serialNum); err == database.ErrVideoNotFound {
-				video.SerialNumber = serialNum
-				video.Create()
-			} else if video.PlaySrc == "" || video.PlaySrc != playSrc {
-				video.PlaySrc = playSrc
-				video.Update()
-			}
-		}
-
-		elems[index] = DirChildElem{
-			Name:        entry.Name(),
-			IsFile:      !entry.IsDir(),
-			IsFolder:    entry.IsDir(),
-			ExtName:     extName,
-			PlaySrc:     playSrc,
-			CurrentPath: path,
-			Poster:      video.PosterName,
-			Title:       video.Title,
-			Actress:     video.Actress,
-			SourceUrl:   video.SourceUrl,
-		}
+		elems = append(elems, elem)
 	}
 
-	var parentFolder string
-	var currentPath string
+	var parentFolder, currentPath string
 	if path == "" {
 		parentFolder = ""
 		currentPath = "/"
@@ -103,6 +118,7 @@ func ApiFileReaderHandler(c *fiber.Ctx) error {
 		parentFolder = path[:strings.LastIndex(path, "/")]
 		currentPath = path
 	}
+
 	return c.Status(fiber.StatusOK).JSON(&RespBody{
 		StatusCode: 200,
 		Data: &Folder{
@@ -111,5 +127,4 @@ func ApiFileReaderHandler(c *fiber.Ctx) error {
 			ChildElem:    elems,
 		},
 	})
-
 }

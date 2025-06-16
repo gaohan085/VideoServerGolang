@@ -7,12 +7,14 @@ type InterfaceMutateFunc = ReturnType<
 
 type DirElement = {
   name: string;
+  sn: string;
   isFile: boolean;
   isFolder: boolean;
+  isVideo: boolean;
   extName: string;
   playSrc: string;
   currentPath: string; // relative path
-  poster: string;
+  posterUrl: string;
   title: string;
   actress: string;
   sourceUrl: string;
@@ -31,12 +33,8 @@ type ResWithActressName = {
 };
 
 type VideoInfo = {
-  id: number;
-  createdAt: number;
-  updatedAt: number;
-  deletedAt: number;
   playSrc: string;
-  posterName: string;
+  posterUrl: string;
   serialNumber: string;
   sourcePosterUrl: string;
   sourceUrl: string;

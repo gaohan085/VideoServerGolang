@@ -70,7 +70,7 @@ func TestVideoNeedConvertedInQueue(t *testing.T) {
 }
 
 func TestGetVideoConverting(t *testing.T) {
-	t.Run("测试从空队列获取正砸转换的视频", func(t *testing.T) {
+	t.Run("测试从空队列获取正在转换的视频", func(t *testing.T) {
 		var queue = &VideoQueue{
 			Queue: []VideoConvert{},
 		}
