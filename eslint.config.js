@@ -1,26 +1,25 @@
-//eslint.config.js
-import eslintjs from "@eslint/js";
-import tsParser from "@typescript-eslint/parser";
-import importPlugin from "eslint-plugin-import";
-import react from "eslint-plugin-react";
+import js from "@eslint/js";
 import globals from "globals";
-import { configs as tsconfigs } from "typescript-eslint";
-const { configs } = eslintjs;
-const { browser } = globals;
-
-import stylistic from "@stylistic/eslint-plugin";
-import reactRefresh from "eslint-plugin-react-refresh";
+import tseslint from "typescript-eslint";
+import pluginReact from "eslint-plugin-react";
+import { defineConfig } from "eslint/config";
+import reactRefresh from "eslint-plugin-react-refresh"
+import reactHooks from "eslint-plugin-react-hooks"
 import { cwd } from "process";
-import reactHooks from 'eslint-plugin-react-hooks';
+import tsParser from "@typescript-eslint/parser";
+import stylistic from '@stylistic/eslint-plugin';
+import importPlugin from "eslint-plugin-import";
 
-export default [
-  eslintjs.configs.recommended,
-  configs.recommended,
-  importPlugin.flatConfigs.recommended,
-  importPlugin.flatConfigs.typescript,
-  ...tsconfigs.recommendedTypeChecked,
+
+export default defineConfig([
+  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },
+  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], languageOptions: { globals: globals.browser } },
+  tseslint.configs.recommended,
+  pluginReact.configs.flat.recommended,
   reactRefresh.configs.recommended,
   reactHooks.configs['recommended-latest'],
+  importPlugin.flatConfigs.recommended,
+  importPlugin.flatConfigs.typescript,
   {
     languageOptions: {
       parserOptions: {
@@ -45,9 +44,8 @@ export default [
   {
     files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
     plugins: {
-      react: react,
+      pluginReact,
     },
-    ignores: ["eslint.config.js"],
     languageOptions: {
       parser: tsParser,
       ecmaVersion: "latest",
@@ -58,7 +56,7 @@ export default [
         },
       },
       globals: {
-        ...browser,
+        ...globals.browser,
       },
     },
     rules: {
@@ -113,6 +111,8 @@ export default [
           "ignoreExternal": true
         }
       ],
+      'react/react-in-jsx-scope': 0,
+      "react/prop-types":0,
       "react/jsx-no-leaked-render": [
         1,
         {
@@ -179,4 +179,4 @@ export default [
       }
     }
   }
-];
+]);
