@@ -3,9 +3,8 @@ package database
 import (
 	"errors"
 	"fmt"
+	"go-fiber-react-ts/lib"
 	"io"
-	"net/http"
-	"net/url"
 	"os"
 	"strings"
 
@@ -134,7 +133,7 @@ func (v *VideoInf) Delete() error {
 		DELETE FROM TABLE 
 			video_infos
 		WHERE
-			serial_num = $1;	
+			serial_num = $1;
 	`
 	_, err := PgxPool.Exec(Ctx, query, v.SerialNumber)
 	return err
@@ -145,17 +144,17 @@ func (v *VideoInf) QueryByVideoSerialNum(n string) error {
 	return v.Query()
 }
 
-func (v *VideoInf) GetDetailInfo() error { //TODO Rewrite
-	proxyUrl, err := url.Parse("http://192.168.1.199:10809")
-	if err != nil {
-		return err
-	}
+func (v *VideoInf) GetActress() error {
+	fiberlog.Info("Getting Actress for " + v.SerialNumber)
+	v.Actress = strings.Split(v.PlaySrc, "/")[4]
+	return v.Update()
+}
 
+func (v *VideoInf) GetDetailInfo() error { //TODO Rewrite
 	fiberlog.Info(fmt.Sprintf("Getting Video '%s' Info.", v.SerialNumber))
-	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
-	req, _ := http.NewRequest("GET", "https://javdb.com/search?q="+v.SerialNumber+"&f=all", nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-	res, err := client.Do(req)
+
+	url := "https://javdb.com/search?q=" + v.SerialNumber + "&f=all"
+	res, err := lib.DoHttpProxyRequest(url)
 	if err != nil {
 		return err
 	}
@@ -221,14 +220,7 @@ func (v *VideoInf) DownloadPoster() error { //TODO Rewrite
 
 	//下载封面文件
 	fiberlog.Info("Downloading Video " + v.SerialNumber + " Poster.")
-	proxyUrl, err := url.Parse("http://192.168.1.199:10809")
-	if err != nil {
-		return err
-	}
-	client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyUrl)}}
-	req, _ := http.NewRequest("GET", v.SourcePosterUrl, nil)
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-	res, err := client.Do(req)
+	res, err := lib.DoHttpProxyRequest(v.SourcePosterUrl)
 	if err != nil {
 		return err
 	}
