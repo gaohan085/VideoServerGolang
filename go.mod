@@ -12,6 +12,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/gofiber/template/html/v2 v2.1.3
 	github.com/jackc/pgx/v5 v5.7.5
+	github.com/jackc/pgx/v5 v5.7.5
 	github.com/joho/godotenv v1.5.1
 	github.com/redis/go-redis/v9 v9.8.0
 	github.com/shirou/gopsutil/v3 v3.24.5
