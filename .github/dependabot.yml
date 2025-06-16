@@ -22,6 +22,7 @@ updates:
           - "plyr"
           - "@tanstack/react-router"
           - "@tanstack/react-router-devtools"
+          - "@tanstack/router-plugin"
           - "@eslint/compat"
           - "@eslint/eslintrc"
           - "@eslint/js"
