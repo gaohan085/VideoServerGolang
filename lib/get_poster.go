@@ -1,5 +1,11 @@
 package lib
 
+import (
+	"fmt"
+	"slices"
+	"strings"
+)
+
 func GenLabels() map[string][]string {
 	labels := make(map[string][]string)
 
@@ -48,4 +54,19 @@ func GenLabels() map[string][]string {
 	labels["n_1428"] = []string{"ap", "ld", "ss"}
 
 	return labels
+}
+
+func GetPosterLinkFromSN(sn string) string {
+	labels := GenLabels()
+	slice := strings.Split(strings.ToLower(sn), "-")
+	dmmMonoPics := "https://p.dmm.co.jp/mono/movie/adult"
+	id := fmt.Sprintf("%s%s", slice[0], slice[1])
+
+	for key, value := range labels {
+		if slices.Contains(value, slice[0]) {
+			return fmt.Sprintf("%s/%s/%spl.jpg", dmmMonoPics, key+id, key+id)
+		}
+	}
+
+	return fmt.Sprintf("%s/%s/%spl.jpg", dmmMonoPics, id, id)
 }
