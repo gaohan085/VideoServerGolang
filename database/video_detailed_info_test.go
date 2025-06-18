@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 	"time"
@@ -18,6 +19,15 @@ func TestCreateReturnID(t *testing.T) {
 
 		assert.Nil(t, err)
 	})
+
+	t.Run("测试查询不存在的视频记录返回错误", func(t *testing.T) {
+		video := VideoDetailedInfo{SN: faker.Username()}
+
+		err := video.Query()
+
+		assert.True(t, errors.Is(ErrVideoNotFound, err))
+	})
+
 	t.Run("保存tag到数据库成功后tag.id不为空", func(t *testing.T) {
 		tag := Tag{Name: faker.Username()}
 
@@ -107,6 +117,8 @@ func TestCreateReturnID(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.Len(t, videos, 2)
+		assert.NotEqual(t, "", videos[0].SN)
+		assert.NotEqual(t, "", videos[1].SN)
 	})
 
 	t.Run("使用演员名称查找视频", func(t *testing.T) {
