@@ -68,6 +68,18 @@ func (ac *Actor) Query() error {
 }
 
 type VideoDetailedInfo struct {
+	ID             int
+	SN             string
+	Title          string
+	ReleaseDate    time.Time
+	Duration       int //数据源自外部网站，数字单位为分钟
+	Director       string
+	Publisher      string
+	Series         string
+	Rank           float64
+	PosterUrl      string
+	SourceUrl      string
+	PosterFileName string
 	Tags           []Tag
 	Actors         []Actor
 }
