@@ -251,6 +251,9 @@ func (v *VideoDetailedInfo) Query() error {
 		&v.SourceUrl,
 		&v.PosterFileName,
 	); err != nil {
+		if err == pgx.ErrNoRows { //DONE test
+			return ErrVideoNotFound
+		}
 		return err
 	}
 
