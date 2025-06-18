@@ -11,7 +11,7 @@ type VideoBriefInfo struct {
 	SN         string `json:"sn"`
 	Title      string `json:"title"`
 	PosterUrl  string `json:"posterUrl"`
-	PlaySource string `json:"playSource"`
+	PlaySource string `json:"playSrc"`
 }
 
 func (v *VideoBriefInfo) MapDbData(dbvideo *database.VideoDetailedInfo) {
