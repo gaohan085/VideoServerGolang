@@ -1,0 +1,27 @@
+@use "../../base" as base;
+
+.fileSysSidebar {
+
+  @extend %sidebar;
+
+  [class~="file-system"] {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 12px;
+    width: 280px;
+    height: 100%;
+    scrollbar-width: none;
+
+    > div {
+      border-left: none;
+    }
+
+    @media (width <=992px) {
+      margin: 5px 0;
+      border-radius: 8px;
+      width: 300px;
+    }
+  }
+}

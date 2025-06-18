@@ -1,0 +1,23 @@
+@use "../../base";
+
+.folder {
+  @extend %element;
+  transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+  >[class~="folder-element"] {
+    @include base.name();
+
+    & {
+      cursor: pointer;
+    }
+
+    >span {
+      @include base.icon();
+    }
+
+    &:hover {
+      color: base.$main-color;
+      // text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+.container-enter {
+  opacity: 0;
+  height: auto;
+  padding-left: 10px;
+}
+
+.container-enter-active {
+  opacity: 1;
+  padding-left: 0px;
+  transition: all .3s ease-in-out;
+}
+
+.container-exit {
+  opacity: 1;
+  padding-left: 0px;
+  max-height: 100px;
+}
+
+.container-exit-active {
+  opacity: 0;
+  height: auto;
+  padding-left: 10px;
+  transition: all .3s ease-in-out;
+}
