@@ -54,6 +54,7 @@ func (d *DirChildElem) MapDbData() error {
 		if err == database.ErrVideoNotFound {
 			//数据库中无记录，应先创建再获取actress
 			go func() {
+				video.PlaySource = d.PlaySrc
 				video.Create()
 				video.DownloadPoster()
 				video.GetSourceUrl()
