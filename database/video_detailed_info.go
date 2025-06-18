@@ -68,18 +68,6 @@ func (ac *Actor) Query() error {
 }
 
 type VideoDetailedInfo struct {
-	ID             int       `json:"id"`
-	SN             string    `json:"sn"`
-	Title          string    `json:"title"`
-	ReleaseDate    time.Time `json:"releaseDate"`
-	Duration       int       `json:"duration"` //数据源自外部网站，数字单位为分钟
-	Director       string    `json:"director"`
-	Publisher      string    `json:"publisher"`
-	Series         string    `json:"series"`
-	Rank           float64   `json:"rank"`
-	PosterUrl      string    `json:"posterUrl"`
-	SourceUrl      string    `json:"sourceUrl"`
-	PosterFileName string    `json:"posterFileName"`
 	Tags           []Tag
 	Actors         []Actor
 }
