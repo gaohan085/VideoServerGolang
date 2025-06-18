@@ -36,6 +36,7 @@ func SetRoutes(app *fiber.App) {
 		api.Post("/convert", handlers.ApiConvertHandler)
 		query.Get("/director/:director", handlers.ApiQueryVideoByDirector)
 		query.Get("/publisher/:publisher", handlers.ApiQueryVideoByPublisher)
+		query.Get("/series/:series", handlers.ApiQueryVideoBySeries)
 		api.Get("/*", handlers.ApiFileReaderHandler)
 	default:
 		app.Get("/assets/*", func(c *fiber.Ctx) error {

@@ -587,6 +587,7 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 	}
 	return videos, nil
 }
+
 func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 	rows, err := PgxPool.Query(Ctx, `
@@ -598,6 +599,35 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 			publisher = $1
 		ORDER BY id;
 	`, publisher)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		video := VideoDetailedInfo{}
+
+		if err := rows.Scan(
+			&video.SN,
+			&video.Title,
+			&video.PosterFileName,
+		); err != nil {
+			return nil, err
+		}
+		videos = append(videos, video)
+	}
+	return videos, nil
+}
+
+func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
+	videos := []VideoDetailedInfo{}
+	rows, err := PgxPool.Query(Ctx, `
+		SELECT 
+			sn, title, poster_file_name
+		FROM
+			video_details
+		WHERE
+			series = $1
+		ORDER BY id;
+	`, serial)
 	if err != nil {
 		return nil, err
 	}
