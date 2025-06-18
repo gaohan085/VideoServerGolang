@@ -8,14 +8,16 @@ import (
 )
 
 type VideoBriefInfo struct {
-	SN        string `json:"sn"`
-	Title     string `json:"title"`
-	PosterUrl string `json:"posterUrl"`
+	SN         string `json:"sn"`
+	Title      string `json:"title"`
+	PosterUrl  string `json:"posterUrl"`
+	PlaySource string `json:"playSource"`
 }
 
 func (v *VideoBriefInfo) MapDbData(dbvideo *database.VideoDetailedInfo) {
 	v.SN = dbvideo.SN
 	v.Title = dbvideo.Title
+	v.PlaySource = dbvideo.PlaySource
 	if dbvideo.PosterFileName != "" {
 		v.PosterUrl = "/assets/poster/" + dbvideo.PosterFileName
 	}

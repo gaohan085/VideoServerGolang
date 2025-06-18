@@ -80,6 +80,7 @@ type VideoDetailedInfo struct {
 	PosterUrl      string
 	SourceUrl      string
 	PosterFileName string
+	PlaySource     string //本地视频播放链接
 	Tags           []Tag
 	Actors         []Actor
 }
@@ -101,7 +102,8 @@ func CreateVideoDetailedInfoTable() error {
 			rank NUMERIC(3,2),
 			poster_url TEXT,
 			source_url TEXT,
-			poster_file_name TEXT
+			poster_file_name TEXT,
+			play_source TEXT
 		);`,
 	)
 	batch.Queue(
@@ -142,7 +144,7 @@ func CreateVideoDetailedInfoTable() error {
 
 func DROPVideoDetailsTable() error {
 	_, err := PgxPool.Exec(Ctx,
-		`DROP TABLE IF EXISTS video_details, tags, actors, video_tags, video_actors CASCADE`,
+		`DROP TABLE IF EXISTS video_details, tags, actors, video_tags, video_actors CASCADE;`,
 	)
 	return err
 }
@@ -160,10 +162,11 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 			rank,
 			poster_url,
 			source_url,
-			poster_file_name
+			poster_file_name,
+			play_source
 		)
 		VALUES
-			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 		ON CONFLICT (sn) DO UPDATE SET sn = EXCLUDED.sn
 		RETURNING id;
 	`
@@ -180,6 +183,7 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 		v.PosterUrl,
 		v.SourceUrl,
 		v.PosterFileName,
+		v.PlaySource,
 	).Scan(&v.ID); err != nil {
 		return err
 	}
@@ -234,7 +238,8 @@ func (v *VideoDetailedInfo) Query() error {
 			rank,
 			poster_url,
 			source_url,
-			poster_file_name
+			poster_file_name,
+			play_source
 		FROM video_details
 		WHERE id = $1 OR sn = $2;
 	`, v.ID, v.SN).Scan(
@@ -250,6 +255,7 @@ func (v *VideoDetailedInfo) Query() error {
 		&v.PosterUrl,
 		&v.SourceUrl,
 		&v.PosterFileName,
+		&v.PlaySource,
 	); err != nil {
 		if err == pgx.ErrNoRows { //DONE test
 			return ErrVideoNotFound
@@ -307,9 +313,10 @@ func (v *VideoDetailedInfo) Update() error {
 			rank=$7,
 			poster_url = $8,
 			source_url = $9,
-			poster_file_name = $10
+			poster_file_name = $10,
+			play_source = $11
 		WHERE 
-			sn = $11 OR id = $12
+			sn = $12 OR id = $13
 		RETURNING id;
 	`, v.Title,
 		v.ReleaseDate,
@@ -321,6 +328,7 @@ func (v *VideoDetailedInfo) Update() error {
 		v.PosterUrl,
 		v.SourceUrl,
 		v.PosterFileName,
+		v.PlaySource,
 		v.SN,
 		v.ID,
 	).Scan(&v.ID); err != nil {
@@ -563,7 +571,7 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 	rows, err := PgxPool.Query(Ctx, `
 		SELECT 
-			sn, title, poster_file_name
+			sn, title, poster_file_name, play_source
 		FROM
 			video_details
 		WHERE
@@ -580,6 +588,7 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 			&video.SN,
 			&video.Title,
 			&video.PosterFileName,
+			&video.PlaySource,
 		); err != nil {
 			return nil, err
 		}
@@ -592,7 +601,7 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 	rows, err := PgxPool.Query(Ctx, `
 		SELECT 
-			sn, title, poster_file_name
+			sn, title, poster_file_name, play_source
 		FROM
 			video_details
 		WHERE
@@ -609,6 +618,7 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 			&video.SN,
 			&video.Title,
 			&video.PosterFileName,
+			&video.PlaySource,
 		); err != nil {
 			return nil, err
 		}
@@ -621,7 +631,7 @@ func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 	rows, err := PgxPool.Query(Ctx, `
 		SELECT 
-			sn, title, poster_file_name
+			sn, title, poster_file_name, play_source
 		FROM
 			video_details
 		WHERE
@@ -638,6 +648,7 @@ func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
 			&video.SN,
 			&video.Title,
 			&video.PosterFileName,
+			&video.PlaySource,
 		); err != nil {
 			return nil, err
 		}
