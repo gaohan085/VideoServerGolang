@@ -15,9 +15,6 @@ type DirElement = {
   playSrc: string;
   currentPath: string; // relative path
   posterUrl: string;
-  title: string;
-  actress: string;
-  sourceUrl: string;
 };
 
 type DirectoryProp = {
@@ -33,11 +30,8 @@ type ResWithActressName = {
 };
 
 type VideoInfo = {
-  playSrc: string;
-  posterUrl: string;
-  serialNumber: string;
-  sourcePosterUrl: string;
-  sourceUrl: string;
+  sn: string;
   title: string;
-  actress: string;
+  posterUrl: string;
+  playSrc: string;
 };
