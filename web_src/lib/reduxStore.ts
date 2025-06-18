@@ -21,9 +21,6 @@ const initialState: PlayingVideo = {
     sn: "",
     playSrc: "",
     posterUrl: "",
-    title: "",
-    actress: "",
-    sourceUrl: "",
   },
 };
 
@@ -39,10 +36,7 @@ const Slice = createSlice({
       state.playingVideo = {
         sn: "",
         playSrc: "",
-        posterUrl: "",
-        title: "",
-        actress: "",
-        sourceUrl: "",
+        posterUrl: ""
       };
     },
   },
