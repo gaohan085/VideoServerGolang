@@ -1,4 +1,7 @@
-name: NodeJS with RsBuild
+name: "NodeJS with RsBuild"
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   push:
