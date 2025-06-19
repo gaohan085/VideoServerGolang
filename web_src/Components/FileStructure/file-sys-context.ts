@@ -2,7 +2,7 @@
 
 import { createContext } from "react";
 import type { useSWRConfig } from "swr";
-import type { UseStateReturnType, DirElement } from "./types.d.ts";
+import type { DirElement, UseStateReturnType } from "../types.js";
 
 const Context = createContext<{
   clicked?: UseStateReturnType<boolean>[0];

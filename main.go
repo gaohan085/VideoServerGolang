@@ -91,7 +91,7 @@ func main() {
 		TimeZone:   "Asia/Shanghai",
 	}
 	loggerConfigPro := logger.Config{
-		Format:     "[${time}] ${ip} ${status} ${latency} ${method} ${path} - ${ua}\n",
+		Format:     "[${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path} | ${ua}\n",
 		TimeFormat: "2006/Jan/02 15:04:05",
 		TimeZone:   "Asia/Shanghai",
 		Output:     file,

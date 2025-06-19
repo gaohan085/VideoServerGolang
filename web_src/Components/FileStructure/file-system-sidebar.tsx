@@ -4,13 +4,13 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FcPrevious } from "react-icons/fc";
 import { useSWRConfig } from "swr";
-import useWindowDimension from "../lib/useWindowDimension.ts";
+import useWindowDimension from "../../lib/useWindowDimension.ts";
+import Spinner from "../spinner.tsx";
+import { DiskUsage } from "../status-bar.tsx";
+import type { DirElement } from "../types.js";
 import CtxMenu from "./context-menu.tsx";
 import Context from "./file-sys-context.ts";
 import styles from "./file-system-sidebar.module.scss";
-import Spinner from "./spinner.tsx";
-import { DiskUsage } from "./status-bar.tsx";
-import type { DirElement } from "./types.d.ts";
 
 const LazyErrElement = lazy(() => import("./error-element.tsx"));
 const LazyContainer = lazy(() => import("./container-element.tsx"));

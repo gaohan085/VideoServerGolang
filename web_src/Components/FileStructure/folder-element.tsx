@@ -3,11 +3,11 @@
 import { lazy, Suspense, useContext, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
+import Spinner from "../spinner.tsx";
+import type { DirElement } from "../types.d.ts";
 import Context from "./file-sys-context.ts";
 import styles from "./folder-element.module.scss";
 import RenameElement from "./rename-element.tsx";
-import Spinner from "./spinner.tsx";
-import type { DirElement } from "./types.d.ts";
 
 const LazyErrElement = lazy(() => import("./error-element.tsx"));
 const LazyContainer = lazy(() => import("./container-element.tsx"));

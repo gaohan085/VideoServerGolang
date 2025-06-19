@@ -12,7 +12,11 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
-import { Route as ActressNameImport } from './routes/actress.$name'
+import { Route as TagNameImport } from './routes/tag.$name'
+import { Route as SeriesNameImport } from './routes/series.$name'
+import { Route as PublisherNameImport } from './routes/publisher.$name'
+import { Route as DirectorNameImport } from './routes/director.$name'
+import { Route as ActorNameImport } from './routes/actor.$name'
 
 // Create/Update Routes
 
@@ -22,9 +26,33 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ActressNameRoute = ActressNameImport.update({
-  id: '/actress/$name',
-  path: '/actress/$name',
+const TagNameRoute = TagNameImport.update({
+  id: '/tag/$name',
+  path: '/tag/$name',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SeriesNameRoute = SeriesNameImport.update({
+  id: '/series/$name',
+  path: '/series/$name',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PublisherNameRoute = PublisherNameImport.update({
+  id: '/publisher/$name',
+  path: '/publisher/$name',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DirectorNameRoute = DirectorNameImport.update({
+  id: '/director/$name',
+  path: '/director/$name',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ActorNameRoute = ActorNameImport.update({
+  id: '/actor/$name',
+  path: '/actor/$name',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,11 +67,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/actress/$name': {
-      id: '/actress/$name'
-      path: '/actress/$name'
-      fullPath: '/actress/$name'
-      preLoaderRoute: typeof ActressNameImport
+    '/actor/$name': {
+      id: '/actor/$name'
+      path: '/actor/$name'
+      fullPath: '/actor/$name'
+      preLoaderRoute: typeof ActorNameImport
+      parentRoute: typeof rootRoute
+    }
+    '/director/$name': {
+      id: '/director/$name'
+      path: '/director/$name'
+      fullPath: '/director/$name'
+      preLoaderRoute: typeof DirectorNameImport
+      parentRoute: typeof rootRoute
+    }
+    '/publisher/$name': {
+      id: '/publisher/$name'
+      path: '/publisher/$name'
+      fullPath: '/publisher/$name'
+      preLoaderRoute: typeof PublisherNameImport
+      parentRoute: typeof rootRoute
+    }
+    '/series/$name': {
+      id: '/series/$name'
+      path: '/series/$name'
+      fullPath: '/series/$name'
+      preLoaderRoute: typeof SeriesNameImport
+      parentRoute: typeof rootRoute
+    }
+    '/tag/$name': {
+      id: '/tag/$name'
+      path: '/tag/$name'
+      fullPath: '/tag/$name'
+      preLoaderRoute: typeof TagNameImport
       parentRoute: typeof rootRoute
     }
   }
@@ -53,37 +109,76 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/actress/$name': typeof ActressNameRoute
+  '/actor/$name': typeof ActorNameRoute
+  '/director/$name': typeof DirectorNameRoute
+  '/publisher/$name': typeof PublisherNameRoute
+  '/series/$name': typeof SeriesNameRoute
+  '/tag/$name': typeof TagNameRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/actress/$name': typeof ActressNameRoute
+  '/actor/$name': typeof ActorNameRoute
+  '/director/$name': typeof DirectorNameRoute
+  '/publisher/$name': typeof PublisherNameRoute
+  '/series/$name': typeof SeriesNameRoute
+  '/tag/$name': typeof TagNameRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/actress/$name': typeof ActressNameRoute
+  '/actor/$name': typeof ActorNameRoute
+  '/director/$name': typeof DirectorNameRoute
+  '/publisher/$name': typeof PublisherNameRoute
+  '/series/$name': typeof SeriesNameRoute
+  '/tag/$name': typeof TagNameRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/actress/$name'
+  fullPaths:
+    | '/'
+    | '/actor/$name'
+    | '/director/$name'
+    | '/publisher/$name'
+    | '/series/$name'
+    | '/tag/$name'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/actress/$name'
-  id: '__root__' | '/' | '/actress/$name'
+  to:
+    | '/'
+    | '/actor/$name'
+    | '/director/$name'
+    | '/publisher/$name'
+    | '/series/$name'
+    | '/tag/$name'
+  id:
+    | '__root__'
+    | '/'
+    | '/actor/$name'
+    | '/director/$name'
+    | '/publisher/$name'
+    | '/series/$name'
+    | '/tag/$name'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ActressNameRoute: typeof ActressNameRoute
+  ActorNameRoute: typeof ActorNameRoute
+  DirectorNameRoute: typeof DirectorNameRoute
+  PublisherNameRoute: typeof PublisherNameRoute
+  SeriesNameRoute: typeof SeriesNameRoute
+  TagNameRoute: typeof TagNameRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ActressNameRoute: ActressNameRoute,
+  ActorNameRoute: ActorNameRoute,
+  DirectorNameRoute: DirectorNameRoute,
+  PublisherNameRoute: PublisherNameRoute,
+  SeriesNameRoute: SeriesNameRoute,
+  TagNameRoute: TagNameRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,14 +192,30 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/actress/$name"
+        "/actor/$name",
+        "/director/$name",
+        "/publisher/$name",
+        "/series/$name",
+        "/tag/$name"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/actress/$name": {
-      "filePath": "actress.$name.tsx"
+    "/actor/$name": {
+      "filePath": "actor.$name.tsx"
+    },
+    "/director/$name": {
+      "filePath": "director.$name.tsx"
+    },
+    "/publisher/$name": {
+      "filePath": "publisher.$name.tsx"
+    },
+    "/series/$name": {
+      "filePath": "series.$name.tsx"
+    },
+    "/tag/$name": {
+      "filePath": "tag.$name.tsx"
     }
   }
 }

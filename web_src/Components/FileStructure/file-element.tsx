@@ -2,13 +2,13 @@
 
 import { useContext, useEffect, useState } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
-import isVideo from "../lib/is-video.ts";
-import * as redux from "../lib/reduxStore.ts";
+import isVideo from "../../lib/is-video.ts";
+import * as redux from "../../lib/reduxStore.ts";
+import type { DirElement } from "../types.d.ts";
+import WsContext from "../websocket-ctx.ts";
 import styles from "./file-element.module.scss";
 import Context from "./file-sys-context.ts";
 import RenameElement from "./rename-element.tsx";
-import type { DirElement } from "./types.d.ts";
-import WsContext from "./websocket-ctx.ts";
 
 type FileElementProps = Readonly<{
   elem: DirElement;

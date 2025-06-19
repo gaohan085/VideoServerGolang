@@ -27,9 +27,6 @@ type DirChildElem struct {
 	PlaySrc     string `json:"playSrc"`
 	CurrentPath string `json:"currentPath"` //不含末尾 "/"
 	PosterUrl   string `json:"posterUrl"`
-	Title       string `json:"title"`
-	Actress     string `json:"actress"`
-	SourceUrl   string `json:"sourceUrl"`
 }
 
 // 只设置 Name, IsFile, IsFolder, ExtName
@@ -49,26 +46,25 @@ func (d *DirChildElem) SetPlaySrcANDCurrentPath(path string) {
 	d.PlaySrc = nginx + path + "/" + d.Name
 }
 
-func (d *DirChildElem) SetFieldValueFromDB() error {
+func (d *DirChildElem) MapDbData() error {
 	d.Sn = strings.ToLower(lib.GetSerialNumReg(d.Name))
 	if d.Sn != "" {
-		video := database.VideoInf{SerialNumber: d.Sn}
+		video := database.VideoDetailedInfo{SN: d.Sn}
 		err := video.Query()
 		if err == database.ErrVideoNotFound {
-			video.PlaySrc = d.PlaySrc
 			//数据库中无记录，应先创建再获取actress
-			video.Create()
-			return video.GetActress()
+			go func() {
+				video.PlaySource = d.PlaySrc
+				video.Create()
+				video.DownloadPoster()
+				video.GetSourceUrl()
+				video.GetDetailInfo()
+			}()
 		}
-		if video.PlaySrc != d.PlaySrc {
-			video.PlaySrc = d.PlaySrc
-			video.GetActress()
-			return video.Update()
+
+		if video.PosterFileName != "" {
+			d.PosterUrl = "/assets/poster/" + video.PosterFileName
 		}
-		d.PosterUrl = "/assets/poster/" + video.PosterName
-		d.Title = video.Title
-		d.Actress = video.Actress
-		d.SourceUrl = video.SourceUrl
 	}
 
 	return nil
@@ -99,7 +95,7 @@ func ApiFileReaderHandler(c *fiber.Ctx) error {
 		elem.SetValueFromfsEntry(entry)
 		if !entry.IsDir() {
 			elem.SetPlaySrcANDCurrentPath(path)
-			elem.SetFieldValueFromDB()
+			elem.MapDbData()
 		} else {
 			elem.CurrentPath = path
 		}

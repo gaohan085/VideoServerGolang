@@ -10,11 +10,11 @@ import {
   FcServices,
   FcStart,
 } from "react-icons/fc";
-import isVideo from "../lib/is-video.ts";
-import * as redux from "../lib/reduxStore.ts";
+import isVideo from "../../lib/is-video.ts";
+import * as redux from "../../lib/reduxStore.ts";
+import type { DirElement } from "../types.d.ts";
 import styles from "./context-menu.module.scss";
 import Context from "./file-sys-context.ts";
-import type { DirElement } from "./types.d.ts";
 
 const PlayVideo: React.FC = () => {
   return (

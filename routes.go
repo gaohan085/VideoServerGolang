@@ -32,8 +32,16 @@ func SetRoutes(app *fiber.App) {
 		api.Post("/delete", handlers.ApiDeleteHandler)
 		api.Post("/rename", handlers.ApiRenameHandler)
 		api.Get("/version", handlers.ApiAppVersionHandler)
-		api.Get("/actress/:name", handlers.GetVideosByActress)
 		api.Post("/convert", handlers.ApiConvertHandler)
+
+		query := api.Group("/query")
+		query.Get("/sn/:sn<regex(([0-9]|[a-z]|[A-Z]){3,}-[0-9]{3,})>", handlers.ApiQueryVideoInfoBySN)
+		query.Get("/tag/:tag", handlers.ApiQueryVideoByTag)
+		query.Get("/director/:director", handlers.ApiQueryVideoByDirector)
+		query.Get("/publisher/:publisher", handlers.ApiQueryVideoByPublisher)
+		query.Get("/series/:series", handlers.ApiQueryVideoBySeries)
+		query.Get("/actor/:name", handlers.ApiGetVideosByActress)
+
 		api.Get("/*", handlers.ApiFileReaderHandler)
 	default:
 		app.Get("/assets/*", func(c *fiber.Ctx) error {

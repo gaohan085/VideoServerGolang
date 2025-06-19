@@ -1,8 +1,9 @@
 "use client";
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import React, { lazy } from "react";
 import Spinner from "../Components/spinner.tsx";
+import type { ResWithActressName } from "../Components/types.js";
 import fetcher from "../lib/fetcher.ts";
 import useTitle from "../lib/useTitle.ts";
 
@@ -12,18 +13,20 @@ const LazyWsLayer = lazy(() => import("../Components/websocket.tsx"));
 
 const ActressNameComponent: React.FC = () => {
   const { name } = Route.useParams();
-  useTitle(name as string);
+  useTitle(`发行商：${name as string}`);
+  const { data: videos }: ResWithActressName = useLoaderData({ from: "/publisher/$name" });
+
   return (
     <LazyWsLayer>
-      <LazyVideoBox />
+      <LazyVideoBox videos={videos}/>
     </LazyWsLayer>
   );
 };
 
-export const Route = createFileRoute("/actress/$name")({
+export const Route = createFileRoute("/publisher/$name")({
   component: () => <ActressNameComponent />,
-  loader: async ({ params: { name } }) => (await fetcher(`/api/actress/${name}`)),
-  pendingComponent: () => <Spinner fontSize={24} />,
+  loader: async ({ params: { name } }) => (await fetcher(`/api/query/publisher/${name}`)),
+  pendingComponent: () => <div style={{ display: "flex", minWidth:320  }}><Spinner fontSize={24} /></div>,
   errorComponent: e => (
     <>
       {e.error.message}

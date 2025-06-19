@@ -5,7 +5,7 @@ import React, { lazy, useEffect, useRef } from "react";
 import * as redux from "../lib/reduxStore.ts";
 import styles from "./player.module.scss";
 
-const LazyTitle = lazy(() => import("./player-title.tsx"));
+const LazyInfo = lazy(() => import("./player-title.tsx"));
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -66,7 +66,6 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     if (encodeURI(videoPlaying.playSrc) !== currPlaySrc) {
       plyr.source = {
         type: "video",
-        title: videoPlaying?.title,
         poster: videoPlaying?.posterUrl,
         sources: [
           {
@@ -99,7 +98,7 @@ const Player: React.FC = () => {
   return (
     <div className={styles.player}>
       <video ref={ref} />
-      <LazyTitle />
+      <LazyInfo />
     </div>
   );
 };

@@ -4,8 +4,8 @@ import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import { lazy } from "react";
 import useSWR from "swr";
-import sortElements from "../lib/sort-elements-by-name.ts";
-import type { DirectoryProp, DirElement } from "./types.d.ts";
+import sortElements from "../../lib/sort-elements-by-name.ts";
+import type { DirectoryProp, DirElement } from "../types.js";
 
 const LazyFileElement = lazy(() => import("./file-element.tsx"));
 const LazyFolderElement = lazy(() => import("./folder-element.tsx"));

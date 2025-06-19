@@ -2,8 +2,6 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    reviewers:
-      - "gaohan085"
     versioning-strategy: increase
     schedule:
       interval: "monthly"
