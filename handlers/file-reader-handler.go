@@ -30,7 +30,7 @@ type DirChildElem struct {
 }
 
 // 只设置 Name, IsFile, IsFolder, ExtName
-func (d *DirChildElem) SetValueFromfsEntry(entry os.DirEntry) {
+func (d *DirChildElem) MapfsEntryData(entry os.DirEntry) {
 	d.Name = entry.Name()
 	d.IsFile = !entry.IsDir()
 	d.IsFolder = entry.IsDir()
@@ -41,18 +41,20 @@ func (d *DirChildElem) SetValueFromfsEntry(entry os.DirEntry) {
 }
 
 func (d *DirChildElem) SetPlaySrcANDCurrentPath(path string) {
-	nginx := os.Getenv("NGINX_SERVE_ADDRESS")
 	d.CurrentPath = path
-	d.PlaySrc = nginx + path + "/" + d.Name
+	if d.IsVideo {
+		nginx := os.Getenv("NGINX_SERVE_ADDRESS")
+		d.PlaySrc = nginx + path + "/" + d.Name
+	}
 }
 
-func (d *DirChildElem) MapDbData() error {
+func (d *DirChildElem) MapDBData() error {
 	d.Sn = strings.ToLower(lib.GetSerialNumReg(d.Name))
-	if d.Sn != "" {
+	if d.Sn != "" && d.IsVideo {
 		video := database.VideoDetailedInfo{SN: d.Sn}
 		err := video.Query()
 		if err == database.ErrVideoNotFound {
-			//数据库中无记录，应先创建再获取actress
+			//数据库中无记录，应先创建再获取封面等信息
 			go func() {
 				video.PlaySource = d.PlaySrc
 				video.Create()
@@ -65,8 +67,13 @@ func (d *DirChildElem) MapDbData() error {
 		if video.PosterFileName != "" {
 			d.PosterUrl = "/assets/poster/" + video.PosterFileName
 		}
-	}
 
+		//In case move file, check video playsource
+		if video.PlaySource != d.PlaySrc {
+			video.PlaySource = d.PlaySrc
+			return video.Update()
+		}
+	}
 	return nil
 }
 
@@ -92,10 +99,10 @@ func ApiFileReaderHandler(c *fiber.Ctx) error {
 
 	for _, entry := range entries {
 		elem := DirChildElem{}
-		elem.SetValueFromfsEntry(entry)
+		elem.MapfsEntryData(entry)
 		if !entry.IsDir() {
 			elem.SetPlaySrcANDCurrentPath(path)
-			elem.MapDbData()
+			elem.MapDBData()
 		} else {
 			elem.CurrentPath = path
 		}
