@@ -47,11 +47,11 @@ const Actors: React.FC<{ actors: { name: string; sex: "male" | "female" }[] }> =
         const IsFemale = actor.sex === "female";
         return (
           <Link to={`/actor/${actor.name}`} key={index}>
+            {actor.name}
             <span style={{ color: IsFemale ? "#e85982" : "" }}>
               {!!IsFemale && <PiGenderFemaleBold />}
               {!IsFemale && <PiGenderMaleBold />}
             </span>
-            {actor.name}
           </Link>
         );
       })}
