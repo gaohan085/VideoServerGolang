@@ -20,7 +20,7 @@ const config = defineConfig({
   },
   source: {
     entry: {
-      index: "./web_src/index.ts"
+      index: "./web_src/index.tsx"
     }
   },
   plugins: [pluginReact(
