@@ -2,8 +2,7 @@
 
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { LazyMotion } from "motion/react";
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import React from "react";
 import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
 import fetcher from "./lib/fetcher.ts";
@@ -19,25 +18,23 @@ declare module "@tanstack/react-router" {
   }
 }
 
-const renderApp = (app: HTMLElement): void => {
-  createRoot(app).render(
-    <StrictMode>
-      <SWRConfig
-        value={{
-          refreshInterval: 120000,
-          fetcher: fetcher,
-          revalidateOnFocus: true,
-          suspense: true,
-        }}
-      >
-        <Provider store={redux.store}>
-          <LazyMotion features={loadFeatures} strict>
-            <RouterProvider router={router} />
-          </LazyMotion>
-        </Provider>
-      </SWRConfig>
-    </StrictMode>,
+const App: React.FC = () => {
+  return (
+    <SWRConfig
+      value={{
+        refreshInterval: 120000,
+        fetcher: fetcher,
+        revalidateOnFocus: true,
+        suspense: true,
+      }}
+    >
+      <Provider store={redux.store}>
+        <LazyMotion features={loadFeatures} strict>
+          <RouterProvider router={router} />
+        </LazyMotion>
+      </Provider>
+    </SWRConfig>
   );
 };
 
-export default renderApp;
+export default App;
