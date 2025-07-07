@@ -11,8 +11,10 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <Suspense fallback={<Spinner fontSize={30} />}>
-        <LazyPlayer />
-        <Outlet />
+        <div className="outlet">
+          <LazyPlayer />
+          <Outlet />
+        </div>
       </Suspense>
       <TanStackRouterDevtools />
     </>

@@ -18,13 +18,13 @@
     justify-content: space-between;
 
     >div:nth-child(1) {
-      margin-block-start: 0.5em;
+      margin-block-start: 0.3em;
     }
 
     >div {
-      margin-block-start: 0.2em;
-      line-height: 23px;
-      font-size: 14px;
+      height: 24px;
+      line-height: 24px;
+      font-size: 13px;
 
       >strong {
         padding-right: 5px;
@@ -45,24 +45,31 @@
   }
 }
 
-.tag,
-.actor {
-  >a {
+.tag>a,
+.actor>a {
+  font-size: 13px;
+  margin: 0 4px 0 0;
+  padding: 1px 5px 3px;
+  border-radius: 8px;
+  background-color: color.adjust(base.$backgrdColor, $lightness: 10%);
+
+  &:hover {
+    background-color: color.adjust(base.$backgrdColor, $lightness: 20%);
+  }
+
+  >span {
+    color: #6190c9;
+    font-size: 11px;
+    vertical-align: baseline;
+  }
+}
+
+.actor>a {
+  padding-left: 6px;
+
+  >span {
     font-size: 13px;
-    margin: 0 4px 0 0;
-    padding: 2px 5px 2px 5px;
-    border-radius: 8px;
-    background-color: color.adjust(base.$backgrdColor, $lightness: 10%);
-
-    &:hover {
-      background-color: color.adjust(base.$backgrdColor, $lightness: 20%);
-    }
-
-    >span {
-      color: #6190c9;
-      font-size: 11px;
-      vertical-align: baseline;
-    }
+    vertical-align: middle;
   }
 }
 

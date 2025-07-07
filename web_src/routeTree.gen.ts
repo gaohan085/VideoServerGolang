@@ -8,104 +8,44 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as TagNameRouteImport } from './routes/tag.$name'
+import { Route as SeriesNameRouteImport } from './routes/series.$name'
+import { Route as PublisherNameRouteImport } from './routes/publisher.$name'
+import { Route as DirectorNameRouteImport } from './routes/director.$name'
+import { Route as ActorNameRouteImport } from './routes/actor.$name'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
-import { Route as TagNameImport } from './routes/tag.$name'
-import { Route as SeriesNameImport } from './routes/series.$name'
-import { Route as PublisherNameImport } from './routes/publisher.$name'
-import { Route as DirectorNameImport } from './routes/director.$name'
-import { Route as ActorNameImport } from './routes/actor.$name'
-
-// Create/Update Routes
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const TagNameRoute = TagNameImport.update({
+const TagNameRoute = TagNameRouteImport.update({
   id: '/tag/$name',
   path: '/tag/$name',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const SeriesNameRoute = SeriesNameImport.update({
+const SeriesNameRoute = SeriesNameRouteImport.update({
   id: '/series/$name',
   path: '/series/$name',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const PublisherNameRoute = PublisherNameImport.update({
+const PublisherNameRoute = PublisherNameRouteImport.update({
   id: '/publisher/$name',
   path: '/publisher/$name',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const DirectorNameRoute = DirectorNameImport.update({
+const DirectorNameRoute = DirectorNameRouteImport.update({
   id: '/director/$name',
   path: '/director/$name',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const ActorNameRoute = ActorNameImport.update({
+const ActorNameRoute = ActorNameRouteImport.update({
   id: '/actor/$name',
   path: '/actor/$name',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/actor/$name': {
-      id: '/actor/$name'
-      path: '/actor/$name'
-      fullPath: '/actor/$name'
-      preLoaderRoute: typeof ActorNameImport
-      parentRoute: typeof rootRoute
-    }
-    '/director/$name': {
-      id: '/director/$name'
-      path: '/director/$name'
-      fullPath: '/director/$name'
-      preLoaderRoute: typeof DirectorNameImport
-      parentRoute: typeof rootRoute
-    }
-    '/publisher/$name': {
-      id: '/publisher/$name'
-      path: '/publisher/$name'
-      fullPath: '/publisher/$name'
-      preLoaderRoute: typeof PublisherNameImport
-      parentRoute: typeof rootRoute
-    }
-    '/series/$name': {
-      id: '/series/$name'
-      path: '/series/$name'
-      fullPath: '/series/$name'
-      preLoaderRoute: typeof SeriesNameImport
-      parentRoute: typeof rootRoute
-    }
-    '/tag/$name': {
-      id: '/tag/$name'
-      path: '/tag/$name'
-      fullPath: '/tag/$name'
-      preLoaderRoute: typeof TagNameImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -115,7 +55,6 @@ export interface FileRoutesByFullPath {
   '/series/$name': typeof SeriesNameRoute
   '/tag/$name': typeof TagNameRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/actor/$name': typeof ActorNameRoute
@@ -124,9 +63,8 @@ export interface FileRoutesByTo {
   '/series/$name': typeof SeriesNameRoute
   '/tag/$name': typeof TagNameRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/actor/$name': typeof ActorNameRoute
   '/director/$name': typeof DirectorNameRoute
@@ -134,7 +72,6 @@ export interface FileRoutesById {
   '/series/$name': typeof SeriesNameRoute
   '/tag/$name': typeof TagNameRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -162,7 +99,6 @@ export interface FileRouteTypes {
     | '/tag/$name'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ActorNameRoute: typeof ActorNameRoute
@@ -170,6 +106,53 @@ export interface RootRouteChildren {
   PublisherNameRoute: typeof PublisherNameRoute
   SeriesNameRoute: typeof SeriesNameRoute
   TagNameRoute: typeof TagNameRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tag/$name': {
+      id: '/tag/$name'
+      path: '/tag/$name'
+      fullPath: '/tag/$name'
+      preLoaderRoute: typeof TagNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/series/$name': {
+      id: '/series/$name'
+      path: '/series/$name'
+      fullPath: '/series/$name'
+      preLoaderRoute: typeof SeriesNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/publisher/$name': {
+      id: '/publisher/$name'
+      path: '/publisher/$name'
+      fullPath: '/publisher/$name'
+      preLoaderRoute: typeof PublisherNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/director/$name': {
+      id: '/director/$name'
+      path: '/director/$name'
+      fullPath: '/director/$name'
+      preLoaderRoute: typeof DirectorNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/actor/$name': {
+      id: '/actor/$name'
+      path: '/actor/$name'
+      fullPath: '/actor/$name'
+      preLoaderRoute: typeof ActorNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -180,43 +163,6 @@ const rootRouteChildren: RootRouteChildren = {
   SeriesNameRoute: SeriesNameRoute,
   TagNameRoute: TagNameRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/actor/$name",
-        "/director/$name",
-        "/publisher/$name",
-        "/series/$name",
-        "/tag/$name"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/actor/$name": {
-      "filePath": "actor.$name.tsx"
-    },
-    "/director/$name": {
-      "filePath": "director.$name.tsx"
-    },
-    "/publisher/$name": {
-      "filePath": "publisher.$name.tsx"
-    },
-    "/series/$name": {
-      "filePath": "series.$name.tsx"
-    },
-    "/tag/$name": {
-      "filePath": "tag.$name.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
