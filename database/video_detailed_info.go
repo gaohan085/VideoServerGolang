@@ -371,6 +371,22 @@ func (v *VideoDetailedInfo) Update() error {
 	return nil
 }
 
+func (v *VideoDetailedInfo) Delete() error {
+	if v.ID == 0 && v.SN != "" {
+		if err := v.Query(); err != nil {
+			return err
+		}
+	}
+
+	batch := &pgx.Batch{}
+	batch.Queue(`DELETE FROM video_tags WHERE video_id = $1`, v.ID)
+	batch.Queue(`DELETE FROM video_actors WHERE video_id = $1`, v.ID)
+	batch.Queue(`DELETE FROM video_details WHERE id = $1`, v.ID)
+
+	_, err := PgxPool.SendBatch(Ctx, batch).Exec()
+	return err
+}
+
 func (v *VideoDetailedInfo) DownloadPoster() error {
 	v.PosterUrl = lib.GetPosterLinkFromSN(v.SN)
 	v.PosterFileName = fmt.Sprintf("%s%s.jpg", strings.Split(v.SN, "-")[0], strings.Split(v.SN, "-")[1])
