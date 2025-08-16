@@ -16,12 +16,7 @@ func ApiGetVideosByActress(c *fiber.Ctx) error {
 	}
 	videos, err := database.QueryVideoByActor(actressName)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(
-			&RespBody{
-				StatusCode: fiber.StatusInternalServerError,
-				Data:       err.Error(),
-			},
-		)
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	videosBrief := []VideoBriefInfo{}

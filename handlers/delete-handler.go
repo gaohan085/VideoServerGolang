@@ -11,13 +11,12 @@ func ApiDeleteHandler(c *fiber.Ctx) error {
 
 	rootDir := os.Getenv("ROOT_DIR")
 
-	c.BodyParser(&fileinfo)
+	if err := c.BodyParser(&fileinfo); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
 
 	if err := os.RemoveAll(rootDir + fileinfo.CurrentPath + "/" + fileinfo.Name); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
-			StatusCode: 500,
-			Data:       err.Error(),
-		})
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	return c.Status(fiber.StatusOK).JSON(&RespBody{

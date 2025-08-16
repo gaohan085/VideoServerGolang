@@ -26,21 +26,11 @@ func (v *VideoBriefInfo) MapDbData(dbvideo *database.VideoDetailedInfo) {
 func ApiQueryVideoByTag(c *fiber.Ctx) error {
 	tag, err := url.QueryUnescape(c.Params("tag"))
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(
-			&RespBody{
-				StatusCode: fiber.StatusInternalServerError,
-				Data:       err.Error(),
-			},
-		)
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	videos, err := database.QueryVideosByTag(tag)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(
-			&RespBody{
-				StatusCode: fiber.StatusInternalServerError,
-				Data:       err.Error(),
-			},
-		)
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	videosBrief := []VideoBriefInfo{}

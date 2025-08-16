@@ -10,22 +10,12 @@ import (
 func ApiQueryVideoBySeries(c *fiber.Ctx) error {
 	series, err := url.QueryUnescape(c.Params("series"))
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(
-			&RespBody{
-				StatusCode: fiber.StatusInternalServerError,
-				Data:       err.Error(),
-			},
-		)
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	videos, err := database.QueryVideosBySeries(series)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(
-			&RespBody{
-				StatusCode: fiber.StatusInternalServerError,
-				Data:       err.Error(),
-			},
-		)
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	videosBrief := []VideoBriefInfo{}

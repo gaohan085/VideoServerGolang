@@ -59,18 +59,13 @@ func ApiQueryVideoInfoBySN(c *fiber.Ctx) error {
 
 	if err := video.Query(); err != nil {
 		if errors.Is(err, database.ErrVideoNotFound) {
-			return c.Status(fiber.StatusNotFound).JSON(
-				&RespBody{
-					StatusCode: fiber.StatusNotFound,
-					Data:       err.Error(),
-				},
-			)
+			return fiber.NewError(404, err.Error())
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(
-			&RespBody{
-				StatusCode: fiber.StatusInternalServerError,
-				Data:       err.Error(),
-			})
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	if video.SN != "" && video.Title == "" {
+		video.GetDetailInfo()
 	}
 
 	videoBySn.MapDbData(video)
