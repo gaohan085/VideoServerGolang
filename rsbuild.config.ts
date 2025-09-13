@@ -40,7 +40,12 @@ const config = defineConfig({
         routesDirectory: "./web_src/routes",
         generatedRouteTree: "./web_src/routeTree.gen.ts"
       })]
-    }
+    },
+    postcss:{
+      postcssOptions:{
+        config: false,
+      },
+    },
   },
 
   output: {
