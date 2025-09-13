@@ -19,7 +19,7 @@
     "@reduxjs/toolkit": "^2.7.0",
     "@tanstack/react-router": "^1.130.9",
     "@tanstack/react-router-devtools": "^1.130.9",
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "motion": "^12.23.12",
     "plyr": "^3.7.8",
     "react": "^19.1.1",
