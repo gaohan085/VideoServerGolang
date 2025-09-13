@@ -65,6 +65,7 @@ func ApiQueryVideoInfoBySN(c *fiber.Ctx) error {
 	}
 
 	if video.SN != "" && video.Title == "" {
+		video.GetSourceUrl()
 		video.GetDetailInfo()
 	}
 
