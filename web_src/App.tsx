@@ -5,6 +5,7 @@ import { LazyMotion } from "motion/react";
 import React from "react";
 import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
+import Spinner from "./Components/spinner.tsx";
 import fetcher from "./lib/fetcher.ts";
 import * as redux from "./lib/reduxStore.ts";
 import { routeTree } from "./routeTree.gen.ts";
@@ -30,7 +31,7 @@ const App: React.FC = () => {
     >
       <Provider store={redux.store}>
         <LazyMotion features={loadFeatures} strict>
-          <RouterProvider router={router} />
+          <RouterProvider router={router} defaultPendingComponent={() => <Spinner fontSize={24} />} />
         </LazyMotion>
       </Provider>
     </SWRConfig>

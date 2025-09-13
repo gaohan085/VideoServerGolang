@@ -1,15 +1,17 @@
 import config from "./rsbuild.config.ts";
 
+const host = "http://192.168.1.199";
+
 config.server!.proxy = {
   "/api": {
-    target: "http://127.0.0.1:3000"
+    target: host
   },
   "/api/ws": {
-    target: "http://127.0.0.1:3000",
+    target: host,
     ws: true
   },
   "/assets": {
-    target: "http://127.0.0.1:3000"
+    target: host,
   }
 };
 
