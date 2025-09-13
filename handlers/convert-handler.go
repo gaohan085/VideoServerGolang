@@ -11,13 +11,17 @@ func ApiConvertHandler(ctx *fiber.Ctx) error {
 	var videoInfo *DirChildElem
 	var queue *database.VideoQueue
 
-	ctx.BodyParser(&videoInfo)
+	if err := ctx.BodyParser(&videoInfo); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
 
-	queue.Join(&database.VideoConvert{
+	if err := queue.Join(&database.VideoConvert{
 		Path:       videoInfo.CurrentPath,
 		FileName:   videoInfo.Name,
 		PlaySource: videoInfo.PlaySrc,
-	})
+	}); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
 
 	return ctx.SendStatus(fiber.StatusOK)
 }

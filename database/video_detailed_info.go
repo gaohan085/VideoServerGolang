@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 	"go-fiber-react-ts/lib"
 	"io"
@@ -371,6 +372,22 @@ func (v *VideoDetailedInfo) Update() error {
 	return nil
 }
 
+func (v *VideoDetailedInfo) Delete() error {
+	if v.ID == 0 && v.SN != "" {
+		if err := v.Query(); err != nil {
+			return err
+		}
+	}
+
+	batch := &pgx.Batch{}
+	batch.Queue(`DELETE FROM video_tags WHERE video_id = $1`, v.ID)
+	batch.Queue(`DELETE FROM video_actors WHERE video_id = $1`, v.ID)
+	batch.Queue(`DELETE FROM video_details WHERE id = $1`, v.ID)
+
+	_, err := PgxPool.SendBatch(Ctx, batch).Exec()
+	return err
+}
+
 func (v *VideoDetailedInfo) DownloadPoster() error {
 	v.PosterUrl = lib.GetPosterLinkFromSN(v.SN)
 	v.PosterFileName = fmt.Sprintf("%s%s.jpg", strings.Split(v.SN, "-")[0], strings.Split(v.SN, "-")[1])
@@ -498,6 +515,13 @@ func (v *VideoDetailedInfo) GetDetailInfo() error {
 	return v.Update()
 }
 
+func (v *VideoDetailedInfo) IsVideoFileExist() bool { //TODO test
+	videoFilePath := v.PlaySource[len("http://192.168.1.199/video/"):]
+
+	_, err := os.Stat(os.Getenv("ROOT_DIR") + videoFilePath)
+	return !errors.Is(err, os.ErrNotExist)
+}
+
 func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 
@@ -527,7 +551,9 @@ func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		videos = append(videos, *video)
+		if video.IsVideoFileExist() {
+			videos = append(videos, *video)
+		}
 	}
 
 	return videos, nil
@@ -562,7 +588,9 @@ func QueryVideoByActor(name string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		videos = append(videos, *video)
+		if video.IsVideoFileExist() {
+			videos = append(videos, *video)
+		}
 	}
 	return videos, nil
 }
@@ -582,7 +610,7 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 		return nil, err
 	}
 	for rows.Next() {
-		video := VideoDetailedInfo{}
+		video := &VideoDetailedInfo{}
 
 		if err := rows.Scan(
 			&video.SN,
@@ -592,7 +620,9 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 		); err != nil {
 			return nil, err
 		}
-		videos = append(videos, video)
+		if video.IsVideoFileExist() {
+			videos = append(videos, *video)
+		}
 	}
 	return videos, nil
 }
@@ -612,7 +642,7 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 		return nil, err
 	}
 	for rows.Next() {
-		video := VideoDetailedInfo{}
+		video := &VideoDetailedInfo{}
 
 		if err := rows.Scan(
 			&video.SN,
@@ -622,7 +652,9 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 		); err != nil {
 			return nil, err
 		}
-		videos = append(videos, video)
+		if video.IsVideoFileExist() {
+			videos = append(videos, *video)
+		}
 	}
 	return videos, nil
 }
@@ -642,7 +674,7 @@ func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
 		return nil, err
 	}
 	for rows.Next() {
-		video := VideoDetailedInfo{}
+		video := &VideoDetailedInfo{}
 
 		if err := rows.Scan(
 			&video.SN,
@@ -652,7 +684,9 @@ func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
 		); err != nil {
 			return nil, err
 		}
-		videos = append(videos, video)
+		if video.IsVideoFileExist() {
+			videos = append(videos, *video)
+		}
 	}
 	return videos, nil
 }

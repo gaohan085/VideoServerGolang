@@ -4,14 +4,11 @@ import (
 	"embed"
 	"errors"
 	"flag"
-	"io"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	fiberlog "github.com/gofiber/fiber/v2/log"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/template/html/v2"
 	"github.com/joho/godotenv"
@@ -68,11 +65,6 @@ func main() {
 		},
 	)
 
-	//Global fiberlog
-	file, _ := os.OpenFile("./log/record.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	iw := io.MultiWriter(os.Stdout, file)
-	fiberlog.SetOutput(iw)
-
 	app.Use(pprof.New())
 	file, err := os.OpenFile("./log/access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -80,32 +72,15 @@ func main() {
 	}
 	defer file.Close()
 
-	loggerConfigDev := logger.Config{
-		Format:     "[INFO] | PID:${pid} | [${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path}\n",
-		TimeFormat: "2006/Jan/02 15:04:05",
-		TimeZone:   "Asia/Shanghai",
-	}
-	loggerConfigPro := logger.Config{
-		Format:     "[${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path} | ${ua}\n",
-		TimeFormat: "2006/Jan/02 15:04:05",
-		TimeZone:   "Asia/Shanghai",
-		Output:     file,
-	}
+	LoggerRegister(app, usage)
 
 	switch usage {
 	case "ffmpeg":
-		app.Use(logger.New(loggerConfigDev))
-
 	case "dev":
-		app.Use(logger.New(loggerConfigDev))
 		SetRoutes(app)
-
 	default:
-		app.Use(logger.New(loggerConfigPro))
 		SetRoutes(app)
 	}
 
-	if err := app.Listen("127.0.0.1:3000"); err != nil {
-		log.Fatal(err)
-	}
+	log.Fatal(app.Listen("127.0.0.1:3000"))
 }

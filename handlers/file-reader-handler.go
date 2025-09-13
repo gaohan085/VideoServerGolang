@@ -80,19 +80,13 @@ func (d *DirChildElem) MapDBData() error {
 func ApiFileReaderHandler(c *fiber.Ctx) error {
 	path, err := url.QueryUnescape(c.Params("*"))
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
-			StatusCode: 500,
-			Data:       err.Error(),
-		})
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	rootDir := os.Getenv("ROOT_DIR")
 	entries, err := os.ReadDir(rootDir + path)
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(&RespBody{
-			StatusCode: 404,
-			Data:       err.Error(),
-		})
+		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
 
 	var elems = []DirChildElem{}

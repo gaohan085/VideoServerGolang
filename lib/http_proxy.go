@@ -1,16 +1,19 @@
 package lib
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	fiberlog "github.com/gofiber/fiber/v2/log"
 )
 
 func DoHttpProxyRequest(link string) (*http.Response, error) {
-	proxyUrl, err := url.Parse("http://192.168.1.199:10809")
+	proxyUrl, err := url.Parse(os.Getenv("HTTP_PROXY"))
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +25,10 @@ func DoHttpProxyRequest(link string) (*http.Response, error) {
 	}
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 	res, err := client.Do(req)
+	fiberlog.Info(fmt.Sprintf("Do Http Request: %s", link))
+
 	if err != nil {
+		fiberlog.Error(fmt.Sprintf("Error Http Request with link %s: %s", link, err.Error()))
 		return nil, err
 	}
 	return res, nil

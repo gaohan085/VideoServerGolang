@@ -1,7 +1,6 @@
 "use client";
 
-import { AnimatePresence } from "motion/react";
-import * as m from "motion/react-m";
+import { AnimatePresence, m } from "motion/react";
 import { lazy } from "react";
 import useSWR from "swr";
 import sortElements from "../../lib/sort-elements-by-name.ts";

@@ -10,17 +10,11 @@ import (
 func ApiDiskUsageHandler(c *fiber.Ctx) error {
 	dir, err := os.Getwd()
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
-			StatusCode: 500,
-			Data:       err.Error(),
-		})
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	useageState, err := disk.Usage(dir)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
-			StatusCode: 500,
-			Data:       err.Error(),
-		})
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	return c.Status(fiber.StatusOK).JSON(&RespBody{

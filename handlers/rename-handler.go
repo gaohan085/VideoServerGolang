@@ -11,34 +11,30 @@ type RenameStruct struct {
 	NewName string `json:"newName"`
 }
 
-func renameErrHandler(e error, c *fiber.Ctx) error {
-	if e != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
-			StatusCode: fiber.StatusInternalServerError,
-			Data:       e.Error(),
-		})
-	}
-	return c.Status(fiber.StatusOK).JSON(&RespBody{
-		StatusCode: fiber.StatusOK,
-		Data:       "ok",
-	})
-}
-
 func ApiRenameHandler(c *fiber.Ctx) error {
 	var renameBody *RenameStruct
 	if err := c.BodyParser(&renameBody); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(&RespBody{
-			StatusCode: 500,
-			Data:       err.Error(),
-		})
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	rootDir /** 包含路径末尾斜杠 */ := os.Getenv("ROOT_DIR")
 
 	if renameBody.CurrentPath == "/" {
-		err := os.Rename(rootDir+renameBody.Name, rootDir+renameBody.NewName)
-		return renameErrHandler(err, c)
+		if err := os.Rename(rootDir+renameBody.Name, rootDir+renameBody.NewName); err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+		return c.Status(fiber.StatusOK).JSON(&RespBody{
+			StatusCode: fiber.StatusOK,
+			Data:       "ok",
+		})
 	}
 
-	return renameErrHandler(os.Rename(rootDir+renameBody.CurrentPath+"/"+renameBody.Name, rootDir+renameBody.CurrentPath+"/"+renameBody.NewName), c)
+	if err := os.Rename(rootDir+renameBody.CurrentPath+"/"+renameBody.Name, rootDir+renameBody.CurrentPath+"/"+renameBody.NewName); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	return c.Status(fiber.StatusOK).JSON(&RespBody{
+		StatusCode: fiber.StatusOK,
+		Data:       "ok",
+	})
 }
