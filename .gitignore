@@ -17,3 +17,4 @@ go-fiber-react-ts
 log/
 *.mp4
 *.mp4*
+.tanstack/
