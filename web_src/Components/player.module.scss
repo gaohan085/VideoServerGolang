@@ -2,6 +2,7 @@
   padding-top: 0px;
   --plyr-color-main: #e85982;
   transition: all 0.2s ease-in-out;
+  overflow: hidden auto;
 
   @media (width <=992px) {
     margin: 12px;
