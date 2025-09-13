@@ -7,17 +7,18 @@ updates:
       interval: "monthly"
       time: "12:00"
       timezone: "Asia/Shanghai"
+    ignore:
+      - dependency-name: "plyr"
+      - dependency-name: "react-error-boundary"
     groups:
       nodejs-dependencies:
         patterns:
           - "@reduxjs/toolkit"
           - "axios"
-          - "prop-types"
           - "react*"
           - "redux"
           - "swr"
           - "motion"
-          - "plyr"
           - "@tanstack/react-router"
           - "@tanstack/react-router-devtools"
           - "@tanstack/router-plugin"
