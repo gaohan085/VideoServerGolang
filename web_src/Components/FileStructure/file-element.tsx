@@ -3,7 +3,8 @@
 import { useContext, useEffect, useState } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
 import isVideo from "../../lib/is-video.ts";
-import * as redux from "../../lib/reduxStore.ts";
+// import * as redux from "../../lib/reduxStore.ts";
+import useStore from "../../lib/zustand-store.ts";
 import type { DirElement } from "../types.d.ts";
 import WsContext from "../websocket-ctx.ts";
 import styles from "./file-element.module.scss";
@@ -50,7 +51,7 @@ const FileElement: React.FC<FileElementProps> = (props) => {
       >
         <span>
           {
-            isConverting ? <FcLock />: elem.isVideo ? <FcFilmReel /> : <FcQuestions />
+            isConverting ? <FcLock /> : elem.isVideo ? <FcFilmReel /> : <FcQuestions />
           }
         </span>
 
@@ -80,7 +81,7 @@ const InteractiveFileElement: React.FC<{
     renameElement,
     setRenameElement,
   } = useContext(Context);
-  const dispatch = redux.useAppDispatch();
+  const setVideoPlaying = useStore(state => state.setVideoPlaying);
   const [isRename, setIsRename] = useState<boolean>(false);
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const { convertingElems } = useContext(WsContext);
@@ -110,7 +111,7 @@ const InteractiveFileElement: React.FC<{
 
   const handleClick: React.MouseEventHandler = () => {
     if (!isRename && !isConverting) {
-      elem.extName === ".mp4" && dispatch(redux.setVideoPlaying(elem));
+      elem.extName === ".mp4" && setVideoPlaying(elem);
       // 取消其他正在重命名的元素
       setRenameElement!(undefined);
     }
@@ -132,9 +133,7 @@ const InteractiveFileElement: React.FC<{
   }, [elem, renameElement, setIsRename]);
 
   // 监听正在播放
-  const currentPlayVideo = redux.useAppSelector(
-    redux.selectVideoPlaying,
-  );
+  const currentPlayVideo = useStore(state => state);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   useEffect(() => {
     currentPlayVideo?.playSrc !== ""

@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { FcPrevious } from "react-icons/fc";
-import * as redux from "../lib/reduxStore.ts";
+// import * as redux from "../lib/reduxStore.ts";
 import useWindowDimension from "../lib/useWindowDimension.ts";
+import useStore from "../lib/zustand-store.ts";
 import { DiskUsage } from "./status-bar.tsx";
 import type { VideoInfo } from "./types.d.ts";
 import styles from "./video-boxes-sidebar.module.scss";
 
 const VideoWithPoster: React.FC<VideoInfo> = (props) => {
-  const dispatch = redux.useAppDispatch();
-  const videoPlaying = redux.useAppSelector(redux.selectVideoPlaying);
+  const playingVideo = useStore(state => state);
+  const setVideoPlaying = useStore(state => state.setVideoPlaying);
   const { title, posterUrl, playSrc, sn } = props;
   const [isPlaying, setIsplaying] = useState<boolean>(false);
 
   const handleClick = () => {
-    dispatch(
-      redux.setVideoPlaying({
-        sn: sn,
-        playSrc: playSrc,
-        posterUrl: posterUrl,
-      }),
-    );
+    setVideoPlaying({
+      sn: sn,
+      name: title,
+      playSrc: playSrc,
+      posterUrl: posterUrl,
+    });
   };
 
   useEffect(() => {
-    videoPlaying.playSrc === playSrc && setIsplaying(true);
-    videoPlaying.playSrc !== playSrc && setIsplaying(false);
-  }, [videoPlaying, playSrc]);
+    playingVideo.playSrc === playSrc && setIsplaying(true);
+    playingVideo.playSrc !== playSrc && setIsplaying(false);
+  }, [playingVideo, playSrc]);
 
   return (
     <div
