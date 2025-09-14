@@ -44,6 +44,7 @@ updates:
           - "sass"
           - "typescript"
           - "typescript-eslint"
+          - "zustand"
   - package-ecosystem: "gomod"
     schedule:
       interval: "monthly"
