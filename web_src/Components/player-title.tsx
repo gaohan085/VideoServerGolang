@@ -5,7 +5,8 @@ import React, { Suspense } from "react";
 import { FaHashtag, FaLink } from "react-icons/fa";
 import { PiGenderFemaleBold, PiGenderMaleBold } from "react-icons/pi";
 import useSWR from "swr";
-import * as redux from "../lib/reduxStore.ts";
+// import * as redux from "../lib/reduxStore.ts";
+import useStore from "../lib/zustand-store.ts";
 import styles from "./player-title.module.scss";
 import Spinner from "./spinner.tsx";
 
@@ -105,22 +106,29 @@ const VideoInfo: React.FC<{ sn: string }> = (props) => {
 };
 
 const InfoPreserveLayer: React.FC = () => {
-  const { sn } = redux.useAppSelector(redux.selectVideoPlaying);
+  const { sn, name } = useStore(state => state);
 
   return (
     <>
       {!!sn && (
         <Suspense fallback={
           <div className={styles.loader}>
-            <Spinner fontSize={28} />
+            <Spinner />
           </div>
         }>
           <VideoInfo sn={sn} />
         </Suspense>
       )}
-      {!sn && <div className={styles["video-info"]}>
-        <h4>{"没有正在播放"}</h4>
-      </div>}
+      {
+        !sn && !name && <div className={styles["video-info"]}>
+          <h4>{"没有正在播放"}</h4>
+        </div>
+      }
+      {
+        !sn && !!name && <div className={styles["video-info"]}>
+          <h4>{name}</h4>
+        </div>
+      }
     </>
   );
 };

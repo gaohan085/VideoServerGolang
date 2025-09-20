@@ -11,7 +11,8 @@ import {
   FcStart,
 } from "react-icons/fc";
 import isVideo from "../../lib/is-video.ts";
-import * as redux from "../../lib/reduxStore.ts";
+// import * as redux from "../../lib/reduxStore.ts";
+import useStore from "../../lib/zustand-store.ts";
 import type { DirElement } from "../types.d.ts";
 import styles from "./context-menu.module.scss";
 import Context from "./file-sys-context.ts";
@@ -192,7 +193,7 @@ const InteractiveCtxMenu: React.FC = () => {
     setRenameElement,
   } = useContext(Context);
 
-  const dispatch = redux.useAppDispatch();
+  const setVideoPlaying = useStore(state => state.setVideoPlaying);
 
   const handleOpenFolder: React.MouseEventHandler = () => {
     setOpenFolder!(
@@ -210,7 +211,7 @@ const InteractiveCtxMenu: React.FC = () => {
   };
 
   const handlePlayVideo: React.MouseEventHandler = () => {
-    dispatch(redux.setVideoPlaying(rightClickElem!));
+    setVideoPlaying(rightClickElem!);
     setClicked!(true);
   };
 

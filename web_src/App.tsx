@@ -3,11 +3,9 @@
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { LazyMotion } from "motion/react";
 import React from "react";
-import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
 import Spinner from "./Components/spinner.tsx";
 import fetcher from "./lib/fetcher.ts";
-import * as redux from "./lib/reduxStore.ts";
 import { routeTree } from "./routeTree.gen.ts";
 
 const loadFeatures = () => import("./motionFeatures.ts").then(res => res.default);
@@ -29,11 +27,9 @@ const App: React.FC = () => {
         suspense: true,
       }}
     >
-      <Provider store={redux.store}>
-        <LazyMotion features={loadFeatures} strict>
-          <RouterProvider router={router} defaultPendingComponent={() => <Spinner fontSize={24} />} />
-        </LazyMotion>
-      </Provider>
+      <LazyMotion features={loadFeatures} strict>
+        <RouterProvider router={router} defaultPendingComponent={() => <Spinner fontSize={24} />} />
+      </LazyMotion>
     </SWRConfig>
   );
 };

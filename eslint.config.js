@@ -97,6 +97,7 @@ export default defineConfig([
         "warn",
         "double"
       ],
+      "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
@@ -112,7 +113,7 @@ export default defineConfig([
         }
       ],
       'react/react-in-jsx-scope': 0,
-      "react/prop-types":0,
+      "react/prop-types": 0,
       "react/jsx-no-leaked-render": [
         1,
         {

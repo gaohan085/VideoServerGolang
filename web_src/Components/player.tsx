@@ -2,7 +2,8 @@ import Plyr from "plyr";
 import "plyr/dist/plyr.css";
 import plyrSvg from "plyr/dist/plyr.svg";
 import React, { lazy, useEffect, useRef } from "react";
-import * as redux from "../lib/reduxStore.ts";
+// import * as redux from "../lib/reduxStore.ts";
+import useStore from "../lib/zustand-store.ts";
 import styles from "./player.module.scss";
 
 const LazyInfo = lazy(() => import("./player-title.tsx"));
@@ -60,22 +61,21 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     localStorage.setItem(source, String(currentTime));
   });
 
-  redux.store.subscribe(() => {
-    const videoPlaying = redux.store.getState().redux.playingVideo;
+  useStore.subscribe(state => {
+    const { playSrc, posterUrl } = state;
     const currPlaySrc = plyr.source as unknown as string;
-    if (encodeURI(videoPlaying.playSrc) !== currPlaySrc) {
+    if (encodeURI(playSrc) !== currPlaySrc) {
       plyr.source = {
         type: "video",
-        poster: videoPlaying?.posterUrl,
+        poster: posterUrl,
         sources: [
           {
-            src: videoPlaying.playSrc,
+            src: playSrc,
           },
         ],
       };
     }
   });
-
   return plyr;
 };
 
