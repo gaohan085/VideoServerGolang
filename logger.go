@@ -2,6 +2,7 @@ package main
 
 import (
 	"io"
+	"log"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,6 +11,11 @@ import (
 )
 
 func LoggerRegister(app *fiber.App, usage string) {
+	logFile, err := os.OpenFile("./log/access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer logFile.Close()
 	//Global fiberlog
 	file, _ := os.OpenFile("./log/record.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	iw := io.MultiWriter(os.Stdout, file)
@@ -24,7 +30,7 @@ func LoggerRegister(app *fiber.App, usage string) {
 		Format:     "[${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path} | ${ua}\n",
 		TimeFormat: "2006/Jan/02 15:04:05",
 		TimeZone:   "Asia/Shanghai",
-		Output:     file,
+		Output:     logFile,
 	}
 
 	switch usage {
