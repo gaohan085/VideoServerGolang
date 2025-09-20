@@ -12,7 +12,7 @@ config.output = {
     image: "assets",
   },
   filename: {
-    js: "[name].js?v=[contenthash:8]"
+    js: "[contenthash:8].js?v=[contenthash:8]"
   },
   sourceMap: {
     js: "source-map",
