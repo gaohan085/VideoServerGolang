@@ -52,7 +52,7 @@ func (v *VideoBySn) MapDbData(dbvideo *database.VideoDetailedInfo) {
 	}
 }
 
-// @route /api/query/:sn<regex(([0-9]|[a-z]|[A-Z]){3,}-[0-9]{3,})>
+// @route /api/query/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>
 func ApiQueryVideoInfoBySN(c *fiber.Ctx) error {
 	video := &database.VideoDetailedInfo{SN: c.Params("sn")}
 	videoBySn := &VideoBySn{}

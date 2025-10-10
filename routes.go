@@ -35,7 +35,7 @@ func SetRoutes(app *fiber.App) {
 		api.Post("/convert", handlers.ApiConvertHandler)
 
 		query := api.Group("/query")
-		query.Get("/sn/:sn<regex(([0-9]|[a-z]|[A-Z]){3,}-[0-9]{3,})>", handlers.ApiQueryVideoInfoBySN)
+		query.Get("/sn/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>", handlers.ApiQueryVideoInfoBySN)
 		query.Get("/tag/:tag", handlers.ApiQueryVideoByTag)
 		query.Get("/director/:director", handlers.ApiQueryVideoByDirector)
 		query.Get("/publisher/:publisher", handlers.ApiQueryVideoByPublisher)
