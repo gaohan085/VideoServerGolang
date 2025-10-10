@@ -55,6 +55,10 @@ func TestGetSerialNumByRegex(t *testing.T) {
 			input:    "",
 			expected: "",
 		},
+		{
+			input:    "BF-701-C.mp4",
+			expected: "BF-701",
+		},
 	}
 
 	for _, c := range cases {
