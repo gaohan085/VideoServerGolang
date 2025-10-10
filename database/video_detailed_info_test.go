@@ -11,7 +11,7 @@ import (
 )
 
 func TestCreateReturnID(t *testing.T) {
-	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.199:5432/video_server_pgx_test")
+	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.30:5432/video_server_pgx_test")
 	PgxConnDatabase()
 
 	t.Run("测试创建视频详细信息表", func(t *testing.T) {
