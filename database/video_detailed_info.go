@@ -516,7 +516,7 @@ func (v *VideoDetailedInfo) GetDetailInfo() error {
 }
 
 func (v *VideoDetailedInfo) IsVideoFileExist() bool { //TODO test
-	videoFilePath := v.PlaySource[len("http://192.168.1.199/video/"):]
+	videoFilePath := v.PlaySource[len(os.Getenv("NGINX_SERVE_ADDRESS")):]
 
 	_, err := os.Stat(os.Getenv("ROOT_DIR") + videoFilePath)
 	return !errors.Is(err, os.ErrNotExist)

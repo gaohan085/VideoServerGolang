@@ -15,7 +15,7 @@ func LoggerRegister(app *fiber.App, usage string) {
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}
-	defer logFile.Close()
+
 	//Global fiberlog
 	file, _ := os.OpenFile("./log/record.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	iw := io.MultiWriter(os.Stdout, file)
