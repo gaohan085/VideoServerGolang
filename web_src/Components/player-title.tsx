@@ -40,11 +40,12 @@ const Tags: React.FC<{ tags: string[] }> = (props) => {
   );
 };
 
-const Actors: React.FC<{ actors: { name: string; sex: "male" | "female" }[] }> = (props) => {
+const Actors: React.FC<{ actors: { name: string; sex: "male" | "female" }[] | null }> = (props) => {
   const { actors } = props;
+  console.log(actors);
   return (
     <div className={styles.actor}><strong>{"演员:"}</strong>
-      {actors.map((actor, index) => {
+      {!!actors && actors.map((actor, index) => {
         const IsFemale = actor.sex === "female";
         return (
           <Link to={`/actor/${actor.name}`} key={index}>
@@ -56,6 +57,7 @@ const Actors: React.FC<{ actors: { name: string; sex: "male" | "female" }[] }> =
           </Link>
         );
       })}
+      {!actors && <>{"N/A"}</>}
     </div>
   );
 };
@@ -113,7 +115,7 @@ const InfoPreserveLayer: React.FC = () => {
       {!!sn && (
         <Suspense fallback={
           <div className={styles.loader}>
-            <Spinner />
+            <Spinner fontSize={24}/>
           </div>
         }>
           <VideoInfo sn={sn} />
