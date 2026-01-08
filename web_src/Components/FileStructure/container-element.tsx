@@ -35,7 +35,7 @@ const Container: React.FC<Readonly<
             initial={{ height: 0 }}
             animate={{ height: "max-content" }}
             exit={{ height: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            transition={{ duration: 0.3, ease: "easeInOut"}}
             id="container"
           >
             {data?.data.childElements.sort((a, b) => sortElements(a, b)).map(
@@ -45,7 +45,7 @@ const Container: React.FC<Readonly<
                     initial={{ opacity: 0, paddingLeft: "15px" }}
                     animate={{ opacity: 1, paddingLeft: "0px" }}
                     exit={{ opacity: 0, paddingLeft: "15px" }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    transition={{ duration: 0.25, ease: "easeInOut"}}
                     id="file-element-animator"
                     key={index}
                   >
@@ -57,7 +57,7 @@ const Container: React.FC<Readonly<
                     initial={{ opacity: 0, paddingLeft: "15px" }}
                     animate={{ opacity: 1, paddingLeft: "0px" }}
                     exit={{ opacity: 0, paddingLeft: "15px" }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
                     id="folder-element-animator"
                     key={index}
                   >
