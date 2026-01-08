@@ -7,7 +7,7 @@ import Spinner from "../spinner.tsx";
 import type { DirElement } from "../types.d.ts";
 import Context from "./file-sys-context.ts";
 import styles from "./folder-element.module.scss";
-import RenameElement from "./rename-element.tsx";
+import RenameElement from "./rename-element-tanstack-form.tsx";
 
 const LazyErrElement = lazy(() => import("./error-element.tsx"));
 const LazyContainer = lazy(() => import("./container-element.tsx"));

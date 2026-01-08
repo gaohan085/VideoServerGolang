@@ -9,7 +9,7 @@ import type { DirElement } from "../types.d.ts";
 import WsContext from "../websocket-ctx.ts";
 import styles from "./file-element.module.scss";
 import Context from "./file-sys-context.ts";
-import RenameElement from "./rename-element.tsx";
+import RenameElement from "./rename-element-tanstack-form.tsx";
 
 type FileElementProps = Readonly<{
   elem: DirElement;
