@@ -45,6 +45,7 @@ updates:
           - "typescript"
           - "typescript-eslint"
           - "zustand"
+          - "@tanstack/react-form"
   - package-ecosystem: "gomod"
     schedule:
       interval: "monthly"
