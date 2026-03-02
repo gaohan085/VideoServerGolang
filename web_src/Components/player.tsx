@@ -10,6 +10,28 @@ const LazyInfo = lazy(() => import("./player-title.tsx"));
 
 const isDev = process.env.NODE_ENV !== "production";
 
+class PlaySource {
+  _playSource: string;
+  _timeOut: NodeJS.Timeout | null = null
+
+  constructor(playSrc: string) {
+    this._playSource = playSrc
+  }
+
+  set playSrc(playSrc: string) {
+    this._playSource = playSrc;
+    clearTimeout(this._timeOut!)
+  }
+
+  get playSrc(): string {
+    return this._playSource
+  }
+
+  set timeOut(timeOut: NodeJS.Timeout) {
+    this._timeOut = timeOut
+  }
+}
+
 const mountPlyr = (node: HTMLElement): Plyr => {
   const plyr = new Plyr(node, {
     autoplay: false,
@@ -36,11 +58,15 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     iconUrl: plyrSvg,
   });
 
+  const playSource = new PlaySource("")
+
   plyr.on("loadedmetadata", async (e) => {
     const instance = e.detail.plyr;
     const playSrc = instance.source as unknown as string;
     const historyTime = localStorage.getItem(playSrc);
-    await new Promise(r => setTimeout(r, 2500));
+    await new Promise(r => {
+      playSource.timeOut = setTimeout(r, 2500)
+    });
     instance.currentTime = Number(historyTime);
     await instance.play();
   });
@@ -64,13 +90,15 @@ const mountPlyr = (node: HTMLElement): Plyr => {
   useStore.subscribe(state => {
     const { playSrc, posterUrl } = state;
     const currPlaySrc = plyr.source as unknown as string;
-    if (encodeURI(playSrc) !== currPlaySrc) {
+    playSource.playSrc = playSrc;
+    if (encodeURI(playSource.playSrc) !== currPlaySrc) {
+      plyr.stop()
       plyr.source = {
         type: "video",
         poster: posterUrl,
         sources: [
           {
-            src: playSrc,
+            src: playSource.playSrc,
           },
         ],
       };
@@ -92,6 +120,7 @@ const Player: React.FC = () => {
     return () => {
       if (!currentNode && plyr) {
         plyr.stop();
+        plyr.destroy()
       }
     };
   }, [ref]);
