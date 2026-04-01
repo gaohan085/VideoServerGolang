@@ -1,17 +1,15 @@
 module go-fiber-react-ts
 
-go 1.24.0
-
-toolchain go1.24.1
+go 1.25.0
 
 require (
-	github.com/PuerkitoBio/goquery v1.11.0
+	github.com/PuerkitoBio/goquery v1.12.0
 	github.com/go-co-op/gocron/v2 v2.19.1
 	github.com/go-faker/faker/v4 v4.7.0
 	github.com/gofiber/contrib/websocket v1.3.4
 	github.com/gofiber/fiber/v2 v2.52.12
 	github.com/gofiber/template/html/v2 v2.1.3
-	github.com/jackc/pgx/v5 v5.8.0
+	github.com/jackc/pgx/v5 v5.9.1
 	github.com/joho/godotenv v1.5.1
 	github.com/redis/go-redis/v9 v9.18.0
 	github.com/shirou/gopsutil/v3 v3.24.5
@@ -49,9 +47,9 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/net v0.47.0 // indirect
-	golang.org/x/sync v0.18.0 // indirect
-	golang.org/x/sys v0.38.0 // indirect
-	golang.org/x/text v0.31.0 // indirect
+	golang.org/x/net v0.52.0 // indirect
+	golang.org/x/sync v0.20.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
+	golang.org/x/text v0.35.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
