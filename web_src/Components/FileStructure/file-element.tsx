@@ -3,7 +3,6 @@
 import { useContext, useEffect, useState } from "react";
 import { FcFilmReel, FcLock, FcQuestions } from "react-icons/fc";
 import isVideo from "../../lib/is-video.ts";
-// import * as redux from "../../lib/reduxStore.ts";
 import useStore from "../../lib/zustand-store.ts";
 import type { DirElement } from "../types.d.ts";
 import WsContext from "../websocket-ctx.ts";
@@ -22,7 +21,7 @@ type FileElementProps = Readonly<{
   progress?: number;
 }>;
 
-const FileElement: React.FC<FileElementProps> = (props) => {
+const FileElement = (props: FileElementProps) => {
   const {
     elem,
     handleClick,
@@ -34,9 +33,7 @@ const FileElement: React.FC<FileElementProps> = (props) => {
   } = props;
 
   return (
-    <div
-      className={styles.file}
-    >
+    <div className={styles.file}>
       <div
         className={
           isConverting
@@ -50,9 +47,13 @@ const FileElement: React.FC<FileElementProps> = (props) => {
         title={isVideo(elem.extName) ? `播放 ${elem.name}` : elem.name}
       >
         <span>
-          {
-            isConverting ? <FcLock /> : elem.isVideo ? <FcFilmReel /> : <FcQuestions />
-          }
+          {isConverting ? (
+            <FcLock />
+          ) : elem.isVideo ? (
+            <FcFilmReel />
+          ) : (
+            <FcQuestions />
+          )}
         </span>
 
         {!isRename && <a className="name">{elem.name}</a>}
@@ -62,17 +63,13 @@ const FileElement: React.FC<FileElementProps> = (props) => {
             {(progress! * 100).toFixed(2).toString() + "%"}
           </a>
         )}
-        {!!isRename && (
-          <RenameElement {...elem} />
-        )}
+        {!!isRename && <RenameElement {...elem} />}
       </div>
     </div>
   );
 };
 
-const InteractiveFileElement: React.FC<{
-  readonly elem: DirElement;
-}> = ({ elem }) => {
+const InteractiveFileElement = ({ elem }: { readonly elem: DirElement }) => {
   const {
     clicked,
     setClicked,
@@ -81,7 +78,7 @@ const InteractiveFileElement: React.FC<{
     renameElement,
     setRenameElement,
   } = useContext(Context);
-  const setVideoPlaying = useStore(state => state.setVideoPlaying);
+  const setVideoPlaying = useStore((state) => state.setVideoPlaying);
   const [isRename, setIsRename] = useState<boolean>(false);
   const [isConverting, setIsConverting] = useState<boolean>(false);
   const { convertingElems } = useContext(WsContext);
@@ -89,18 +86,17 @@ const InteractiveFileElement: React.FC<{
 
   useEffect(() => {
     const filterElem = convertingElems?.filter(
-      video => video.playSource === elem.playSrc,
+      (video) => video.playSource === elem.playSrc,
     );
     if (filterElem?.length === 1) {
       if (
-        filterElem[0].status === "converting"
-        || filterElem[0].status === "pending"
+        filterElem[0].status === "converting" ||
+        filterElem[0].status === "pending"
       ) {
         setIsConverting(true);
         setProgress(filterElem[0].progress);
         console.log("AAAAadasa");
-      }
-      else {
+      } else {
         setIsConverting(false);
       }
     }
@@ -133,12 +129,12 @@ const InteractiveFileElement: React.FC<{
   }, [elem, renameElement, setIsRename]);
 
   // 监听正在播放
-  const currentPlayVideo = useStore(state => state);
+  const currentPlayVideo = useStore((state) => state);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   useEffect(() => {
-    currentPlayVideo?.playSrc !== ""
-      && currentPlayVideo?.playSrc === elem.playSrc
-      && setIsPlaying(true);
+    currentPlayVideo?.playSrc !== "" &&
+      currentPlayVideo?.playSrc === elem.playSrc &&
+      setIsPlaying(true);
     return () => setIsPlaying(false);
   }, [currentPlayVideo?.playSrc, elem, setIsPlaying]);
 

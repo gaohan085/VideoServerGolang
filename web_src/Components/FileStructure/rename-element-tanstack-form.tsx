@@ -1,16 +1,16 @@
-import { AnyFieldApi, useForm } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
+import axios from "axios";
 import React, { useContext } from "react";
-import { DirElement } from "../types.js";
+import { FcCancel, FcCheckmark } from "react-icons/fc";
+import { IoCheckmarkSharp, IoCloseSharp } from "react-icons/io5";
+import Spinner from "../spinner.tsx";
+import type { DirElement } from "../types.d.ts";
 import Context from "./file-sys-context.ts";
 import styles from "./rename-element.module.scss";
-import { FcCancel, FcCheckmark } from "react-icons/fc";
-import Spinner from "../spinner.tsx";
-import axios from "axios";
-import { IoCheckmarkSharp, IoCloseSharp } from "react-icons/io5";
 
-const InteractiveTsRenameComponent: React.FC<DirElement> = props => {
+const InteractiveTsRenameComponent: React.FC<DirElement> = (props) => {
   const { currentPath, name } = props;
-  const { setRenameElement, mutate } = useContext(Context)
+  const { setRenameElement, mutate } = useContext(Context);
 
   const form = useForm({
     defaultValues: {
@@ -19,8 +19,8 @@ const InteractiveTsRenameComponent: React.FC<DirElement> = props => {
     onSubmit: async ({ value }) => {
       const newName = value.name;
       setRenameElement!(undefined);
-      newName !== name
-        && void axios
+      newName !== name &&
+        void axios
           .post("/api/rename", { ...props, newName })
           .then(() => {
             void mutate!(`/api/${currentPath}`);
@@ -29,7 +29,7 @@ const InteractiveTsRenameComponent: React.FC<DirElement> = props => {
             return;
           });
     },
-  })
+  });
 
   const handleCancelRename: React.MouseEventHandler = () => {
     setRenameElement!(undefined);
@@ -59,17 +59,22 @@ const InteractiveTsRenameComponent: React.FC<DirElement> = props => {
                 required
                 style={{ width: `${Math.min(name.length * 10 + 30, 135)}px` }}
                 type="text"
-                onChange={e => field.handleChange(e.target.value)}
-                onFocus={e => e.target.select()}
+                onChange={(e) => field.handleChange(e.target.value)}
+                onFocus={(e) => e.target.select()}
               />
             </>
-          )
+          );
         }}
       />
       <form.Subscribe
         selector={(state) => [state.canSubmit, state.isSubmitting]}
         children={([canSubmit, isSubmitting]) => (
-          <button title="确认重命名" type="submit" disabled={!canSubmit} className="check">
+          <button
+            title="确认重命名"
+            type="submit"
+            disabled={!canSubmit}
+            className="check"
+          >
             {!isSubmitting ? <IoCheckmarkSharp /> : <Spinner fontSize={19} />}
           </button>
         )}
@@ -78,7 +83,7 @@ const InteractiveTsRenameComponent: React.FC<DirElement> = props => {
         <IoCloseSharp />
       </button>
     </form>
-  )
-}
+  );
+};
 
 export default InteractiveTsRenameComponent;

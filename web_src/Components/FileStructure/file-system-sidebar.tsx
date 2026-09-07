@@ -2,7 +2,6 @@
 
 import { lazy, Suspense, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { FcPrevious } from "react-icons/fc";
 import { useSWRConfig } from "swr";
 import useWindowDimension from "../../lib/useWindowDimension.ts";
 import Spinner from "../spinner.tsx";
@@ -15,35 +14,22 @@ import styles from "./file-system-sidebar.module.scss";
 const LazyErrElement = lazy(() => import("./error-element.tsx"));
 const LazyContainer = lazy(() => import("./container-element.tsx"));
 
-const FileSysSideBar: React.FC<Readonly<{
-  handleClick: React.MouseEventHandler;
-  width: number;
-  handleCtxMenu: React.MouseEventHandler;
-  toggleActive: React.MouseEventHandler;
-  isActive: boolean;
-  clicked: boolean;
-}>> = (props) => {
-  const {
-    handleClick,
-    handleCtxMenu,
-    isActive,
-    toggleActive,
-    width,
-    clicked,
-  } = props;
+const FileSysSideBar = (
+  props: Readonly<{
+    handleClick: React.MouseEventHandler;
+    width: number;
+    handleCtxMenu: React.MouseEventHandler;
+    toggleActive: React.MouseEventHandler;
+    isActive: boolean;
+    clicked: boolean;
+  }>,
+) => {
+  const { handleClick, handleCtxMenu, isActive, toggleActive, width, clicked } =
+    props;
 
   return (
     <>
-      <div
-        className={
-          !isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`
-        }
-        onClick={handleClick}
-        onContextMenu={handleCtxMenu}
-      >
-        <span className="arrow" onClick={toggleActive}>
-          <FcPrevious />
-        </span>
+      <div onClick={handleClick} onContextMenu={handleCtxMenu}>
         {!!isActive && (
           <>
             <div className="file-system">
@@ -58,7 +44,7 @@ const FileSysSideBar: React.FC<Readonly<{
   );
 };
 
-const InteractiveFileSysSideBar: React.FC = () => {
+const InteractiveFileSysSideBar = () => {
   const [rightClickElem, setRightClickElem] = useState<DirElement | undefined>(
     undefined,
   );
@@ -108,15 +94,20 @@ const InteractiveFileSysSideBar: React.FC = () => {
       }}
     >
       <ErrorBoundary fallback={<LazyErrElement />}>
-        <Suspense fallback={
-          (
-            <div className={!isActive ? styles.fileSysSidebar : `${styles.fileSysSidebar} active`}>
+        <Suspense
+          fallback={
+            <div
+              className={
+                !isActive
+                  ? styles.fileSysSidebar
+                  : `${styles.fileSysSidebar} active`
+              }
+            >
               <div className="file-system">
                 <Spinner fontSize={24} />
               </div>
             </div>
-          )
-        }
+          }
         >
           <FileSysSideBar
             handleClick={handleClick}

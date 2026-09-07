@@ -12,9 +12,7 @@ import RenameElement from "./rename-element-tanstack-form.tsx";
 const LazyErrElement = lazy(() => import("./error-element.tsx"));
 const LazyContainer = lazy(() => import("./container-element.tsx"));
 
-const LoadingFileElement: React.FC<{ elem: DirElement }> = (props) => {
-  const { elem } = props;
-
+const LoadingFileElement = ({ elem }: Readonly<{ elem: DirElement }>) => {
   return (
     <a className="folder-element">
       <Spinner />
@@ -32,13 +30,7 @@ type FolderElementProps = Readonly<{
 }>;
 
 const FolderElement: React.FC<FolderElementProps> = (props) => {
-  const {
-    elem,
-    isOpen,
-    handleClick,
-    handleCtxMenu,
-    isRename,
-  } = props;
+  const { elem, isOpen, handleClick, handleCtxMenu, isRename } = props;
 
   return (
     <div className={styles.folder}>
@@ -61,9 +53,7 @@ const FolderElement: React.FC<FolderElementProps> = (props) => {
   );
 };
 
-const InteractiveFolderElement: React.FC<{
-  readonly elem: DirElement;
-}> = ({ elem }) => {
+const InteractiveFolderElement = ({ elem }: { readonly elem: DirElement }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const {
