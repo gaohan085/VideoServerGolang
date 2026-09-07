@@ -11,58 +11,56 @@ import {
   FcStart,
 } from "react-icons/fc";
 import isVideo from "../../lib/is-video.ts";
-// import * as redux from "../../lib/reduxStore.ts";
 import useStore from "../../lib/zustand-store.ts";
 import type { DirElement } from "../types.d.ts";
 import styles from "./context-menu.module.scss";
 import Context from "./file-sys-context.ts";
 
-const PlayVideo: React.FC = () => {
+const PlayVideo = () => {
   return (
     <a>
       <span>
         <FcStart />
       </span>
-      播放视频
+      {"播放视频"}
     </a>
   );
 };
 
-const OpenFolder: React.FC = () => {
+const OpenFolder = () => {
   return (
     <a>
       <span>
         <FcOpenedFolder />
       </span>
-      打开文件夹
+      {"打开文件夹"}
     </a>
   );
 };
 
-const CloseFolder: React.FC = () => {
+const CloseFolder = () => {
   return (
     <a>
       <span>
         <FcFolder />
       </span>
-      收起文件夹
+      {"收起文件夹"}
     </a>
   );
 };
 
-const ProcessVideo: React.FC = () => {
+const ProcessVideo = () => {
   return (
     <a>
       <span>
         <FcProcess />
       </span>
-      转换视频
+      {"转换视频"}
     </a>
   );
 };
 
-const Delete: React.FC<{ readonly isFile: boolean }> = (props) => {
-  const { isFile } = props;
+const Delete = ({ isFile }: Readonly<{ isFile: boolean }>) => {
   return (
     <a>
       <span>
@@ -80,17 +78,17 @@ const Rename: React.FC = () => {
       <span>
         <FcServices />
       </span>
-      重命名
+      {"重命名"}
     </a>
   );
 };
 
-const DeleteConfirm: React.FC<{
+const DeleteConfirm = (props: {
   readonly elem: DirElement;
   readonly handleConfirmDel: React.MouseEventHandler;
   readonly handleCancelDel: React.MouseEventHandler;
   readonly position: { pageX: number; pageY: number };
-}> = (props) => {
+}) => {
   const { elem, handleConfirmDel, handleCancelDel, position } = props;
 
   return (
@@ -109,18 +107,20 @@ const DeleteConfirm: React.FC<{
   );
 };
 
-const CtxMenu: React.FC<Readonly<{
-  /* 右键点击的元素 */
-  elem: DirElement;
-  openFolder: string;
-  handleOpenFolder: React.MouseEventHandler;
-  handleCloseFolder: React.MouseEventHandler;
-  handleConverVideo?: React.MouseEventHandler;
-  handleDelete: React.MouseEventHandler;
-  handlePlayVideo: React.MouseEventHandler;
-  position: { pageX: number; pageY: number };
-  handleRename: React.MouseEventHandler;
-}>> = (props) => {
+const CtxMenu = (
+  props: Readonly<{
+    /* 右键点击的元素 */
+    elem: DirElement;
+    openFolder: string;
+    handleOpenFolder: React.MouseEventHandler;
+    handleCloseFolder: React.MouseEventHandler;
+    handleConverVideo?: React.MouseEventHandler;
+    handleDelete: React.MouseEventHandler;
+    handlePlayVideo: React.MouseEventHandler;
+    position: { pageX: number; pageY: number };
+    handleRename: React.MouseEventHandler;
+  }>,
+) => {
   const {
     elem,
     openFolder,
@@ -181,7 +181,7 @@ const CtxMenu: React.FC<Readonly<{
   );
 };
 
-const InteractiveCtxMenu: React.FC = () => {
+const InteractiveCtxMenu = () => {
   const [delConfirm, setDelConfirm] = useState<boolean>(false);
   const {
     rightClickElem,
@@ -193,7 +193,7 @@ const InteractiveCtxMenu: React.FC = () => {
     setRenameElement,
   } = useContext(Context);
 
-  const setVideoPlaying = useStore(state => state.setVideoPlaying);
+  const setVideoPlaying = useStore((state) => state.setVideoPlaying);
 
   const handleOpenFolder: React.MouseEventHandler = () => {
     setOpenFolder!(

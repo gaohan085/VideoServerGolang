@@ -29,8 +29,7 @@ type VideoDetail = {
   actors: { name: string; sex: "male" | "female" }[];
 };
 
-const Tags: React.FC<{ tags: string[] }> = (props) => {
-  const { tags } = props;
+const Tags = ({tags} : Readonly<{ tags: string[] }>) => {
   return (
     <div className={styles.tag}><strong>{"标签:"}</strong>
       {tags.map((tag, index) => {
@@ -62,8 +61,7 @@ const Actors: React.FC<{ actors: { name: string; sex: "male" | "female" }[] | nu
   );
 };
 
-const VideoInfo: React.FC<{ sn: string }> = (props) => {
-  const { sn } = props;
+const VideoInfo = ({sn}: Readonly<{ sn: string }>) => {
   const { data } = useSWR<QueryInfoBySN>(`/api/query/sn/${sn}`);
   const {
     title,
@@ -107,7 +105,7 @@ const VideoInfo: React.FC<{ sn: string }> = (props) => {
   );
 };
 
-const InfoPreserveLayer: React.FC = () => {
+const InfoPreserveLayer = () => {
   const { sn, name } = useStore(state => state);
 
   return (
