@@ -9,28 +9,6 @@ const LazyInfo = lazy(() => import("./player-title.tsx"));
 
 const isDev = process.env.NODE_ENV !== "production";
 
-class PlaySource {
-  _playSource: string;
-  _timeOut: NodeJS.Timeout | null = null;
-
-  constructor(playSrc: string) {
-    this._playSource = playSrc;
-  }
-
-  set playSrc(playSrc: string) {
-    this._playSource = playSrc;
-    clearTimeout(this._timeOut!);
-  }
-
-  get playSrc(): string {
-    return this._playSource;
-  }
-
-  set timeOut(timeOut: NodeJS.Timeout) {
-    this._timeOut = timeOut;
-  }
-}
-
 const mountPlyr = (node: HTMLElement): Plyr => {
   const plyr = new Plyr(node, {
     autoplay: false,
@@ -57,17 +35,17 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     iconUrl: plyrSvg,
   });
 
-  const playSource = new PlaySource("");
+  let trackedTimeout: NodeJS.Timeout;
 
   plyr.on("loadedmetadata", async (e) => {
     const instance = e.detail.plyr;
     const playSrc = instance.source as unknown as string;
     const historyTime = localStorage.getItem(playSrc);
-    await new Promise((r) => {
-      playSource.timeOut = setTimeout(r, 2500);
-    });
-    instance.currentTime = Number(historyTime);
-    await instance.play();
+
+    trackedTimeout = setTimeout(async () => {
+      instance.currentTime = Number(historyTime);
+      await instance.play();
+    }, 2500);
   });
 
   plyr.on("enterfullscreen", async () => {
@@ -86,25 +64,21 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     localStorage.setItem(source, String(currentTime));
   });
 
-  useBoundStore.subscribe((state) => {
-    const {
-      currentPlayingVideo: { playSrc, posterUrl },
-    } = state;
-    const currPlaySrc = plyr.source as unknown as string;
-    playSource.playSrc = playSrc;
-    if (encodeURI(playSource.playSrc) !== currPlaySrc) {
-      plyr.stop();
-      plyr.source = {
-        type: "video",
-        poster: posterUrl,
-        sources: [
-          {
-            src: playSource.playSrc,
-          },
-        ],
-      };
-    }
-  });
+  useBoundStore.subscribe(
+    (state) => state.currentPlayingVideo,
+    (current, previous) => {
+      if (current.playSrc !== previous.playSrc) {
+        const { posterUrl, playSrc } = current;
+        plyr.stop();
+        plyr.source = {
+          type: "video",
+          poster: posterUrl,
+          sources: [{ src: playSrc }],
+        };
+        clearTimeout(trackedTimeout);
+      }
+    },
+  );
   return plyr;
 };
 
