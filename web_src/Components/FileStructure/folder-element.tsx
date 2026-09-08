@@ -1,20 +1,18 @@
 "use client";
 
-import { lazy, Suspense, useContext, useEffect, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
+import useBoundStore from "../../lib/zustand-store.ts";
 import Spinner from "../spinner.tsx";
 import type { DirElement } from "../types.d.ts";
-import Context from "./file-sys-context.ts";
 import styles from "./folder-element.module.scss";
 import RenameElement from "./rename-element-tanstack-form.tsx";
 
 const LazyErrElement = lazy(() => import("./error-element.tsx"));
 const LazyContainer = lazy(() => import("./container-element.tsx"));
 
-const LoadingFileElement: React.FC<{ elem: DirElement }> = (props) => {
-  const { elem } = props;
-
+const LoadingFileElement = ({ elem }: Readonly<{ elem: DirElement }>) => {
   return (
     <a className="folder-element">
       <Spinner />
@@ -32,13 +30,7 @@ type FolderElementProps = Readonly<{
 }>;
 
 const FolderElement: React.FC<FolderElementProps> = (props) => {
-  const {
-    elem,
-    isOpen,
-    handleClick,
-    handleCtxMenu,
-    isRename,
-  } = props;
+  const { elem, isOpen, handleClick, handleCtxMenu, isRename } = props;
 
   return (
     <div className={styles.folder}>
@@ -61,61 +53,45 @@ const FolderElement: React.FC<FolderElementProps> = (props) => {
   );
 };
 
-const InteractiveFolderElement: React.FC<{
-  readonly elem: DirElement;
-}> = ({ elem }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const InteractiveFolderElement = ({ elem }: { readonly elem: DirElement }) => {
 
   const {
-    openFolder,
-    setOpenFolder,
+    openFolderPath,
+    setOpenFolderPath,
     setPosition,
-    clicked,
-    setClicked,
-    setRightClickElem,
-    renameElement,
-    setRenameElement,
-  } = useContext(Context);
+    isClicked,
+    setIsClicked,
+    setRClickElem,
+    renameElem,
+    setRenameElem,
+    unSetRenameElem,
+  } = useBoundStore((state) => state);
 
-  // TO listen context open folder and change this component isOpen status
-  useEffect(() => {
-    if (openFolder === elem.currentPath + elem.name && !isOpen) setIsOpen(true);
-    else if (openFolder?.includes(elem.name) && isOpen) setIsOpen(true);
-    else if (openFolder !== elem.currentPath + elem.name && isOpen)
-      setIsOpen(false);
-    return;
-  }, [openFolder, elem, isOpen, setIsOpen]);
+  const isOpen = openFolderPath.includes(elem.name);
+  const isRename = renameElem === elem;
 
   const handleClick: React.MouseEventHandler = (): void => {
-    setClicked!(true);
+    setIsClicked(true);
     if (!isRename) {
       if (!isOpen) {
-        setIsOpen(true);
-        setOpenFolder!(elem.currentPath + elem.name);
+        setOpenFolderPath(elem.currentPath + "/" + elem.name);
       }
       if (isOpen) {
-        setIsOpen(false);
-        setOpenFolder!(elem.currentPath);
+        setOpenFolderPath(elem.currentPath);
       }
       // 取消其他正在重命名的元素
-      setRenameElement!(undefined);
+      unSetRenameElem();
     }
   };
 
-  const [isRename, setIsRename] = useState<boolean>(false);
-  useEffect(() => {
-    elem === renameElement ? setIsRename(true) : setIsRename(false);
-    return;
-  }, [elem, renameElement, setIsRename]);
-
   const handleCtxMenu: React.MouseEventHandler = (e): void => {
     if (!isRename) {
-      setPosition!({ ...e });
-      clicked && setClicked!(false);
-      setRightClickElem!(elem);
+      setPosition({ pageX: e.pageX, pageY: e.pageY });
+      isClicked && setIsClicked(false);
+      setRClickElem!(elem);
 
       // 取消其他正在重命名的元素
-      setRenameElement!(undefined);
+      unSetRenameElem();
     }
   };
 

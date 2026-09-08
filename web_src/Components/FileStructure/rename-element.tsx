@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useContext } from "react";
 import { FcCancel, FcCheckmark } from "react-icons/fc";
+import useBoundStore from "../../lib/zustand-store.ts";
 import type { DirElement } from "../types.d.ts";
-import Context from "./file-sys-context.ts";
 import styles from "./rename-element.module.scss";
 
 interface RenameElements extends HTMLFormControlsCollection {
@@ -13,11 +13,11 @@ interface RenameForm extends HTMLFormElement {
   readonly elements: RenameElements;
 }
 
-const RenameComponent: React.FC<{
+const RenameComponent  = (props: {
   readonly elem: DirElement;
-  readonly handleSubmit: React.FormEventHandler<RenameForm>;
+  readonly handleSubmit: React.SubmitEventHandler<RenameForm>;
   readonly handleCancelRename: React.MouseEventHandler;
-}> = (props) => {
+}) => {
   const { elem, handleSubmit, handleCancelRename } = props;
   return (
     <form className={styles.form} method="post" onSubmit={handleSubmit}>
@@ -26,7 +26,7 @@ const RenameComponent: React.FC<{
         defaultValue={elem.name}
         id="name"
         name="name"
-        onFocus={e => e.target.select()}
+        onFocus={(e) => e.target.select()}
         placeholder={elem.name}
         required
         style={{ width: `${Math.min(elem.name.length * 10 + 30, 135)}px` }}
@@ -44,26 +44,26 @@ const RenameComponent: React.FC<{
   );
 };
 
-const InteractiveRenameComponent: React.FC<DirElement> = (props) => {
+const InteractiveRenameComponent  = (props: Readonly<DirElement>) => {
   const { currentPath, name } = props;
-  const { setRenameElement, mutate } = useContext(Context);
-  const handleSubmit: React.FormEventHandler<RenameForm> = (e) => {
+  const { unSetRenameElem, mutate } = useBoundStore(state => state);
+  const handleSubmit: React.SubmitEventHandler<RenameForm> = (e) => {
     e.preventDefault();
     const newName = e.currentTarget.elements.name.value;
-    setRenameElement!(undefined);
-    newName !== name
-    && void axios
-      .post("/api/rename", { ...props, newName })
-      .then(() => {
-        void mutate!(`/api/${currentPath}`);
-      })
-      .catch(() => {
-        return;
-      });
+    unSetRenameElem();
+    newName !== name &&
+      void axios
+        .post("/api/rename", { ...props, newName })
+        .then(() => {
+          void mutate!(`/api/${currentPath}`);
+        })
+        .catch(() => {
+          return;
+        });
   };
 
   const handleCancelRename: React.MouseEventHandler = () => {
-    setRenameElement!(undefined);
+    unSetRenameElem();
   };
 
   return (

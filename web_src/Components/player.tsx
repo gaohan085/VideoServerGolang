@@ -1,9 +1,8 @@
 import Plyr from "plyr";
 import "plyr/dist/plyr.css";
 import plyrSvg from "plyr/dist/plyr.svg";
-import React, { lazy, useEffect, useRef } from "react";
-// import * as redux from "../lib/reduxStore.ts";
-import useStore from "../lib/zustand-store.ts";
+import { lazy, useEffect, useRef } from "react";
+import useBoundStore from "../lib/zustand-store.ts";
 import styles from "./player.module.scss";
 
 const LazyInfo = lazy(() => import("./player-title.tsx"));
@@ -12,23 +11,23 @@ const isDev = process.env.NODE_ENV !== "production";
 
 class PlaySource {
   _playSource: string;
-  _timeOut: NodeJS.Timeout | null = null
+  _timeOut: NodeJS.Timeout | null = null;
 
   constructor(playSrc: string) {
-    this._playSource = playSrc
+    this._playSource = playSrc;
   }
 
   set playSrc(playSrc: string) {
     this._playSource = playSrc;
-    clearTimeout(this._timeOut!)
+    clearTimeout(this._timeOut!);
   }
 
   get playSrc(): string {
-    return this._playSource
+    return this._playSource;
   }
 
   set timeOut(timeOut: NodeJS.Timeout) {
-    this._timeOut = timeOut
+    this._timeOut = timeOut;
   }
 }
 
@@ -58,14 +57,14 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     iconUrl: plyrSvg,
   });
 
-  const playSource = new PlaySource("")
+  const playSource = new PlaySource("");
 
   plyr.on("loadedmetadata", async (e) => {
     const instance = e.detail.plyr;
     const playSrc = instance.source as unknown as string;
     const historyTime = localStorage.getItem(playSrc);
-    await new Promise(r => {
-      playSource.timeOut = setTimeout(r, 2500)
+    await new Promise((r) => {
+      playSource.timeOut = setTimeout(r, 2500);
     });
     instance.currentTime = Number(historyTime);
     await instance.play();
@@ -87,12 +86,14 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     localStorage.setItem(source, String(currentTime));
   });
 
-  useStore.subscribe(state => {
-    const { playSrc, posterUrl } = state;
+  useBoundStore.subscribe((state) => {
+    const {
+      currentPlayingVideo: { playSrc, posterUrl },
+    } = state;
     const currPlaySrc = plyr.source as unknown as string;
     playSource.playSrc = playSrc;
     if (encodeURI(playSource.playSrc) !== currPlaySrc) {
-      plyr.stop()
+      plyr.stop();
       plyr.source = {
         type: "video",
         poster: posterUrl,
@@ -107,7 +108,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
   return plyr;
 };
 
-const Player: React.FC = () => {
+const Player = () => {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -120,7 +121,7 @@ const Player: React.FC = () => {
     return () => {
       if (!currentNode && plyr) {
         plyr.stop();
-        plyr.destroy()
+        plyr.destroy();
       }
     };
   }, [ref]);

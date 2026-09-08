@@ -1,51 +1,25 @@
-import React, {
-  useEffect,
-  useState,
-  type PropsWithChildren,
-} from "react";
-import WsContext from "./websocket-ctx.ts";
+import { useEffect, type ReactNode } from "react";
+import useBoundStore from "../lib/zustand-store.ts";
+import type { VideoCvQueue } from "./types.d.ts";
 
-export interface VideoStatus {
-  fileName: string;
-  path: string;
-  status: "pending" | "converting" | "done";
-  duration: number;
-  progress: number;
-  playSource: string;
-}
-
-const WebSocketLayer: React.FC<PropsWithChildren> = (props) => {
-  const { children } = props;
-  const [convertState, setConvertState] = useState<string | undefined>(
-    undefined,
-  );
+const WebSocketLayer = ({ children }: { children: ReactNode }) => {
+  const { setVideoCVQueue } = useBoundStore((state) => state);
 
   useEffect(() => {
-    // const hostname = window.location.hostname;
-    // const protrol = window.location.protocol === "https:" ? "wss://" : "ws://";
     const ws = new WebSocket("/api/ws");
     const intervalID = setInterval(() => {
       ws.send("Hello from server");
     }, 3000);
-    ws.onmessage = (data: MessageEvent<string>) => setConvertState(data.data);
+    ws.onmessage = (data: MessageEvent<string>) =>
+      setVideoCVQueue(JSON.parse(data.data) as VideoCvQueue);
 
     return () => {
       clearInterval(intervalID);
       ws.onopen = () => ws.close();
     };
-  }, [setConvertState]);
+  }, [setVideoCVQueue]);
 
-  return (
-    <WsContext.Provider
-      value={{
-        convertingElems: convertState
-          ? (JSON.parse(convertState) as VideoStatus[])
-          : undefined,
-      }}
-    >
-      {children}
-    </WsContext.Provider>
-  );
+  return <>{children}</>;
 };
 
 export default WebSocketLayer;

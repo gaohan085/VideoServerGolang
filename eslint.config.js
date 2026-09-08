@@ -1,34 +1,18 @@
+import { cwd } from "process";
 import js from "@eslint/js";
+import stylistic from "@stylistic/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
+import { defineConfig } from "eslint/config";
+import { importX } from "eslint-plugin-import-x";
+import pluginReact from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import { reactRefresh } from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import { defineConfig } from "eslint/config";
-import reactRefresh from "eslint-plugin-react-refresh"
-import reactHooks from "eslint-plugin-react-hooks"
-import { cwd } from "process";
-import tsParser from "@typescript-eslint/parser";
-import stylistic from '@stylistic/eslint-plugin';
-import importPlugin from "eslint-plugin-import";
-
 
 export default defineConfig([
-  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },
-  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], languageOptions: { globals: globals.browser } },
-  tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
-  reactRefresh.configs.recommended,
-  reactHooks.configs['recommended-latest'],
-  importPlugin.flatConfigs.recommended,
-  importPlugin.flatConfigs.typescript,
   {
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: cwd(),
-      },
-    },
-  },
-  {
+    files: ["**/*.{js,ts}"],
     ignores: [
       "**/dist/**",
       ".next",
@@ -38,14 +22,101 @@ export default defineConfig([
       "/coverage-ts/",
       "**/stress-test/**",
       "eslint.config.js",
-      "rsbuild.config.ts"
+      "rsbuild.config.ts",
     ],
+    extends: [js.configs.recommended, tseslint.configs.recommendedTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: cwd(),
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          vars: "all",
+          args: "after-used",
+          ignoreRestSiblings: false,
+        },
+      ],
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          vars: "all",
+          args: "after-used",
+          ignoreRestSiblings: false,
+        },
+      ],
+
+      "@typescript-eslint/prefer-nullish-coalescing": "error",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          checksVoidReturn: false,
+        },
+      ],
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          fixStyle: "inline-type-imports",
+        },
+      ],
+    },
   },
   {
+    plugins: { "import-x": importX },
+    extends: ["import-x/flat/recommended", "import-x/flat/typescript"],
     files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
-    plugins: {
-      pluginReact,
+    ignores: [
+      "**/dist/**",
+      ".next",
+      "**/__test__/**",
+      "**/test/**",
+      "/coverage/",
+      "/coverage-ts/",
+      "**/stress-test/**",
+      "eslint.config.js",
+      "rsbuild.config.ts",
+    ],
+    rules: {
+      "import-x/no-dynamic-require": "warn",
+      "import-x/default": 0,
+      "import-x/no-default-export": 0,
+      "import-x/no-dynamic-require": "warn",
+      "import-x/no-nodejs-modules": "warn",
+      "import-x/prefer-default-export": "off",
+      "import-x/default": 0,
+      "import-x/order": [
+        "error",
+        {
+          groups: [
+            "type",
+            ["sibling", "parent"],
+            "external",
+            "index",
+            "object",
+          ],
+          "newlines-between": "never",
+        },
+      ],
+      "import-x/order": [
+        "error",
+        {
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
+        },
+      ],
     },
+  },
+  {
+    files: ["**/*.{jsx,tsx}"],
+    ...pluginReact.configs.flat.recommended,
     languageOptions: {
       parser: tsParser,
       ecmaVersion: "latest",
@@ -60,108 +131,27 @@ export default defineConfig([
       },
     },
     rules: {
-      "complexity": ["error", 10],
-      'no-unused-vars': 'warn',
-      "import/default": 0,
-      "import/no-default-export": 0,
-      'import/no-dynamic-require': 'warn',
-      'import/no-nodejs-modules': 'warn',
-      'import/prefer-default-export': "off",
-      'import/default': 0,
-      'import/order': [
-        "error",
-        {
-          "groups": [
-            "type",
-            ["sibling", "parent"],
-            "external",
-            "index",
-            "object",
-          ],
-          "newlines-between": "never",
-        },
-      ],
-      'import/order': [
-        "error",
-        {
-          "alphabetize": {
-            "order": "asc",
-            "caseInsensitive": true,
-          }
-        }
-      ],
-      "@typescript-eslint/no-unsafe-assignment": "off",
-      "no-unused-expressions": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
-      "quotes": [
-        "warn",
-        "double"
-      ],
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          "vars": "all",
-          "args": "after-used",
-          "ignoreRestSiblings": false
-        }
-      ],
-      "import/no-cycle": [
-        0,
-        {
-          "ignoreExternal": true
-        }
-      ],
-      'react/react-in-jsx-scope': 0,
+      "react/react-in-jsx-scope": 0,
       "react/prop-types": 0,
       "react/jsx-no-leaked-render": [
         1,
         {
-          "validStrategies": [
-            "ternary",
-            "coerce"
-          ]
-        }
+          validStrategies: ["ternary", "coerce"],
+        },
       ],
       "react/destructuring-assignment": [
         1,
         "always",
         {
-          "ignoreClassFields": false,
-          "destructureInSignature": "ignore"
-        }
-      ],
-      "@typescript-eslint/no-unsafe-assignment": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        {
-          "vars": "all",
-          "args": "after-used",
-          "ignoreRestSiblings": false
-        }
-      ],
-
-      "@typescript-eslint/prefer-nullish-coalescing": "error",
-      "@typescript-eslint/no-misused-promises": [
-        "error",
-        {
-          "checksVoidReturn": false
-        }
-      ],
-      "@typescript-eslint/no-unsafe-member-access": "off",
-      "@typescript-eslint/consistent-type-imports": "error",
-      '@typescript-eslint/consistent-type-imports': [
-        'error',
-        {
-          fixStyle: 'inline-type-imports',
+          ignoreClassFields: false,
+          destructureInSignature: "ignore",
         },
       ],
-      "react-refresh/only-export-components": "error",
-      "react-refresh/only-export-components": [
-        "error",
-        { "allowConstantExport": true }
-      ],
+    },
+    settings: {
+      react: {
+        version: "19",
+      },
     },
   },
   {
@@ -170,14 +160,50 @@ export default defineConfig([
     rules: {
       "@stylistic/indent": ["error", 2],
       "@stylistic/semi": ["error", "always"],
-      "@stylistic/space-before-blocks": ["error", "always"]
-    }
+      "@stylistic/space-before-blocks": ["error", "always"],
+    },
   },
   {
-    settings: {
-      react: {
-        version: "detect"
-      }
-    }
-  }
+    extends: [reactRefresh.configs.recommended()],
+    rules: {
+      "react-refresh/only-export-components": [
+        "error",
+        {
+          allowConstantExport: true,
+          extraHOCs: [
+            "createFileRoute",
+            "createLazyFileRoute",
+            "createRootRoute",
+            "createRootRouteWithContext",
+            "createLink",
+            "createRoute",
+            "createLazyRoute",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    extends: [reactHooks.configs.flat["recommended-latest"]],
+    rules: {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+
+      // React Compiler rules
+      "react-hooks/config": "error",
+      "react-hooks/error-boundaries": "error",
+      "react-hooks/gating": "error",
+      "react-hooks/globals": "error",
+      "react-hooks/immutability": "error",
+      "react-hooks/preserve-manual-memoization": "error",
+      "react-hooks/purity": "error",
+      "react-hooks/refs": "error",
+      "react-hooks/set-state-in-effect": "error",
+      "react-hooks/set-state-in-render": "error",
+      "react-hooks/static-components": "error",
+      "react-hooks/unsupported-syntax": "warn",
+      "react-hooks/use-memo": "error",
+      "react-hooks/incompatible-library": "warn",
+    },
+  },
 ]);

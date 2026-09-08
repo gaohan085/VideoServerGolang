@@ -5,7 +5,7 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "module": "NodeNext",
-    "target": "es5",
+    "target": "es6",
     "allowJs": true,
     "moduleResolution": "nodenext",
     "sourceMap": true,

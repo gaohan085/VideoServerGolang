@@ -1,21 +1,17 @@
 @use "../base" as base;
 @use "sass:color";
 
-.video-box-sidebar {
-  @extend %sidebar;
+.video-box-container {
+  overflow-y: auto;
+  height: 100%;
 
-  [class~="video-box-container"] {
-    overflow-y: auto;
-    height: 100%;
-  }
-
-  [class~="video-box-container"]>[class~="videobox"] {
+  > [class~="videobox"] {
     display: flex;
     margin: 8px;
     padding: 5px;
     border-radius: 8px;
 
-    >[class~="img-box"] {
+    > [class~="img-box"] {
       position: relative;
       padding-right: 10px;
       cursor: pointer;
@@ -30,7 +26,7 @@
       }
     }
 
-    >[class~="img-box-title"] {
+    > [class~="img-box-title"] {
       width: 100%;
       height: calc(50%);
       padding-left: 0px;

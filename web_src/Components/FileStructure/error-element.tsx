@@ -3,7 +3,7 @@
 import { FcCancel } from "react-icons/fc";
 import styles from "./error-element.module.scss";
 
-const ErrorElement: React.FC = () => {
+const ErrorElement = () => {
   return (
     <p
       className={styles["error-element"]}
@@ -11,7 +11,7 @@ const ErrorElement: React.FC = () => {
       <span>
         <FcCancel />
       </span>
-      Error Fetch Data
+      {"Error Fetch Data"}
     </p>
   );
 };
