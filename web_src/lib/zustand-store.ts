@@ -1,6 +1,6 @@
 import type { useSWRConfig } from "swr";
 import { create, type StateCreator } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, subscribeWithSelector } from "zustand/middleware";
 import type { DirElement, VideoCvQueue } from "../Components/types.d.ts";
 
 type PlayingVideoStore = {
@@ -138,15 +138,17 @@ const useBoundStore = create<
     MutateStore &
     VideoCVQueueStore
 >()(
-  devtools((...a) => ({
-    ...createPlayingVideoStore(...a),
-    ...createSidebarStatusStore(...a),
-    ...createClickedStore(...a),
-    ...createRClickPosition(...a),
-    ...createSelectElemStore(...a),
-    ...createMutateStore(...a),
-    ...createVideoCVQueueStore(...a),
-  })),
+  devtools(
+    subscribeWithSelector((...a) => ({
+      ...createPlayingVideoStore(...a),
+      ...createSidebarStatusStore(...a),
+      ...createClickedStore(...a),
+      ...createRClickPosition(...a),
+      ...createSelectElemStore(...a),
+      ...createMutateStore(...a),
+      ...createVideoCVQueueStore(...a),
+    })),
+  ),
 );
 
 export default useBoundStore;

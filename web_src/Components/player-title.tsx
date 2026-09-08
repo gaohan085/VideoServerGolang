@@ -41,7 +41,6 @@ const Tags = ({tags} : Readonly<{ tags: string[] }>) => {
 
 const Actors: React.FC<{ actors: { name: string; sex: "male" | "female" }[] | null }> = (props) => {
   const { actors } = props;
-  console.log(actors);
   return (
     <div className={styles.actor}><strong>{"演员:"}</strong>
       {!!actors && actors.map((actor, index) => {
