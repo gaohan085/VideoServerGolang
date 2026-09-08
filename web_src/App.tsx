@@ -1,6 +1,10 @@
 "use client";
 
-import { createBrowserHistory, createRouter, RouterProvider } from "@tanstack/react-router";
+import {
+  createBrowserHistory,
+  createRouter,
+  RouterProvider,
+} from "@tanstack/react-router";
 import { LazyMotion } from "motion/react";
 import React from "react";
 import { SWRConfig } from "swr";
@@ -8,9 +12,10 @@ import Spinner from "./Components/spinner.tsx";
 import fetcher from "./lib/fetcher.ts";
 import { routeTree } from "./routeTree.gen.ts";
 
-const loadFeatures = () => import("./motionFeatures.ts").then(res => res.default);
+const loadFeatures = () =>
+  import("./motionFeatures.ts").then((res) => res.default);
 
-const browserHistory = createBrowserHistory()
+const browserHistory = createBrowserHistory();
 const router = createRouter({ routeTree, history: browserHistory });
 
 declare module "@tanstack/react-router" {
@@ -30,7 +35,10 @@ const App: React.FC = () => {
       }}
     >
       <LazyMotion features={loadFeatures} strict>
-        <RouterProvider router={router} defaultPendingComponent={() => <Spinner fontSize={24} />} />
+        <RouterProvider
+          router={router}
+          defaultPendingComponent={() => <Spinner fontSize={24} />}
+        />
       </LazyMotion>
     </SWRConfig>
   );

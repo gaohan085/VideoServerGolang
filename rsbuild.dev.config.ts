@@ -1,6 +1,6 @@
 import config from "./rsbuild.config.ts";
 
-const host = "http://192.168.1.199";
+const host = "http://192.168.1.31";
 
 config.server!.proxy = {
   "/api": {

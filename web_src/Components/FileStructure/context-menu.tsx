@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   FcEmptyTrash,
   FcFolder,
@@ -11,10 +11,9 @@ import {
   FcStart,
 } from "react-icons/fc";
 import isVideo from "../../lib/is-video.ts";
-import useStore from "../../lib/zustand-store.ts";
+import useBoundStore from "../../lib/zustand-store.ts";
 import type { DirElement } from "../types.d.ts";
 import styles from "./context-menu.module.scss";
-import Context from "./file-sys-context.ts";
 
 const PlayVideo = () => {
   return (
@@ -111,7 +110,7 @@ const CtxMenu = (
   props: Readonly<{
     /* 右键点击的元素 */
     elem: DirElement;
-    openFolder: string;
+    openFolderPath: string;
     handleOpenFolder: React.MouseEventHandler;
     handleCloseFolder: React.MouseEventHandler;
     handleConverVideo?: React.MouseEventHandler;
@@ -123,7 +122,7 @@ const CtxMenu = (
 ) => {
   const {
     elem,
-    openFolder,
+    openFolderPath,
     handleOpenFolder,
     handleCloseFolder,
     handleDelete,
@@ -146,18 +145,18 @@ const CtxMenu = (
           </li>
         )}
 
-        {!!elem.isFolder &&
-          !openFolder.includes(elem.currentPath + elem.name) && (
+        {!!elem.isFolder && !openFolderPath.includes(elem.currentPath +"/" + elem.name) && (
           <li onClick={handleOpenFolder}>
             <OpenFolder />
           </li>
         )}
 
-        {!!elem.isFolder &&
-          openFolder.includes(elem.currentPath + elem.name) && (
-          <li onClick={handleCloseFolder}>
-            <CloseFolder />
-          </li>
+        {!!elem.isFolder && !!openFolderPath.includes(elem.currentPath +"/" + elem.name) && (
+          <>
+            <li onClick={handleCloseFolder}>
+              <CloseFolder />
+            </li>
+          </>
         )}
 
         {/* Second list */}
@@ -184,26 +183,23 @@ const CtxMenu = (
 const InteractiveCtxMenu = () => {
   const [delConfirm, setDelConfirm] = useState<boolean>(false);
   const {
-    rightClickElem,
+    rClickElem,
     position,
-    setOpenFolder,
-    setClicked,
-    openFolder,
+    setOpenFolderPath,
+    setIsClicked,
+    openFolderPath,
     mutate,
-    setRenameElement,
-  } = useContext(Context);
-
-  const setVideoPlaying = useStore((state) => state.setVideoPlaying);
+    setRenameElem,
+    setVideoPlaying,
+  } = useBoundStore((state) => state);
 
   const handleOpenFolder: React.MouseEventHandler = () => {
-    setOpenFolder!(
-      rightClickElem && rightClickElem.currentPath + rightClickElem.name,
-    );
-    setClicked!(true);
+    setOpenFolderPath(rClickElem && rClickElem.currentPath + "/" + rClickElem.name);
+    setIsClicked(true);
   };
   const handleCloseFolder: React.MouseEventHandler = () => {
-    setOpenFolder!(rightClickElem ? rightClickElem.currentPath : "");
-    setClicked!(true);
+    setOpenFolderPath(rClickElem ? rClickElem.currentPath : "");
+    setIsClicked(true);
   };
 
   const handleDelete: React.MouseEventHandler = () => {
@@ -211,58 +207,58 @@ const InteractiveCtxMenu = () => {
   };
 
   const handlePlayVideo: React.MouseEventHandler = () => {
-    setVideoPlaying(rightClickElem!);
-    setClicked!(true);
+    setVideoPlaying(rClickElem);
+    setIsClicked(true);
   };
 
   const handleCancelDel: React.MouseEventHandler = () => {
     setDelConfirm(false);
-    setClicked!(true);
+    setIsClicked(true);
   };
 
   const handleConfirmDel: React.MouseEventHandler = () => {
-    void axios.post("/api/delete", rightClickElem).then(() => {
-      const { currentPath } = rightClickElem!;
+    void axios.post("/api/delete", rClickElem).then(() => {
+      const { currentPath } = rClickElem!;
       void mutate!(`/api/${currentPath}`);
-      setClicked!(true);
+      setIsClicked(true);
     });
   };
 
   const handleConvertVideo: React.MouseEventHandler = () => {
-    void axios.post("/api/convert", rightClickElem).then(() => {
-      setClicked!(true);
-      const { currentPath } = rightClickElem!;
+    void axios.post("/api/convert", rClickElem).then(() => {
+      setIsClicked(true);
+      const { currentPath } = rClickElem;
       void mutate!(`/api/${currentPath}`);
     });
   };
 
   const handleRename: React.MouseEventHandler = () => {
-    setClicked!(true);
-    setRenameElement!(rightClickElem);
+    setIsClicked(true);
+    setRenameElem(rClickElem);
   };
 
   return (
     <>
       {!delConfirm && (
         <CtxMenu
-          elem={rightClickElem!}
+          elem={rClickElem}
           handleCloseFolder={handleCloseFolder}
           handleConverVideo={handleConvertVideo}
           handleDelete={handleDelete}
           handleOpenFolder={handleOpenFolder}
           handlePlayVideo={handlePlayVideo}
           handleRename={handleRename}
-          openFolder={openFolder!}
+          openFolderPath={openFolderPath}
           position={position!}
         />
       )}
 
       {!!delConfirm && (
         <DeleteConfirm
-          elem={rightClickElem!}
+          elem={rClickElem}
           handleCancelDel={handleCancelDel}
           handleConfirmDel={handleConfirmDel}
-          position={position!}
+          position={position}
         />
       )}
     </>

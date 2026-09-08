@@ -35,3 +35,14 @@ type VideoInfo = {
   posterUrl: string;
   playSrc: string;
 };
+
+interface VideoStatus {
+  fileName: string;
+  path: string;
+  status: "pending" | "converting" | "done";
+  duration: number;
+  progress: number;
+  playSource: string;
+}
+
+type VideoCvQueue = VideoStatus[];

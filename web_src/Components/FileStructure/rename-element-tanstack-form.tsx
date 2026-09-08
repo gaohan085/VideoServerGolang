@@ -1,16 +1,17 @@
 import { useForm } from "@tanstack/react-form";
 import axios from "axios";
-import React, { useContext } from "react";
-import { FcCancel, FcCheckmark } from "react-icons/fc";
+import React from "react";
 import { IoCheckmarkSharp, IoCloseSharp } from "react-icons/io5";
+import useBoundStore from "../../lib/zustand-store.ts";
 import Spinner from "../spinner.tsx";
 import type { DirElement } from "../types.d.ts";
-import Context from "./file-sys-context.ts";
 import styles from "./rename-element.module.scss";
 
-const InteractiveTsRenameComponent: React.FC<DirElement> = (props) => {
+const InteractiveTsRenameComponent = (props: DirElement) => {
   const { currentPath, name } = props;
-  const { setRenameElement, mutate } = useContext(Context);
+  const { setRenameElem, unSetRenameElem, mutate } = useBoundStore(
+    (state) => state,
+  );
 
   const form = useForm({
     defaultValues: {
@@ -18,7 +19,7 @@ const InteractiveTsRenameComponent: React.FC<DirElement> = (props) => {
     },
     onSubmit: async ({ value }) => {
       const newName = value.name;
-      setRenameElement!(undefined);
+      unSetRenameElem();
       newName !== name &&
         void axios
           .post("/api/rename", { ...props, newName })
@@ -32,7 +33,7 @@ const InteractiveTsRenameComponent: React.FC<DirElement> = (props) => {
   });
 
   const handleCancelRename: React.MouseEventHandler = () => {
-    setRenameElement!(undefined);
+    unSetRenameElem();
   };
 
   return (

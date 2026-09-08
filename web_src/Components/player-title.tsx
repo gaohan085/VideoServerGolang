@@ -106,7 +106,7 @@ const VideoInfo = ({sn}: Readonly<{ sn: string }>) => {
 };
 
 const InfoPreserveLayer = () => {
-  const { sn, name } = useStore(state => state);
+  const {currentPlayingVideo: {sn, name}} = useStore(state => state);
 
   return (
     <>

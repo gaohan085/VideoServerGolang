@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useContext } from "react";
 import { FcCancel, FcCheckmark } from "react-icons/fc";
+import useBoundStore from "../../lib/zustand-store.ts";
 import type { DirElement } from "../types.d.ts";
-import Context from "./file-sys-context.ts";
 import styles from "./rename-element.module.scss";
 
 interface RenameElements extends HTMLFormControlsCollection {
@@ -46,11 +46,11 @@ const RenameComponent  = (props: {
 
 const InteractiveRenameComponent  = (props: Readonly<DirElement>) => {
   const { currentPath, name } = props;
-  const { setRenameElement, mutate } = useContext(Context);
+  const { unSetRenameElem, mutate } = useBoundStore(state => state);
   const handleSubmit: React.SubmitEventHandler<RenameForm> = (e) => {
     e.preventDefault();
     const newName = e.currentTarget.elements.name.value;
-    setRenameElement!(undefined);
+    unSetRenameElem();
     newName !== name &&
       void axios
         .post("/api/rename", { ...props, newName })
@@ -63,7 +63,7 @@ const InteractiveRenameComponent  = (props: Readonly<DirElement>) => {
   };
 
   const handleCancelRename: React.MouseEventHandler = () => {
-    setRenameElement!(undefined);
+    unSetRenameElem();
   };
 
   return (

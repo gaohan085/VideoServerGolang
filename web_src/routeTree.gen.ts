@@ -10,30 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as TagNameRouteImport } from './routes/tag.$name'
-import { Route as SeriesNameRouteImport } from './routes/series.$name'
-import { Route as PublisherNameRouteImport } from './routes/publisher.$name'
-import { Route as DirectorNameRouteImport } from './routes/director.$name'
 import { Route as ActorNameRouteImport } from './routes/actor.$name'
+import { Route as DirectorNameRouteImport } from './routes/director.$name'
+import { Route as PublisherNameRouteImport } from './routes/publisher.$name'
+import { Route as SeriesNameRouteImport } from './routes/series.$name'
+import { Route as TagNameRouteImport } from './routes/tag.$name'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TagNameRoute = TagNameRouteImport.update({
-  id: '/tag/$name',
-  path: '/tag/$name',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SeriesNameRoute = SeriesNameRouteImport.update({
-  id: '/series/$name',
-  path: '/series/$name',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublisherNameRoute = PublisherNameRouteImport.update({
-  id: '/publisher/$name',
-  path: '/publisher/$name',
+const ActorNameRoute = ActorNameRouteImport.update({
+  id: '/actor/$name',
+  path: '/actor/$name',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DirectorNameRoute = DirectorNameRouteImport.update({
@@ -41,9 +31,19 @@ const DirectorNameRoute = DirectorNameRouteImport.update({
   path: '/director/$name',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ActorNameRoute = ActorNameRouteImport.update({
-  id: '/actor/$name',
-  path: '/actor/$name',
+const PublisherNameRoute = PublisherNameRouteImport.update({
+  id: '/publisher/$name',
+  path: '/publisher/$name',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SeriesNameRoute = SeriesNameRouteImport.update({
+  id: '/series/$name',
+  path: '/series/$name',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TagNameRoute = TagNameRouteImport.update({
+  id: '/tag/$name',
+  path: '/tag/$name',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -117,25 +117,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tag/$name': {
-      id: '/tag/$name'
-      path: '/tag/$name'
-      fullPath: '/tag/$name'
-      preLoaderRoute: typeof TagNameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/series/$name': {
-      id: '/series/$name'
-      path: '/series/$name'
-      fullPath: '/series/$name'
-      preLoaderRoute: typeof SeriesNameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/publisher/$name': {
-      id: '/publisher/$name'
-      path: '/publisher/$name'
-      fullPath: '/publisher/$name'
-      preLoaderRoute: typeof PublisherNameRouteImport
+    '/actor/$name': {
+      id: '/actor/$name'
+      path: '/actor/$name'
+      fullPath: '/actor/$name'
+      preLoaderRoute: typeof ActorNameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/director/$name': {
@@ -145,11 +131,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DirectorNameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/actor/$name': {
-      id: '/actor/$name'
-      path: '/actor/$name'
-      fullPath: '/actor/$name'
-      preLoaderRoute: typeof ActorNameRouteImport
+    '/publisher/$name': {
+      id: '/publisher/$name'
+      path: '/publisher/$name'
+      fullPath: '/publisher/$name'
+      preLoaderRoute: typeof PublisherNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/series/$name': {
+      id: '/series/$name'
+      path: '/series/$name'
+      fullPath: '/series/$name'
+      preLoaderRoute: typeof SeriesNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tag/$name': {
+      id: '/tag/$name'
+      path: '/tag/$name'
+      fullPath: '/tag/$name'
+      preLoaderRoute: typeof TagNameRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
