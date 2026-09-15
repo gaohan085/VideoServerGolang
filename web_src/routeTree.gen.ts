@@ -9,159 +9,50 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ActorNameRouteImport } from './routes/actor.$name'
-import { Route as DirectorNameRouteImport } from './routes/director.$name'
-import { Route as PublisherNameRouteImport } from './routes/publisher.$name'
-import { Route as SeriesNameRouteImport } from './routes/series.$name'
-import { Route as TagNameRouteImport } from './routes/tag.$name'
+import { Route as VideosRouteImport } from './routes/videos'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ActorNameRoute = ActorNameRouteImport.update({
-  id: '/actor/$name',
-  path: '/actor/$name',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DirectorNameRoute = DirectorNameRouteImport.update({
-  id: '/director/$name',
-  path: '/director/$name',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublisherNameRoute = PublisherNameRouteImport.update({
-  id: '/publisher/$name',
-  path: '/publisher/$name',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SeriesNameRoute = SeriesNameRouteImport.update({
-  id: '/series/$name',
-  path: '/series/$name',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TagNameRoute = TagNameRouteImport.update({
-  id: '/tag/$name',
-  path: '/tag/$name',
+const VideosRoute = VideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/actor/$name': typeof ActorNameRoute
-  '/director/$name': typeof DirectorNameRoute
-  '/publisher/$name': typeof PublisherNameRoute
-  '/series/$name': typeof SeriesNameRoute
-  '/tag/$name': typeof TagNameRoute
+  '/videos': typeof VideosRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/actor/$name': typeof ActorNameRoute
-  '/director/$name': typeof DirectorNameRoute
-  '/publisher/$name': typeof PublisherNameRoute
-  '/series/$name': typeof SeriesNameRoute
-  '/tag/$name': typeof TagNameRoute
+  '/videos': typeof VideosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/actor/$name': typeof ActorNameRoute
-  '/director/$name': typeof DirectorNameRoute
-  '/publisher/$name': typeof PublisherNameRoute
-  '/series/$name': typeof SeriesNameRoute
-  '/tag/$name': typeof TagNameRoute
+  '/videos': typeof VideosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/actor/$name'
-    | '/director/$name'
-    | '/publisher/$name'
-    | '/series/$name'
-    | '/tag/$name'
+  fullPaths: '/videos'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/actor/$name'
-    | '/director/$name'
-    | '/publisher/$name'
-    | '/series/$name'
-    | '/tag/$name'
-  id:
-    | '__root__'
-    | '/'
-    | '/actor/$name'
-    | '/director/$name'
-    | '/publisher/$name'
-    | '/series/$name'
-    | '/tag/$name'
+  to: '/videos'
+  id: '__root__' | '/videos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ActorNameRoute: typeof ActorNameRoute
-  DirectorNameRoute: typeof DirectorNameRoute
-  PublisherNameRoute: typeof PublisherNameRoute
-  SeriesNameRoute: typeof SeriesNameRoute
-  TagNameRoute: typeof TagNameRoute
+  VideosRoute: typeof VideosRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/actor/$name': {
-      id: '/actor/$name'
-      path: '/actor/$name'
-      fullPath: '/actor/$name'
-      preLoaderRoute: typeof ActorNameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/director/$name': {
-      id: '/director/$name'
-      path: '/director/$name'
-      fullPath: '/director/$name'
-      preLoaderRoute: typeof DirectorNameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/publisher/$name': {
-      id: '/publisher/$name'
-      path: '/publisher/$name'
-      fullPath: '/publisher/$name'
-      preLoaderRoute: typeof PublisherNameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/series/$name': {
-      id: '/series/$name'
-      path: '/series/$name'
-      fullPath: '/series/$name'
-      preLoaderRoute: typeof SeriesNameRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tag/$name': {
-      id: '/tag/$name'
-      path: '/tag/$name'
-      fullPath: '/tag/$name'
-      preLoaderRoute: typeof TagNameRouteImport
+    '/videos': {
+      id: '/videos'
+      path: '/videos'
+      fullPath: '/videos'
+      preLoaderRoute: typeof VideosRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ActorNameRoute: ActorNameRoute,
-  DirectorNameRoute: DirectorNameRoute,
-  PublisherNameRoute: PublisherNameRoute,
-  SeriesNameRoute: SeriesNameRoute,
-  TagNameRoute: TagNameRoute,
+  VideosRoute: VideosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

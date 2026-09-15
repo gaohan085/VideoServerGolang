@@ -16,7 +16,7 @@ type QueryInfoBySN = {
 };
 
 type VideoDetail = {
-  sn: string
+  sn: string;
   title: string;
   releaseDate: Date;
   duration: number;
@@ -29,38 +29,50 @@ type VideoDetail = {
   actors: { name: string; sex: "male" | "female" }[];
 };
 
-const Tags = ({tags} : Readonly<{ tags: string[] }>) => {
+const Tags = ({ tags }: Readonly<{ tags: string[] }>) => {
   return (
-    <div className={styles.tag}><strong>{"标签:"}</strong>
+    <div className={styles.tag}>
+      <strong>{"标签:"}</strong>
       {tags.map((tag, index) => {
-        return <Link to={`/tag/${tag}`} key={index} ><span><FaHashtag /></span>{tag}</Link>;
+        return (
+          <Link to="/videos" search={{ tag }} key={index}>
+            <span>
+              <FaHashtag />
+            </span>
+            {tag}
+          </Link>
+        );
       })}
     </div>
   );
 };
 
-const Actors: React.FC<{ actors: { name: string; sex: "male" | "female" }[] | null }> = (props) => {
+const Actors: React.FC<{
+  actors: { name: string; sex: "male" | "female" }[] | null;
+}> = (props) => {
   const { actors } = props;
   return (
-    <div className={styles.actor}><strong>{"演员:"}</strong>
-      {!!actors && actors.map((actor, index) => {
-        const IsFemale = actor.sex === "female";
-        return (
-          <Link to={`/actor/${actor.name}`} key={index}>
-            {actor.name}
-            <span style={{ color: IsFemale ? "#e85982" : "" }}>
-              {!!IsFemale && <PiGenderFemaleBold />}
-              {!IsFemale && <PiGenderMaleBold />}
-            </span>
-          </Link>
-        );
-      })}
+    <div className={styles.actor}>
+      <strong>{"演员:"}</strong>
+      {!!actors &&
+        actors.map((actor, index) => {
+          const IsFemale = actor.sex === "female";
+          return (
+            <Link to="/videos" search={{ actor: actor.name }} key={index}>
+              {actor.name}
+              <span style={{ color: IsFemale ? "#e85982" : "" }}>
+                {!!IsFemale && <PiGenderFemaleBold />}
+                {!IsFemale && <PiGenderMaleBold />}
+              </span>
+            </Link>
+          );
+        })}
       {!actors && <>{"N/A"}</>}
     </div>
   );
 };
 
-const VideoInfo = ({sn}: Readonly<{ sn: string }>) => {
+const VideoInfo = ({ sn }: Readonly<{ sn: string }>) => {
   const { data } = useSWR<QueryInfoBySN>(`/api/query/sn/${sn}`);
   const {
     title,
@@ -72,62 +84,104 @@ const VideoInfo = ({sn}: Readonly<{ sn: string }>) => {
     sourceUrl,
     tags,
     actors,
-    director
+    director,
   } = data!.data;
 
   return (
     <div className={styles["video-info"]}>
-      <h4>
-        {`${sn.toLocaleUpperCase()} ${title}`}
-      </h4>
+      <h4>{`${sn.toLocaleUpperCase()} ${title}`}</h4>
       <div className="info">
-        {
-          !!title &&
+        {!!title && (
           <>
-            <div><strong>{"发售日期:"}</strong>{`${(new Date(releaseDate)).toLocaleDateString("zh-CN")}`}</div>
-            <div><strong>{"时长:"}</strong>{`${duration}min`}</div>
-            <div><strong>{"导演:"}</strong><Link to={`/director/${director}`} className="link">{`${director}`}</Link></div>
-            <div><strong>{"发行商:"}</strong><Link to={`/publisher/${publisher}`} className="link">{`${publisher}`}</Link></div>
-            {!!series && <div><strong>{"系列:"}</strong><Link to={`/series/${series}`} className="link">{`${series}`}</Link></div>}
-            <div><strong>{"评分:"}</strong>{`${rank}`}</div>
+            <div>
+              <strong>{"发售日期:"}</strong>
+              {`${new Date(releaseDate).toLocaleDateString("zh-CN")}`}
+            </div>
+            <div>
+              <strong>{"时长:"}</strong>
+              {`${duration}min`}
+            </div>
+            <div>
+              <strong>{"导演:"}</strong>
+              <Link
+                className="link"
+                to="/videos"
+                search={{ director }}
+              >{`${director}`}</Link>
+            </div>
+            <div>
+              <strong>{"发行商:"}</strong>
+              <Link
+                className="link"
+                to="/videos"
+                search={{ publisher }}
+              >{`${publisher}`}</Link>
+            </div>
+            {!!series && (
+              <div>
+                <strong>{"系列:"}</strong>
+                <Link
+                  className="link"
+                  to="/videos"
+                  search={{ series }}
+                >{`${series}`}</Link>
+              </div>
+            )}
+            <div>
+              <strong>{"评分:"}</strong>
+              {`${rank}`}
+            </div>
             <Tags tags={tags} />
             <Actors actors={actors} />
-            <div><strong>{"外部链接:"}</strong><span><FaLink /></span>
-              <a href={sourceUrl} target="_blank" rel="noreferrer" className="link">
+            <div>
+              <strong>{"外部链接:"}</strong>
+              <span>
+                <FaLink />
+              </span>
+              <a
+                href={sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="link"
+              >
                 {"JavDB"}
               </a>
             </div>
           </>
-        }
+        )}
       </div>
     </div>
   );
 };
 
 const InfoPreserveLayer = () => {
-  const {currentPlayingVideo: {sn, name}} = useStore(state => state);
+  const {
+    currentPlayingVideo: { sn, name },
+  } = useStore((state) => state);
 
   return (
     <>
       {!!sn && (
-        <Suspense fallback={
-          <div className={styles.loader}>
-            <Spinner fontSize={24}/>
-          </div>
-        }>
+        <Suspense
+          fallback={
+            <div className={styles.loader}>
+              <Spinner fontSize={24} />
+            </div>
+          }
+        >
           <VideoInfo sn={sn} />
         </Suspense>
       )}
-      {
-        !sn && !name && <div className={styles["video-info"]}>
+      {!sn && !name && (
+        <div className={styles["video-info"]}>
           <h4>{"没有正在播放"}</h4>
         </div>
-      }
-      {
-        !sn && !!name && <div className={styles["video-info"]}>
+      )}
+      {!sn && !!name && (
+        <div className={styles["video-info"]}>
           <h4>{name}</h4>
         </div>
-      }
+      )}
     </>
   );
 };

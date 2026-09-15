@@ -63,7 +63,6 @@ const InteractiveFolderElement = ({ elem }: { readonly elem: DirElement }) => {
     setIsClicked,
     setRClickElem,
     renameElem,
-    setRenameElem,
     unSetRenameElem,
   } = useBoundStore((state) => state);
 

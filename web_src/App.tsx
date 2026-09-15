@@ -16,7 +16,10 @@ const loadFeatures = () =>
   import("./motionFeatures.ts").then((res) => res.default);
 
 const browserHistory = createBrowserHistory();
-const router = createRouter({ routeTree, history: browserHistory });
+const router = createRouter({
+  routeTree,
+  history: browserHistory,
+});
 
 declare module "@tanstack/react-router" {
   interface Register {

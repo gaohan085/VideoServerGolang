@@ -19,16 +19,20 @@ const SideBar = ({ children }: { readonly children: ReactNode }) => {
   return (
     <div
       className={
-        !isSidebarActive ? styles["sidebar"] : `${styles["sidebar"]} active`
+        !isSidebarActive ? styles["sidebar"] : `${styles["sidebar"]} open`
       }
     >
-      <span className="arrow" onClick={() => toggleSidebarStatus()}>
-        <FcPrevious />
+      <span className="top-arrow" onClick={() => toggleSidebarStatus()}>
+        <FcPrevious onAnimationEnd={()=>{}}/>
       </span>
       {!!isSidebarActive && (
         <>
-          {children}
-          {width <= 992 && <DiskUsage />}
+          <div className="middle">{children}</div>
+          {width <= 992 && (
+            <div className="statusbar">
+              <DiskUsage />
+            </div>
+          )}
         </>
       )}
     </div>
