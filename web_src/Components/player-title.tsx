@@ -35,7 +35,7 @@ const Tags = ({ tags }: Readonly<{ tags: string[] }>) => {
       <strong>{"标签:"}</strong>
       {tags.map((tag, index) => {
         return (
-          <Link to="/videos" search={{ tag }} key={index}>
+          <Link to="/queryvideos" search={{ tag }} key={index}>
             <span>
               <FaHashtag />
             </span>
@@ -58,7 +58,7 @@ const Actors: React.FC<{
         actors.map((actor, index) => {
           const IsFemale = actor.sex === "female";
           return (
-            <Link to="/videos" search={{ actor: actor.name }} key={index}>
+            <Link to="/queryvideos" search={{ actor: actor.name }} key={index}>
               {actor.name}
               <span style={{ color: IsFemale ? "#e85982" : "" }}>
                 {!!IsFemale && <PiGenderFemaleBold />}
@@ -105,7 +105,7 @@ const VideoInfo = ({ sn }: Readonly<{ sn: string }>) => {
               <strong>{"导演:"}</strong>
               <Link
                 className="link"
-                to="/videos"
+                to="/queryvideos"
                 search={{ director }}
               >{`${director}`}</Link>
             </div>
@@ -113,7 +113,7 @@ const VideoInfo = ({ sn }: Readonly<{ sn: string }>) => {
               <strong>{"发行商:"}</strong>
               <Link
                 className="link"
-                to="/videos"
+                to="/queryvideos"
                 search={{ publisher }}
               >{`${publisher}`}</Link>
             </div>
@@ -122,7 +122,7 @@ const VideoInfo = ({ sn }: Readonly<{ sn: string }>) => {
                 <strong>{"系列:"}</strong>
                 <Link
                   className="link"
-                  to="/videos"
+                  to="/queryvideos"
                   search={{ series }}
                 >{`${series}`}</Link>
               </div>
