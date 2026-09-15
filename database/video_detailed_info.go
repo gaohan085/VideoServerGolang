@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
-	fiberlog "github.com/gofiber/fiber/v2/log"
+	fiberlog "github.com/gofiber/fiber/v3/log"
 	"github.com/jackc/pgx/v5"
 )
 

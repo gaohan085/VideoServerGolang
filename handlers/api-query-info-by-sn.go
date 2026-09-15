@@ -5,7 +5,7 @@ import (
 	"go-fiber-react-ts/database"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type VideoBySn struct {
@@ -53,7 +53,7 @@ func (v *VideoBySn) MapDbData(dbvideo *database.VideoDetailedInfo) {
 }
 
 // @route /api/query/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>
-func ApiQueryVideoInfoBySN(c *fiber.Ctx) error {
+func ApiQueryVideoInfoBySN(c fiber.Ctx) error {
 	video := &database.VideoDetailedInfo{SN: c.Params("sn")}
 	videoBySn := &VideoBySn{}
 

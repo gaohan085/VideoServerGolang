@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	fiberlog "github.com/gofiber/fiber/v2/log"
+	fiberlog "github.com/gofiber/fiber/v3/log"
 )
 
 type VideoConvert struct {
@@ -92,7 +92,7 @@ func (v *VideoConvert) Update() error {
 	query := `
 		UPDATE
 			video_converts
-		SET 
+		SET
 			filename = $1,
 			path = $2,
 			status = $3,
@@ -169,6 +169,9 @@ func (v *VideoConvert) UpdateDuration() error { //DONE TEST
 	}
 
 	scanner := bufio.NewScanner(stdout)
+	if err := scanner.Err(); err != nil {
+		return err
+	}
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -236,6 +239,9 @@ func (v *VideoConvert) ReadProgress(chInter <-chan int, chDone <-chan int) error
 			cmd.Stdin = strings.NewReader(script)
 			buf, _ := cmd.StdoutPipe()
 			scanner := bufio.NewScanner(buf)
+			if err := scanner.Err(); err != nil {
+				break
+			}
 			cmd.Start()
 
 			for scanner.Scan() {
@@ -291,7 +297,7 @@ func (v *VideoConvert) Delete() error {
 func GetAllVideoNeedConvert() ([]VideoConvert, error) {
 	videos := []VideoConvert{}
 	rows, err := PgxPool.Query(Ctx, `
-		SELECT 
+		SELECT
 			filename,
 			path,
 			status,
@@ -300,7 +306,7 @@ func GetAllVideoNeedConvert() ([]VideoConvert, error) {
 			play_source,
 			output_name,
 			downloaded
-		FROM video_converts 
+		FROM video_converts
 		ORDER BY id;
 	`)
 	if err != nil {

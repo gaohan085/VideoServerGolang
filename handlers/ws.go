@@ -3,7 +3,7 @@ package handlers
 import (
 	"go-fiber-react-ts/database"
 
-	"github.com/gofiber/contrib/websocket"
+	"github.com/gofiber/contrib/v3/websocket"
 )
 
 var Wshandler = websocket.New(func(c *websocket.Conn) {

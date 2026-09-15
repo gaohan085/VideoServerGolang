@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 
 	"go-fiber-react-ts/database"
 	"go-fiber-react-ts/lib"
@@ -77,7 +77,7 @@ func (d *DirChildElem) MapDBData() error {
 	return nil
 }
 
-func ApiFileReaderHandler(c *fiber.Ctx) error {
+func ApiFileReaderHandler(c fiber.Ctx) error {
 	path, err := url.QueryUnescape(c.Params("*"))
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())

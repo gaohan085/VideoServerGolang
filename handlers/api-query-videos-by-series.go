@@ -4,10 +4,10 @@ import (
 	"go-fiber-react-ts/database"
 	"net/url"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
-func ApiQueryVideoBySeries(c *fiber.Ctx) error {
+func ApiQueryVideoBySeries(c fiber.Ctx) error {
 	series, err := url.QueryUnescape(c.Params("series"))
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())

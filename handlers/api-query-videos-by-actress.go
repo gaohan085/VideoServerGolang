@@ -4,11 +4,11 @@ import (
 	"go-fiber-react-ts/database"
 	"net/url"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 // @router /api/query/actor/:name
-func ApiGetVideosByActress(c *fiber.Ctx) error {
+func ApiGetVideosByActress(c fiber.Ctx) error {
 	encodeURIname := c.Params("name")
 	actressName, err := url.QueryUnescape(encodeURIname)
 	if err != nil {

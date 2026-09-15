@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/pprof"
-	"github.com/gofiber/template/html/v2"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/pprof"
+	"github.com/gofiber/template/html/v3"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
 
@@ -19,7 +19,7 @@ import (
 )
 
 //go:embed dist/*
-var content embed.FS
+var distContent embed.FS
 
 // main usage -ffmpeg -pro
 
@@ -42,26 +42,21 @@ func main() {
 	}
 
 	usage := os.Getenv("USAGE")
-	engine := html.NewFileSystem(http.FS(content), ".html")
+	engine := html.NewFileSystem(http.FS(distContent), ".html")
 
 	app := fiber.New(
 		fiber.Config{
-			Views:        engine,
-			Prefork:      true,
-			ServerHeader: "Fiber",
-			ErrorHandler: func(ctx *fiber.Ctx, err error) error {
-				var e *fiber.Error
-				if errors.As(err, &e) {
+			Views: engine, ServerHeader: "Fiber",
+			ErrorHandler: func(ctx fiber.Ctx, err error) error {
+				if e, ok := errors.AsType[*fiber.Error](err); ok {
 					return ctx.Status(e.Code).JSON(&handlers.RespBody{
 						StatusCode: e.Code,
 						Data:       e.Error(),
 					})
 				}
 				return nil
-			},
-			DisableStartupMessage: false,
-			AppName:               "Go Fiber React TypeScript",
-			ProxyHeader:           fiber.HeaderXForwardedFor,
+			}, AppName: "Go Fiber React TypeScript",
+			ProxyHeader: fiber.HeaderXForwardedFor,
 		},
 	)
 
@@ -77,5 +72,5 @@ func main() {
 		SetRoutes(app)
 	}
 
-	log.Fatal(app.Listen("127.0.0.1:3000"))
+	log.Fatal(app.Listen("127.0.0.1:3000", fiber.ListenConfig{EnablePrefork: true, DisableStartupMessage: false}))
 }

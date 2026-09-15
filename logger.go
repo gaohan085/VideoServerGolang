@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/gofiber/fiber/v2"
-	fiberlog "github.com/gofiber/fiber/v2/log"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v3"
+	fiberlog "github.com/gofiber/fiber/v3/log"
+	"github.com/gofiber/fiber/v3/middleware/logger"
 )
 
 func LoggerRegister(app *fiber.App, usage string) {
@@ -30,7 +30,7 @@ func LoggerRegister(app *fiber.App, usage string) {
 		Format:     "[${time}] | ${ip} | ${status} | ${latency} | ${method} | ${path} | ${ua}\n",
 		TimeFormat: "2006/Jan/02 15:04:05",
 		TimeZone:   "Asia/Shanghai",
-		Output:     logFile,
+		Stream:     logFile,
 	}
 
 	switch usage {
