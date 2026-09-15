@@ -10,43 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as VideosRouteImport } from './routes/videos'
+import { Route as QueryvideosRouteImport } from './routes/queryvideos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VideosRoute = VideosRouteImport.update({
-  id: '/videos',
-  path: '/videos',
+const QueryvideosRoute = QueryvideosRouteImport.update({
+  id: '/queryvideos',
+  path: '/queryvideos',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/videos': typeof VideosRoute
+  '/queryvideos': typeof QueryvideosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/videos': typeof VideosRoute
+  '/queryvideos': typeof QueryvideosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/videos': typeof VideosRoute
+  '/queryvideos': typeof QueryvideosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/videos'
+  fullPaths: '/' | '/queryvideos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/videos'
-  id: '__root__' | '/' | '/videos'
+  to: '/' | '/queryvideos'
+  id: '__root__' | '/' | '/queryvideos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  VideosRoute: typeof VideosRoute
+  QueryvideosRoute: typeof QueryvideosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,11 +58,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/videos': {
-      id: '/videos'
-      path: '/videos'
-      fullPath: '/videos'
-      preLoaderRoute: typeof VideosRouteImport
+    '/queryvideos': {
+      id: '/queryvideos'
+      path: '/queryvideos'
+      fullPath: '/queryvideos'
+      preLoaderRoute: typeof QueryvideosRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -70,7 +70,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  VideosRoute: VideosRoute,
+  QueryvideosRoute: QueryvideosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

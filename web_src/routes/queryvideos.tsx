@@ -17,7 +17,7 @@ const videoSearchSchema = zod.object({
   tag: zod.string().default(""),
 });
 
-export const Route = createFileRoute("/videos")({
+export const Route = createFileRoute("/queryvideos")({
   validateSearch: videoSearchSchema,
   loaderDeps: ({ search: { actor, director, publisher, series, tag } }) => ({
     actor,
@@ -48,7 +48,7 @@ export const Route = createFileRoute("/videos")({
 
 const VideosComponent = () => {
   const { data: videos }: ResWithActressName = useLoaderData({
-    from: "/videos",
+    from: "/queryvideos",
   });
 
   return <LazyVideoBox videos={videos} />;
