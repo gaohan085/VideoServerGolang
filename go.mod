@@ -3,18 +3,12 @@ module go-fiber-react-ts
 go 1.26.0
 
 require (
-	github.com/PuerkitoBio/goquery v1.12.0
-	github.com/go-co-op/gocron/v2 v2.21.2
-	github.com/go-faker/faker/v4 v4.9.0
-	github.com/gofiber/contrib/v3/websocket v1.2.6
-	github.com/gofiber/fiber/v3 v3.5.0
-	github.com/gofiber/template/html/v3 v3.0.0
 	github.com/PuerkitoBio/goquery v1.13.0
 	github.com/go-co-op/gocron/v2 v2.22.0
 	github.com/go-faker/faker/v4 v4.11.0
-	github.com/gofiber/contrib/websocket v1.3.4
-	github.com/gofiber/fiber/v2 v2.52.15
-	github.com/gofiber/template/html/v2 v2.1.3
+	github.com/gofiber/contrib/v3/websocket v1.2.6
+	github.com/gofiber/fiber/v3 v3.5.0
+	github.com/gofiber/template/html/v3 v3.0.0
 	github.com/jackc/pgx/v5 v5.10.0
 	github.com/joho/godotenv v1.5.1
 	github.com/redis/go-redis/v9 v9.22.0
@@ -23,13 +17,9 @@ require (
 )
 
 require (
-	github.com/andybalholm/cascadia v1.3.3 // indirect
-	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/fasthttp/websocket v1.5.12 // indirect
-	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/andybalholm/cascadia v1.3.4 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/fasthttp/websocket v1.5.10 // indirect
+	github.com/fasthttp/websocket v1.5.12 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/gofiber/schema v1.8.6 // indirect
 	github.com/gofiber/template/v2 v2.0.0 // indirect
@@ -45,10 +35,6 @@ require (
 	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/molecule-man/go-brrr v1.0.1 // indirect
 	github.com/philhofer/fwd v1.2.0 // indirect
-	github.com/klauspost/compress v1.17.10 // indirect
-	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/savsgio/gotils v0.0.0-20250924091648-bce9a52d7761 // indirect
@@ -63,8 +49,4 @@ require (
 	golang.org/x/sync v0.23.0 // indirect
 	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
-	golang.org/x/net v0.58.0 // indirect
-	golang.org/x/sync v0.22.0 // indirect
-	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/text v0.41.0 // indirect
 )
