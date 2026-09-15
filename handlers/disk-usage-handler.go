@@ -3,11 +3,11 @@ package handlers
 import (
 	"os"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/shirou/gopsutil/v3/disk"
 )
 
-func ApiDiskUsageHandler(c *fiber.Ctx) error {
+func ApiDiskUsageHandler(c fiber.Ctx) error {
 	dir, err := os.Getwd()
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())

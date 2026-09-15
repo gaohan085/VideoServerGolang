@@ -36,9 +36,9 @@ const Container = ({
         >
           {data?.data.childElements
             .sort((a, b) => sortElements(a, b))
-            .map((elem, index) => {
-              if (elem.isFile)
-                return (
+            .map((elem, index) => (
+              <>
+                {!!elem.isFile && (
                   <m.div
                     initial={{ opacity: 0, paddingLeft: "15px" }}
                     animate={{ opacity: 1, paddingLeft: "0px" }}
@@ -49,9 +49,8 @@ const Container = ({
                   >
                     <LazyFileElement elem={elem} />
                   </m.div>
-                );
-              if (elem.isFolder)
-                return (
+                )}
+                {!!elem.isFolder && (
                   <m.div
                     initial={{ opacity: 0, paddingLeft: "15px" }}
                     animate={{ opacity: 1, paddingLeft: "0px" }}
@@ -62,8 +61,9 @@ const Container = ({
                   >
                     <LazyFolderElement elem={elem} />
                   </m.div>
-                );
-            })}
+                )}
+              </>
+            ))}
         </m.div>
       )}
     </AnimatePresence>

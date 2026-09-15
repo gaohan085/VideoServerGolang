@@ -12,7 +12,7 @@ config.output = {
     image: "assets",
   },
   filename: {
-    js: "[contenthash:8].js?v=[contenthash:8]"
+    js: "[name].js?v=[contenthash:8]"
   },
   sourceMap: {
     js: "source-map",
@@ -23,11 +23,13 @@ config.output = {
   }
 };
 
+config.splitChunks = {
+  preset: "per-package"
+};
+
 config.performance = {
   removeConsole: true,
-  chunkSplit: {
-    strategy: "split-by-module",
-  }
+  buildCache: true,
 };
 
 export default config;

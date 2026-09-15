@@ -4,7 +4,7 @@ import (
 	"go-fiber-react-ts/database"
 	"net/url"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type VideoBriefInfo struct {
@@ -23,7 +23,7 @@ func (v *VideoBriefInfo) MapDbData(dbvideo *database.VideoDetailedInfo) {
 	}
 }
 
-func ApiQueryVideoByTag(c *fiber.Ctx) error {
+func ApiQueryVideoByTag(c fiber.Ctx) error {
 	tag, err := url.QueryUnescape(c.Params("tag"))
 	if err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())

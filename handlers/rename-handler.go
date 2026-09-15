@@ -3,7 +3,7 @@ package handlers
 import (
 	"os"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
 type RenameStruct struct {
@@ -11,9 +11,9 @@ type RenameStruct struct {
 	NewName string `json:"newName"`
 }
 
-func ApiRenameHandler(c *fiber.Ctx) error {
+func ApiRenameHandler(c fiber.Ctx) error {
 	var renameBody *RenameStruct
-	if err := c.BodyParser(&renameBody); err != nil {
+	if err := c.Bind().Body(&renameBody); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 

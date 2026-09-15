@@ -122,6 +122,8 @@ func TestReduceLineReadFromCat(t *testing.T) {
 		cmd.Stdin = strings.NewReader(script)
 		pipe, _ := cmd.StdoutPipe()
 		scanner := bufio.NewScanner(pipe)
+
+		assert.Nil(t, scanner.Err())
 		var time float64
 
 		err := cmd.Start()

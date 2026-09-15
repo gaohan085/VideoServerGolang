@@ -13,7 +13,7 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ncipollo/release-action@v1
         with:
           prerelease: true
@@ -29,25 +29,16 @@ jobs:
         goarch: [amd64]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-      
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: actions/checkout@v7
+
+      - name: Setup PNPM
+        uses: pnpm/setup@v2
         with:
-          run_install: false
-          
-      - name: Install Nodejs
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-          
-      - name: Install dependencies
-        run: pnpm install
-        
+          runtime: node@22
+
       - name: RsBuild
         run: pnpm build
-        
+
       - uses: wangyoucao577/go-release-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

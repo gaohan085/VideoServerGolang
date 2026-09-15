@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/go-co-op/gocron/v2"
-	fiberlog "github.com/gofiber/fiber/v2/log"
+	fiberlog "github.com/gofiber/fiber/v3/log"
 )
 
 func Schedule() error {

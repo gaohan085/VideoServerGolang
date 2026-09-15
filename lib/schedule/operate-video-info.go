@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strings"
 
-	fiberlog "github.com/gofiber/fiber/v2/log"
+	fiberlog "github.com/gofiber/fiber/v3/log"
 )
 
 func QueryVideoInfo() error {

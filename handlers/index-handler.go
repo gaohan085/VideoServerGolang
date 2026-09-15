@@ -5,11 +5,11 @@ import (
 	"go-fiber-react-ts/lib"
 	"os"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 	"github.com/shirou/gopsutil/v3/disk"
 )
 
-func IndexHtmlHandler(c *fiber.Ctx) error {
+func IndexHtmlHandler(c fiber.Ctx) error {
 	cwd, _ := os.Getwd()
 	usage, _ := disk.Usage(cwd)
 	freedisk := float64(usage.Free) / (1024 * 1024 * 1024)

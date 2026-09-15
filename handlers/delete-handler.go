@@ -3,15 +3,15 @@ package handlers
 import (
 	"os"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v3"
 )
 
-func ApiDeleteHandler(c *fiber.Ctx) error {
+func ApiDeleteHandler(c fiber.Ctx) error {
 	var fileinfo DirChildElem
 
 	rootDir := os.Getenv("ROOT_DIR")
 
-	if err := c.BodyParser(&fileinfo); err != nil {
+	if err := c.Bind().Body(&fileinfo); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
