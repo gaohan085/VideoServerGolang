@@ -1,7 +1,7 @@
 @use "../base" as base;
 @use "sass:color";
 
-.sidebar{
+.sidebar {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -20,6 +20,7 @@
     position: absolute;
     top: 0;
     right: 0;
+    bottom: 0;
     background-color: #1c1838;
     z-index: 10;
     width: 0px;
@@ -28,7 +29,7 @@
     padding-top: 5px;
   }
 
-  [class~="arrow"] {
+  [class~="top-arrow"] {
     height: fit-content;
     vertical-align: middle;
     font-size: 18px;
@@ -46,30 +47,34 @@
     }
   }
 
-  &[class~="active"] {
+  &[class~="open"] {
     width: 320px;
     min-width: 320px;
     padding-left: 3px;
     padding-right: 5px;
-    overflow: auto;
-
-    > [class="arrow"] {
+    > [class="top-arrow"] {
+      width: 20px;
       margin-left: 4px;
       > svg {
-        transform: rotate(180deg);
+        transform: rotate(540deg);
         transition: all 0.5s ease-in-out;
       }
     }
+
+    > [class="middle"] {
+      overflow: auto;
+    }
   }
 
-  > p {
-    margin-left: 8px;
+  > [class="statusbar"] {
     margin-top: auto;
+    margin-left: 8px;
+    bottom: 0;
     user-select: none;
     line-height: 12px;
     font-size: 12px;
     white-space: nowrap;
-
+    position: sticky;
     svg {
       display: inline-block;
       vertical-align: sub;

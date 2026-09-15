@@ -1,7 +1,7 @@
 "use client";
 
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { lazy, useEffect } from "react";
+import { lazy } from "react";
 import InteractiveCtxMenu from "../Components/FileStructure/context-menu.tsx";
 import Spinner from "../Components/spinner.tsx";
 import useBoundStore from "../lib/zustand-store.ts";
@@ -37,4 +37,5 @@ export const Route = createRootRoute({
     </div>
   ),
   errorComponent: (e) => <>{e.error.message}</>,
+
 });

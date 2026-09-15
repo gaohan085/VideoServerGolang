@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, m } from "motion/react";
-import { lazy } from "react";
+import { Fragment, lazy } from "react";
 import useSWR from "swr";
 import sortElements from "../../lib/sort-elements-by-name.ts";
 import type { DirectoryProp, DirElement } from "../types.js";
@@ -37,12 +37,12 @@ const Container = ({
           {data?.data.childElements
             .sort((a, b) => sortElements(a, b))
             .map((elem, index) => (
-              <>
+              <Fragment key={index}>
                 {!!elem.isFile && (
                   <m.div
-                    initial={{ opacity: 0, paddingLeft: "15px" }}
+                    initial={{ opacity: 0, paddingLeft: "10px" }}
                     animate={{ opacity: 1, paddingLeft: "0px" }}
-                    exit={{ opacity: 0, paddingLeft: "15px" }}
+                    exit={{ opacity: 0, paddingLeft: "10px" }}
                     transition={{ duration: 0.25, ease: "easeInOut" }}
                     id="file-element-animator"
                     key={index}
@@ -52,9 +52,9 @@ const Container = ({
                 )}
                 {!!elem.isFolder && (
                   <m.div
-                    initial={{ opacity: 0, paddingLeft: "15px" }}
+                    initial={{ opacity: 0, paddingLeft: "10px" }}
                     animate={{ opacity: 1, paddingLeft: "0px" }}
-                    exit={{ opacity: 0, paddingLeft: "15px" }}
+                    exit={{ opacity: 0, paddingLeft: "10px" }}
                     transition={{ duration: 0.25, ease: "easeInOut" }}
                     id="folder-element-animator"
                     key={index}
@@ -62,7 +62,7 @@ const Container = ({
                     <LazyFolderElement elem={elem} />
                   </m.div>
                 )}
-              </>
+              </Fragment>
             ))}
         </m.div>
       )}
