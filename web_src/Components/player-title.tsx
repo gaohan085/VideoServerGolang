@@ -33,16 +33,18 @@ const Tags = ({ tags }: Readonly<{ tags: string[] }>) => {
   return (
     <div className={styles.tag}>
       <strong>{"标签:"}</strong>
-      {tags.map((tag, index) => {
-        return (
-          <Link to="/queryvideos" search={{ tag }} key={index}>
-            <span>
-              <FaHashtag />
-            </span>
-            {tag}
-          </Link>
-        );
-      })}
+      <div>
+        {tags.map((tag, index) => {
+          return (
+            <Link to="/queryvideos" search={{ tag }} key={index}>
+              <span>
+                <FaHashtag />
+              </span>
+              {tag}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };
@@ -54,19 +56,25 @@ const Actors: React.FC<{
   return (
     <div className={styles.actor}>
       <strong>{"演员:"}</strong>
-      {!!actors &&
-        actors.map((actor, index) => {
-          const IsFemale = actor.sex === "female";
-          return (
-            <Link to="/queryvideos" search={{ actor: actor.name }} key={index}>
-              {actor.name}
-              <span style={{ color: IsFemale ? "#e85982" : "" }}>
-                {!!IsFemale && <PiGenderFemaleBold />}
-                {!IsFemale && <PiGenderMaleBold />}
-              </span>
-            </Link>
-          );
-        })}
+      <div>
+        {!!actors &&
+          actors.map((actor, index) => {
+            const IsFemale = actor.sex === "female";
+            return (
+              <Link
+                to="/queryvideos"
+                search={{ actor: actor.name }}
+                key={index}
+              >
+                {actor.name}
+                <span style={{ color: IsFemale ? "#e85982" : "" }}>
+                  {!!IsFemale && <PiGenderFemaleBold />}
+                  {!IsFemale && <PiGenderMaleBold />}
+                </span>
+              </Link>
+            );
+          })}
+      </div>
       {!actors && <>{"N/A"}</>}
     </div>
   );
