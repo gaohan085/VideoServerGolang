@@ -8,36 +8,35 @@
   margin-top: 1rem;
   border-radius: 5px;
 
-  >h4 {
+  > h4 {
     margin-block-end: 0em;
     margin-block-start: 0em;
     font-size: 17px;
   }
 
-  >[class~="info"] {
-    justify-content: space-between;
-
-    >div:nth-child(1) {
+  > [class~="info"] {
+    > div:nth-child(1) {
       margin-block-start: 0.3em;
     }
 
-    >div {
-      height: 25px;
-      line-height: 30px;
+    > div {
+      height: auto;
+      line-height: 25px;
       font-size: 13px;
 
-      >strong {
+      > strong {
         padding-right: 5px;
+        white-space: nowrap;
       }
 
-      >span {
+      > span {
         color: #6190c9;
         font-size: 11px;
         vertical-align: baseline;
         padding-left: 3px;
       }
 
-      >[class~='link']:hover {
+      > [class~="link"]:hover {
         text-decoration: underline;
         color: #e85982;
       }
@@ -45,29 +44,32 @@
   }
 }
 
-.tag>a,
-.actor>a {
-  font-size: 13px;
-  margin: 0 4px 0 0;
-  padding: 1px 5px 3px;
-  border-radius: 8px;
-  background-color: color.adjust(base.$backgrdColor, $lightness: 10%);
+.tag,
+.actor {
+  display: flex;
+  > div > a {
+    font-size: 13px;
+    margin: 0 4px 0 0;
+    padding: 1px 5px 3px;
+    border-radius: 8px;
+    background-color: color.adjust(base.$backgrdColor, $lightness: 10%);
+    white-space: nowrap;
+    &:hover {
+      background-color: color.adjust(base.$backgrdColor, $lightness: 20%);
+    }
 
-  &:hover {
-    background-color: color.adjust(base.$backgrdColor, $lightness: 20%);
-  }
-
-  >span {
-    color: #6190c9;
-    font-size: 11px;
-    vertical-align: baseline;
+    > span {
+      color: #6190c9;
+      font-size: 11px;
+      vertical-align: baseline;
+    }
   }
 }
 
-.actor>a {
+.actor > a {
   padding-left: 6px;
 
-  >span {
+  > span {
     font-size: 13px;
     vertical-align: middle;
   }

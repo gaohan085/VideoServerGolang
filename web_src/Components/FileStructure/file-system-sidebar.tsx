@@ -54,27 +54,11 @@ const InteractiveFileSysSideBar = () => {
 
   return (
     <ErrorBoundary fallback={<LazyErrElement />}>
-      <Suspense
-        fallback={
-          <div
-            className={
-              !isSidebarActive
-                ? styles.fileSysSidebar
-                : `${styles.fileSysSidebar} active`
-            }
-          >
-            <div className="file-system">
-              <Spinner fontSize={24} />
-            </div>
-          </div>
-        }
-      >
-        <FileSysSideBar
-          handleClick={handleClick}
-          handleCtxMenu={handleCtxMenu}
-          isSidebarActive={isSidebarActive}
-        />
-      </Suspense>
+      <FileSysSideBar
+        handleClick={handleClick}
+        handleCtxMenu={handleCtxMenu}
+        isSidebarActive={isSidebarActive}
+      />
     </ErrorBoundary>
   );
 };
