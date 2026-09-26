@@ -94,6 +94,7 @@ const DeleteConfirm = (props: {
     <div
       className={styles["ctx-dialog"]}
       style={{ top: position.pageY, left: position.pageX }}
+      onContextMenu={ (e) => e.preventDefault()}
     >
       <p>{`确认删除${elem.isFile ? "文件" : "文件夹"} "${elem.name}"`}</p>
 
@@ -136,6 +137,7 @@ const CtxMenu = (
     <div
       className={styles.ctx}
       style={{ top: position.pageY, left: position.pageX }}
+      onContextMenu={ (e) => e.preventDefault()}
     >
       <ul>
         {/* First list */}
