@@ -6,7 +6,6 @@ import {
   RouterProvider,
 } from "@tanstack/react-router";
 import { LazyMotion } from "motion/react";
-import React from "react";
 import { SWRConfig } from "swr";
 import Spinner from "./Components/spinner.tsx";
 import fetcher from "./lib/fetcher.ts";
@@ -27,7 +26,7 @@ declare module "@tanstack/react-router" {
   }
 }
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <SWRConfig
       value={{

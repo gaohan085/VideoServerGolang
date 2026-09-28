@@ -68,7 +68,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     (state) => state.currentPlayingVideo,
     (current, previous) => {
       if (current.playSrc !== previous.playSrc) {
-        const { posterUrl, playSrc } = current;
+        const { posterUrl, playSrc, name, sn } = current;
         plyr.stop();
         plyr.source = {
           type: "video",
@@ -76,9 +76,37 @@ const mountPlyr = (node: HTMLElement): Plyr => {
           sources: [{ src: playSrc }],
         };
         clearTimeout(trackedTimeout);
+
+        if ("mediaSession" in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: name,
+            artwork: [{ src: posterUrl }],
+          });
+        }
       }
     },
   );
+
+  plyr.on("playing", (e) => {
+    navigator.mediaSession.playbackState = "playing";
+    navigator.mediaSession.setActionHandler("pause", () =>
+      e.detail.plyr.pause(),
+    );
+  });
+  plyr.on("pause", (e) => {
+    navigator.mediaSession.playbackState = "paused";
+    navigator.mediaSession.setActionHandler("play", () =>
+      e.detail.plyr.play(),
+    );
+  });
+
+  navigator.mediaSession.setActionHandler("seekbackward", () =>
+    plyr.rewind(10),
+  );
+  navigator.mediaSession.setActionHandler("seekforward", () =>
+    plyr.forward(10),
+  );
+
   return plyr;
 };
 
