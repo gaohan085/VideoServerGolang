@@ -8,10 +8,11 @@ import (
 )
 
 type VideoBriefInfo struct {
-	SN         string `json:"sn"`
-	Title      string `json:"title"`
-	PosterUrl  string `json:"posterUrl"`
-	PlaySource string `json:"playSrc"`
+	SN         string           `json:"sn"`
+	Title      string           `json:"title"`
+	PosterUrl  string           `json:"posterUrl"`
+	PlaySource string           `json:"playSrc"`
+	Actors     []database.Actor `json:"actors"`
 }
 
 func (v *VideoBriefInfo) MapDbData(dbvideo *database.VideoDetailedInfo) {
@@ -21,6 +22,8 @@ func (v *VideoBriefInfo) MapDbData(dbvideo *database.VideoDetailedInfo) {
 	if dbvideo.PosterFileName != "" {
 		v.PosterUrl = "/assets/poster/" + dbvideo.PosterFileName
 	}
+	v.Actors = dbvideo.Actors
+
 }
 
 func ApiQueryVideoByTag(c fiber.Ctx) error {

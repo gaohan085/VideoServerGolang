@@ -36,7 +36,7 @@ func (t *Tag) Create() error {
 func (t *Tag) Query() error {
 	return PgxPool.QueryRow(Ctx, `
 		SELECT id, name
-		FROM tags 
+		FROM tags
 		WHERE name = $1 OR id = $2;
 	`, t.Name, t.ID).Scan(&t.ID, &t.Name)
 }
@@ -125,7 +125,7 @@ func CreateVideoDetailedInfoTable() error {
 	batch.Queue(
 		`
 		CREATE TABLE IF NOT EXISTS actors (
-			id SERIAL PRIMARY KEY,	
+			id SERIAL PRIMARY KEY,
 			name TEXT UNIQUE NOT NULL,
 			sex TEXT
 		);`,
@@ -195,7 +195,7 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 		_, err := PgxPool.Exec(Ctx, `
 			INSERT INTO video_tags (
 			video_id, tag_id
-			) 
+			)
 			VALUES ($1, $2)
 			ON CONFLICT (video_id,tag_id) DO NOTHING;
 		`, v.ID, tag.ID)
@@ -211,7 +211,7 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 			`
 			INSERT INTO video_actors (
 			video_id, actor_id
-			) 
+			)
 			VALUES ($1, $2)
 			ON CONFLICT (video_id,actor_id) DO NOTHING;
 		`,
@@ -227,7 +227,7 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 
 func (v *VideoDetailedInfo) Query() error {
 	if err := PgxPool.QueryRow(Ctx, `
-		SELECT 
+		SELECT
 			id,
 			sn,
 			title,
@@ -316,7 +316,7 @@ func (v *VideoDetailedInfo) Update() error {
 			source_url = $9,
 			poster_file_name = $10,
 			play_source = $11
-		WHERE 
+		WHERE
 			sn = $12 OR id = $13
 		RETURNING id;
 	`, v.Title,
@@ -342,7 +342,7 @@ func (v *VideoDetailedInfo) Update() error {
 		_, err := PgxPool.Exec(Ctx, `
 			INSERT INTO video_tags (
 			video_id, tag_id
-			) 
+			)
 			VALUES ($1, $2)
 			ON CONFLICT (video_id,tag_id) DO NOTHING;
 		`, v.ID, tag.ID)
@@ -358,7 +358,7 @@ func (v *VideoDetailedInfo) Update() error {
 			`
 			INSERT INTO video_actors (
 			video_id, actor_id
-			) 
+			)
 			VALUES ($1, $2)
 			ON CONFLICT (video_id,actor_id) DO NOTHING;
 		`,
@@ -598,8 +598,8 @@ func QueryVideoByActor(name string) ([]VideoDetailedInfo, error) {
 func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 	rows, err := PgxPool.Query(Ctx, `
-		SELECT 
-			sn, title, poster_file_name, play_source
+		SELECT
+			id
 		FROM
 			video_details
 		WHERE
@@ -613,13 +613,15 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 		video := &VideoDetailedInfo{}
 
 		if err := rows.Scan(
-			&video.SN,
-			&video.Title,
-			&video.PosterFileName,
-			&video.PlaySource,
+			&video.ID,
 		); err != nil {
 			return nil, err
 		}
+
+		if err := video.Query(); err != nil {
+			return nil, err
+		}
+
 		if video.IsVideoFileExist() {
 			videos = append(videos, *video)
 		}
@@ -630,8 +632,8 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 	rows, err := PgxPool.Query(Ctx, `
-		SELECT 
-			sn, title, poster_file_name, play_source
+		SELECT
+			id
 		FROM
 			video_details
 		WHERE
@@ -645,13 +647,15 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 		video := &VideoDetailedInfo{}
 
 		if err := rows.Scan(
-			&video.SN,
-			&video.Title,
-			&video.PosterFileName,
-			&video.PlaySource,
+			&video.ID,
 		); err != nil {
 			return nil, err
 		}
+
+		if err := video.Query(); err != nil {
+			return nil, err
+		}
+
 		if video.IsVideoFileExist() {
 			videos = append(videos, *video)
 		}
@@ -662,8 +666,8 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 	rows, err := PgxPool.Query(Ctx, `
-		SELECT 
-			sn, title, poster_file_name, play_source
+		SELECT
+			id
 		FROM
 			video_details
 		WHERE
@@ -677,13 +681,15 @@ func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
 		video := &VideoDetailedInfo{}
 
 		if err := rows.Scan(
-			&video.SN,
-			&video.Title,
-			&video.PosterFileName,
-			&video.PlaySource,
+			&video.ID,
 		); err != nil {
 			return nil, err
 		}
+
+		if err := video.Query(); err != nil {
+			return nil, err
+		}
+
 		if video.IsVideoFileExist() {
 			videos = append(videos, *video)
 		}
