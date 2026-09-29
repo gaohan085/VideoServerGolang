@@ -34,6 +34,7 @@ type VideoInfo = {
   title: string;
   posterUrl: string;
   playSrc: string;
+  actors: {actorName: string, sex: "male" | "female"}[]
 };
 
 interface VideoStatus {

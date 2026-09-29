@@ -5,7 +5,6 @@ import React, { Suspense } from "react";
 import { FaHashtag, FaLink } from "react-icons/fa";
 import { PiGenderFemaleBold, PiGenderMaleBold } from "react-icons/pi";
 import useSWR from "swr";
-// import * as redux from "../lib/reduxStore.ts";
 import useStore from "../lib/zustand-store.ts";
 import styles from "./player-title.module.scss";
 import Spinner from "./spinner.tsx";
