@@ -58,10 +58,11 @@ const InteractiveTsRenameComponent = (props: DirElement) => {
                 placeholder={name}
                 defaultValue={form.state.values.name}
                 required
-                style={{ width: `${Math.min(name.length * 10 + 30, 135)}px` }}
+                style={{ width: `${Math.min(name.length * 15 + 30, 155)}px` }}
                 type="text"
                 onChange={(e) => field.handleChange(e.target.value)}
                 onFocus={(e) => e.target.select()}
+                autoComplete=""
               />
             </>
           );

@@ -39,6 +39,7 @@
       padding: 0.4em;
       &:hover {
         color: #f3f3f3;
+        text-decoration: underline;
       }
     }
   }
@@ -74,14 +75,14 @@
         border-radius: 4px;
         width: 100%;
         padding: 3px;
-        font-size: 12px;
-        line-height: 12px;
+        font-size: 13px;
+        line-height: 22px;
         cursor: pointer;
 
         span {
           display: inline-block;
           vertical-align: sub;
-          font-size: 17px;
+          font-size: 20px;
           margin-right: 3px;
           line-height: 14px;
         }
@@ -91,7 +92,7 @@
           line-height: 24px;
 
           > span {
-            font-size: 20px;
+            font-size: 22px;
           }
         }
       }

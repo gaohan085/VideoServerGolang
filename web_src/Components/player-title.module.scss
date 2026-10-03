@@ -1,4 +1,4 @@
-@use "../_base" as base;
+@use "../responsive" as r;
 @use "sass:color";
 
 .video-info {
@@ -51,10 +51,10 @@
     margin: 0 4px 0 0;
     padding: 1px 5px 3px;
     border-radius: 8px;
-    background-color: color.adjust(base.$backgrdColor, $lightness: 10%);
+    background-color: color.adjust(r.$backgrdColor, $lightness: 10%);
     white-space: nowrap;
     &:hover {
-      background-color: color.adjust(base.$backgrdColor, $lightness: 20%);
+      background-color: color.adjust(r.$backgrdColor, $lightness: 20%);
     }
 
     > span {

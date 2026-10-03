@@ -31,7 +31,7 @@ const FileElement = (props: FileElementProps) => {
 
   return (
     <div className={styles.file}>
-      <div
+      <a
         className={
           isConverting
             ? "file-element convert"
@@ -53,7 +53,7 @@ const FileElement = (props: FileElementProps) => {
           )}
         </span>
 
-        {!isRename && <a className="name">{elem.name}</a>}
+        {!isRename && <>{elem.name}</>}
         {!!isConverting && (
           <a className="progress">
             {" "}
@@ -61,7 +61,7 @@ const FileElement = (props: FileElementProps) => {
           </a>
         )}
         {!!isRename && <RenameElement {...elem} />}
-      </div>
+      </a>
     </div>
   );
 };
@@ -73,7 +73,6 @@ const InteractiveFileElement = ({ elem }: { readonly elem: DirElement }) => {
     setRClickElem,
     setPosition,
     renameElem,
-    setRenameElem,
     unSetRenameElem,
     setVideoPlaying,
     currentPlayingVideo,

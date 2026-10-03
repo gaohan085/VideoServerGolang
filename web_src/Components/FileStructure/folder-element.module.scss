@@ -1,23 +1,14 @@
-@use "../../base";
+@use "../../responsive" as r;
 
 .folder {
-  @extend %element;
-  transition: background-color 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  border-radius: 1px;
+  margin-left: 8px;
+  @include r.element;
 
-  >[class~="folder-element"] {
-    @include base.name();
-
-    & {
-      cursor: pointer;
-    }
-
-    >span {
-      @include base.icon();
-    }
-
+  > [class~="folder-element"] {
+    cursor: pointer;
     &:hover {
-      color: base.$main-color;
-      // text-decoration: underline;
+      color: r.$main-color;
     }
   }
 }

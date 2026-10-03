@@ -1,11 +1,8 @@
-@use "../../base" as base;
-
 .file-system {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  font-size: 12px;
   width: 280px;
   height: 100%;
   > div {

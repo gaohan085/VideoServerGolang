@@ -1,35 +1,28 @@
-@use "../../base" as base;
+@use "../../responsive" as r;
 @use "sass:color";
 
 .file {
-  @extend %element;
+  border-radius: 1px;
+  margin-left: 8px;
+  @include r.element;
+
   > [class~="file-element"] {
-    @include base.name();
-
-    & {
-      transition: color 0.2s ease-in-out;
-      text-overflow: ellipsis;
-      padding-right: 10px;
-    }
-
-    > [class~="name"]:hover {
-      color: base.$main-color;
-    }
-    > span {
-      @include base.icon();
-    }
+    transition: color 0.2s ease-in-out;
+    text-overflow: ellipsis;
+    padding-right: 10px;
 
     &:hover {
       cursor: pointer;
+      color: r.$main-color;
     }
 
     &[class~="playing"] {
       // color: lighten(base.$main-color, 5%);
-      color: color.scale(base.$main-color, $lightness: 25%);
+      color: color.scale(r.$main-color, $lightness: 25%);
       text-decoration: underline;
 
       &:hover {
-        color: base.$main-color;
+        color: r.$main-color;
       }
     }
 
@@ -43,8 +36,7 @@
 
         > [class~="name"] {
           text-decoration: line-through;
-          // color: lighten($color: #1c1838, $amount: 50%);
-          color: color.scale(#1c1838, $lightness: 50%)
+          color: color.scale(#1c1838, $lightness: 50%);
         }
       }
     }
