@@ -5,6 +5,7 @@ import {
   createRouter,
   RouterProvider,
 } from "@tanstack/react-router";
+import { Base64 } from "js-base64";
 import { LazyMotion } from "motion/react";
 import { SWRConfig } from "swr";
 import Spinner from "./Components/spinner.tsx";
@@ -14,10 +15,18 @@ import { routeTree } from "./routeTree.gen.ts";
 const loadFeatures = () =>
   import("./motionFeatures.ts").then((res) => res.default);
 
-const browserHistory = createBrowserHistory();
 const router = createRouter({
   routeTree,
-  history: browserHistory,
+  history: createBrowserHistory(),
+  parseSearch: (value) => {
+    if (value === "") return;
+    return JSON.parse(Base64.decode(value.slice(3)));
+  },
+  stringifySearch: (value) => {
+    if (value === undefined) return "";
+    const result = Base64.encode(JSON.stringify(value));
+    return "?s=" + result;
+  },
 });
 
 declare module "@tanstack/react-router" {
@@ -40,6 +49,7 @@ const App = () => {
         <RouterProvider
           router={router}
           defaultPendingComponent={() => <Spinner fontSize={24} />}
+          defaultNotFoundComponent={() => <>{"Page Not Found"}</>}
         />
       </LazyMotion>
     </SWRConfig>
