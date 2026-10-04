@@ -173,10 +173,10 @@ importers:
         specifier: ^1.33.5
         version: 1.33.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@tanstack/react-router':
-        specifier: ^1.170.40
+        specifier: ^1.170.25
         version: 1.170.40(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@tanstack/react-router-devtools':
-        specifier: ^1.167.2
+        specifier: ^1.167.1
         version: 1.167.2(@tanstack/react-router@1.170.40(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(@tanstack/router-core@1.171.33)(csstype@3.2.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       axios:
         specifier: ^1.19.0
@@ -185,7 +185,7 @@ importers:
         specifier: ^3.9.4
         version: 3.9.4
       motion:
-        specifier: ^13.4.4
+        specifier: ^13.1.0
         version: 13.4.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       plyr:
         specifier: ^3.7.8
