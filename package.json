@@ -21,6 +21,7 @@
     "@tanstack/react-router": "^1.170.25",
     "@tanstack/react-router-devtools": "^1.167.1",
     "axios": "^1.19.0",
+    "js-base64": "^3.9.4",
     "motion": "^13.1.0",
     "plyr": "^3.7.8",
     "react": "^19.2.8",
