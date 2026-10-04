@@ -1,3 +1,5 @@
+@use "sass:map";
+
 $main-color: #e85982;
 $backgrdColor: #090812;
 
@@ -18,8 +20,8 @@ $breakpoints: (
   #{$property}: $default;
 
   @each $name, $value in $values {
-    @if map-has-key($breakpoints, $name) {
-      @media (width <= map-get($breakpoints, $name)) {
+    @if map.has-key($breakpoints, $name) {
+      @media (width <= map.get($breakpoints, $name)) {
         #{$property}: $value;
       }
     }
