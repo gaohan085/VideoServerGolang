@@ -1,4 +1,4 @@
-@use "../base" as base;
+@use "../responsive" as r;
 @use "sass:color";
 
 .video-box-container {
@@ -10,7 +10,7 @@
     display: flex;
     margin: 10px;
     padding: 6px;
-    border-radius: 4px;
+    border-radius: 5px;
     transition: all 0.2s ease-in-out;
 
     > [class~="img-box"] {
@@ -49,7 +49,7 @@
           font-size: 16px;
           writing-mode: vertical-lr;
           white-space: nowrap;
-          color: color.scale(base.$main-color, $lightness: 5%);
+          color: color.scale(r.$main-color, $lightness: 5%);
           cursor: pointer;
         }
 
@@ -91,7 +91,7 @@
       transition: all 0.2s ease-in-out;
 
       > [class~="img-box-title"] > a {
-        color: color.scale(base.$main-color, $lightness: 40%);
+        color: color.scale(r.$main-color, $lightness: 40%);
       }
     }
 
@@ -104,7 +104,7 @@
         object-position: 91% center;
       }
       > [class~="img-box-title"] > a {
-        color: color.scale(base.$main-color, $lightness: 20%);
+        color: color.scale(r.$main-color, $lightness: 20%);
       }
     }
   }

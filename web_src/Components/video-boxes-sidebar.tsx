@@ -23,7 +23,7 @@ const VideoWithPoster = (props: Readonly<VideoInfo>) => {
   return (
     <div className={!isPlaying ? "videobox" : "videobox playing"}>
       <div className="img-box" onClick={handleClick}>
-        <img src={!!posterUrl ? posterUrl : ""} loading="lazy" />
+        {!!posterUrl && <img src={posterUrl} loading="lazy" />}
       </div>
       <div className="img-box-title">
         <div className="sn">
