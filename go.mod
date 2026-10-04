@@ -5,11 +5,11 @@ go 1.26.0
 require (
 	github.com/PuerkitoBio/goquery v1.13.0
 	github.com/go-co-op/gocron/v2 v2.22.0
-	github.com/go-faker/faker/v4 v4.11.0
+	github.com/go-faker/faker/v4 v4.12.0
 	github.com/gofiber/contrib/v3/websocket v1.2.6
 	github.com/gofiber/fiber/v3 v3.5.0
-	github.com/gofiber/template/html/v3 v3.0.0
-	github.com/jackc/pgx/v5 v5.10.0
+	github.com/gofiber/template/html/v3 v3.0.9
+	github.com/jackc/pgx/v5 v5.11.0
 	github.com/joho/godotenv v1.5.1
 	github.com/redis/go-redis/v9 v9.22.0
 	github.com/shirou/gopsutil/v3 v3.24.5
@@ -22,9 +22,8 @@ require (
 	github.com/fasthttp/websocket v1.5.12 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/gofiber/schema v1.8.6 // indirect
-	github.com/gofiber/template/v2 v2.0.0 // indirect
-	github.com/gofiber/utils v1.1.0 // indirect
-	github.com/gofiber/utils/v2 v2.5.1 // indirect
+	github.com/gofiber/template/v2 v2.1.2 // indirect
+	github.com/gofiber/utils/v2 v2.5.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
