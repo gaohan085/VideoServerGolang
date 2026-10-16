@@ -1,10 +1,9 @@
 "use client";
 
-import { lazy, useState, Suspense, useEffect } from "react";
+import { lazy, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useSWRConfig } from "swr";
 import useBoundStore from "../../lib/zustand-store.ts";
-import Spinner from "../spinner.tsx";
 import styles from "./file-system-sidebar.module.scss";
 
 const LazyErrElement = lazy(() => import("./error-element.tsx"));

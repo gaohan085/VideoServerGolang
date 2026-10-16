@@ -85,7 +85,7 @@ const InteractiveFileElement = ({ elem }: { readonly elem: DirElement }) => {
   const isConverting =
     !!result &&
     (result?.status === "pending" || result?.status === "converting");
-  const progress = !!isConverting ? result.progress : 0;
+  const progress = isConverting ? result.progress : 0;
   const isRename = renameElem === elem;
   const isPlaying =
     currentPlayingVideo.playSrc !== "" &&

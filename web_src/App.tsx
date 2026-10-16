@@ -18,11 +18,11 @@ const loadFeatures = () =>
 const router = createRouter({
   routeTree,
   history: createBrowserHistory(),
-  parseSearch: (value) => {
+  parseSearch: (value: string) => {
     if (value === "") return;
     return JSON.parse(Base64.decode(value.slice(3)));
   },
-  stringifySearch: (value) => {
+  stringifySearch: (value: Record<string, string>) => {
     if (value === undefined) return "";
     const result = Base64.encode(JSON.stringify(value));
     return "?s=" + result;
