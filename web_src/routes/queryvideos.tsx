@@ -33,7 +33,7 @@ export const Route = createFileRoute("/queryvideos")({
       publisher,
       series,
       tag,
-    }).find(([_, value]) => value !== "");
+    }).find(([,value]) => value !== "");
 
     return await fetcher(`/api/query/${result![0]}/${result![1]}`);
   },
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/queryvideos")({
       <Spinner fontSize={24} />
     </div>
   ),
-  errorComponent: (e) => <>{e.error.message}</>,
+  errorComponent: (e) => <>{e.error}</>,
 });
 
 const VideosComponent = () => {

@@ -37,23 +37,23 @@ const mountPlyr = (node: HTMLElement): Plyr => {
 
   let trackedTimeout: NodeJS.Timeout;
 
-  plyr.on("loadedmetadata", async (e) => {
+  plyr.on("loadedmetadata", (e) => {
     const instance = e.detail.plyr;
     const playSrc = instance.source as unknown as string;
     const historyTime = localStorage.getItem(playSrc);
 
-    trackedTimeout = setTimeout(async () => {
+    trackedTimeout = setTimeout(() => {
       instance.currentTime = Number(historyTime);
-      await instance.play();
+      void instance.play();
     }, 2500);
   });
 
-  plyr.on("enterfullscreen", async () => {
+  plyr.on("enterfullscreen", () => {
     if (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
     ) {
       window.screen.orientation.unlock();
-      await window.screen.orientation.lock("landscape");
+      void window.screen.orientation.lock("landscape");
     }
   });
 
@@ -68,7 +68,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     (state) => state.currentPlayingVideo,
     (current, previous) => {
       if (current.playSrc !== previous.playSrc) {
-        const { posterUrl, playSrc, name, sn } = current;
+        const { posterUrl, playSrc, name } = current;
         plyr.stop();
         plyr.source = {
           type: "video",
@@ -96,7 +96,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
   plyr.on("pause", (e) => {
     navigator.mediaSession.playbackState = "paused";
     navigator.mediaSession.setActionHandler("play", () =>
-      e.detail.plyr.play(),
+      void e.detail.plyr.play(),
     );
   });
 

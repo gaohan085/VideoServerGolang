@@ -36,6 +36,5 @@ export const Route = createRootRoute({
       <Spinner fontSize={24} />
     </div>
   ),
-  errorComponent: (e) => <>{e.error.message}</>,
-
+  errorComponent: (e) => <>{e.error}</>,
 });
