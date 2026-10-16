@@ -1,6 +1,6 @@
 "use client";
 
-import { lazy, Suspense, useState, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { FcFolder, FcOpenedFolder } from "react-icons/fc";
 import useBoundStore from "../../lib/zustand-store.ts";

@@ -9,7 +9,7 @@ import styles from "./rename-element.module.scss";
 
 const InteractiveTsRenameComponent = (props: DirElement) => {
   const { currentPath, name } = props;
-  const { setRenameElem, unSetRenameElem, mutate } = useBoundStore(
+  const { unSetRenameElem, mutate } = useBoundStore(
     (state) => state,
   );
 
@@ -42,7 +42,7 @@ const InteractiveTsRenameComponent = (props: DirElement) => {
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
     >
       <form.Field
