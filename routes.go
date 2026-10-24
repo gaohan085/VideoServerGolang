@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"go-fiber-react-ts/handlers"
 	"net/url"
 	"os"
@@ -33,6 +34,7 @@ func SetRoutes(app *fiber.App) {
 		api.Post("/rename", handlers.ApiRenameHandler)
 		api.Get("/version", handlers.ApiAppVersionHandler)
 		api.Post("/convert", handlers.ApiConvertHandler)
+		api.Post("/refresh/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>", handlers.ApiRefreshVideoInfoBySN)
 
 		query := api.Group("/query")
 		query.Get("/sn/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>", handlers.ApiQueryVideoInfoBySN)
@@ -42,7 +44,13 @@ func SetRoutes(app *fiber.App) {
 		query.Get("/series/:series", handlers.ApiQueryVideoBySeries)
 		query.Get("/actor/:name", handlers.ApiGetVideosByActress)
 
-		api.Get("/*", handlers.ApiFileReaderHandler)
+		api.Get("/*", func(c fiber.Ctx) error {
+			path, err := url.QueryUnescape(c.Params("*"))
+			if err != nil {
+				return err
+			}
+			return proxy.Do(c, "http://localhost/video/"+path)
+		})
 	default:
 		app.Get("/assets/*", func(c fiber.Ctx) error {
 			path, err := url.QueryUnescape(c.Params("*"))
