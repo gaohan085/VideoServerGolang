@@ -52,21 +52,25 @@ func (v *VideoBySn) MapDbData(dbvideo *database.VideoDetailedInfo) {
 	}
 }
 
-// @route /api/query/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>
+/*
+	@route /api/query/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>
+	@Method GET
+
+从数据库查询SN码对应视频信息，如果查询为空则返回404。
+
+	Notes:
+
+如果需要服务端查询视频信息，Post请求 "/api/refresh/:sn"
+*/
 func ApiQueryVideoInfoBySN(c fiber.Ctx) error {
 	video := &database.VideoDetailedInfo{SN: c.Params("sn")}
 	videoBySn := &VideoBySn{}
 
 	if err := video.Query(); err != nil {
 		if errors.Is(err, database.ErrVideoNotFound) {
-			return fiber.NewError(404, err.Error())
+			return fiber.NewError(fiber.StatusNotFound, err.Error())
 		}
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-	}
-
-	if video.SN != "" && video.Title == "" {
-		video.GetSourceUrl()
-		video.GetDetailInfo()
 	}
 
 	videoBySn.MapDbData(video)

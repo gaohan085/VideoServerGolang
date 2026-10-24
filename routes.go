@@ -58,7 +58,7 @@ func SetRoutes(app *fiber.App) {
 				return err
 			}
 
-			return proxy.Do(c, "http://192.168.1.199/assets/"+path)
+			return proxy.Do(c, "http://192.168.1.31/assets/"+path)
 		})
 
 		api.Get("/*", func(c fiber.Ctx) error {
@@ -66,8 +66,17 @@ func SetRoutes(app *fiber.App) {
 			if err != nil {
 				return err
 			}
+			if err := proxy.Do(c, "http://192.168.1.31/video/"+path); err != nil {
+				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+			}
 
-			return proxy.Do(c, "http://192.168.1.199/api/"+path)
+			var result json.RawMessage
+			json.Unmarshal(c.Response().Body(), &result)
+
+			return c.Status(fiber.StatusOK).JSON(&handlers.RespBody{
+				StatusCode: fiber.StatusOK,
+				Data:       result,
+			})
 		})
 
 	}

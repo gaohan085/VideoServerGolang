@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"errors"
 	"flag"
 	"log"
 	"net/http"
@@ -10,12 +9,12 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/pprof"
+	"github.com/gofiber/fiber/v3/middleware/proxy"
 	"github.com/gofiber/template/html/v3"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
 
 	"go-fiber-react-ts/database"
-	"go-fiber-react-ts/handlers"
 )
 
 //go:embed dist/*
@@ -36,6 +35,8 @@ func Parseflag() {
 func main() {
 	Parseflag()
 	database.PgxConnDatabase()
+	database.SetRedisClient()
+	proxy.WithSecurityPolicy(proxy.SecurityPolicy{AllowPrivateIPs: true})
 
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
@@ -47,16 +48,9 @@ func main() {
 	app := fiber.New(
 		fiber.Config{
 			Views: engine, ServerHeader: "Fiber",
-			ErrorHandler: func(ctx fiber.Ctx, err error) error {
-				if e, ok := errors.AsType[*fiber.Error](err); ok {
-					return ctx.Status(e.Code).JSON(&handlers.RespBody{
-						StatusCode: e.Code,
-						Data:       e.Error(),
-					})
-				}
-				return nil
-			}, AppName: "Go Fiber React TypeScript",
-			ProxyHeader: fiber.HeaderXForwardedFor,
+			ErrorHandler: fiber.DefaultErrorHandler,
+			AppName:      "Go Fiber React TypeScript",
+			ProxyHeader:  fiber.HeaderXForwardedFor,
 		},
 	)
 
@@ -66,8 +60,6 @@ func main() {
 
 	switch usage {
 	case "ffmpeg":
-	case "dev":
-		SetRoutes(app)
 	default:
 		SetRoutes(app)
 	}
