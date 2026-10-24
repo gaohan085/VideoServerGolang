@@ -49,7 +49,17 @@ func SetRoutes(app *fiber.App) {
 			if err != nil {
 				return err
 			}
-			return proxy.Do(c, "http://localhost/video/"+path)
+			if err := proxy.Do(c, "http://192.168.1.31/video/"+path); err != nil {
+				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+			}
+
+			var result json.RawMessage
+			json.Unmarshal(c.Response().Body(), &result)
+
+			return c.Status(fiber.StatusOK).JSON(&handlers.RespBody{
+				StatusCode: fiber.StatusOK,
+				Data:       result,
+			})
 		})
 	default:
 		app.Get("/assets/*", func(c fiber.Ctx) error {
