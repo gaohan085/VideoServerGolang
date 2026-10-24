@@ -49,7 +49,8 @@ func SetRoutes(app *fiber.App) {
 			if err != nil {
 				return err
 			}
-			if err := proxy.Do(c, "http://192.168.1.31/video/"+path); err != nil {
+			addr := "http://192.168.1.31/video/" + path + "/"
+			if err := proxy.Do(c, addr); err != nil {
 				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 			}
 
@@ -76,7 +77,9 @@ func SetRoutes(app *fiber.App) {
 			if err != nil {
 				return err
 			}
-			if err := proxy.Do(c, "http://192.168.1.31/video/"+path); err != nil {
+
+			addr := "http://192.168.1.31/video/" + path + "/"
+			if err := proxy.Do(c, addr); err != nil {
 				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 			}
 
