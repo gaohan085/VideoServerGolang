@@ -7,11 +7,13 @@ import (
 	"time"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateReturnID(t *testing.T) {
 	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.30:5432/video_server_pgx_test")
+	t.Setenv("HTTP_PROXY", "http://192.168.1.197:10809")
 	PgxConnDatabase()
 
 	t.Run("测试创建视频详细信息表", func(t *testing.T) {
@@ -198,7 +200,7 @@ func TestCreateReturnID(t *testing.T) {
 				Director:    "嵐山みちる",
 				Publisher:   "S1 NO.1 STYLE",
 				Series:      "初体験○本番スペシャル",
-				Rank:        4.4,
+				Rank:        4.39,
 				SourceUrl:   "https://javdb.com/v/d421VQ",
 				Tags:        []Tag{{Name: "巨乳"}, {Name: "多P"}, {Name: "單體作品"}, {Name: "玩具"}, {Name: "4K"}},
 				Actors:      []Actor{{Name: "三田真鈴", Sex: "female"}, {Name: "小田切ジュン", Sex: "male"}, {Name: "トニー大木", Sex: "male"}, {Name: "矢野慎二", Sex: "male"}, {Name: "黒田悠斗", Sex: "male"}},
@@ -254,5 +256,36 @@ func TestCreateReturnID(t *testing.T) {
 
 	t.Run("删除表", func(t *testing.T) {
 		assert.Nil(t, DROPVideoDetailsTable())
+	})
+}
+
+func Test_SetGetVideoDetailStatus(t *testing.T) {
+	t.Setenv("REDIS_ADDR", "192.168.1.30:6379")
+	t.Setenv("REDIS_USRNAME", "gaohan")
+	t.Setenv("REDIS_PASSWD", "gh961004")
+
+	t.Run("初始化redis 数据库链接", func(t *testing.T) {
+		SetRedisClient()
+	})
+
+	t.Run("测试向redis写入数据", func(t *testing.T) {
+		video := &VideoDetailedInfo{SN: "SONE-001"}
+
+		err := video.SetGetInfoProcessStatus(StatusFailed)
+		assert.Nil(t, err)
+
+		status, err := video.GetInfoProcessStatus()
+
+		assert.Equal(t, StatusFailed, status)
+		assert.Nil(t, err)
+	})
+
+	t.Run("测试读取不存在的数据key", func(t *testing.T) {
+		video := &VideoDetailedInfo{SN: "SONE-002"}
+
+		_, err := video.GetInfoProcessStatus()
+
+		assert.NotNil(t, err)
+		assert.Equal(t, redis.Nil, err)
 	})
 }
