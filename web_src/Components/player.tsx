@@ -68,11 +68,11 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     (state) => state.currentPlayingVideo,
     (current, previous) => {
       if (current.playSrc !== previous.playSrc) {
-        const { posterUrl, playSrc, name } = current;
+        const { playSrc, name, sn } = current;
         plyr.stop();
         plyr.source = {
           type: "video",
-          poster: posterUrl,
+          poster:"/assets/poster/" + sn.toLowerCase().split("-").filter(Boolean).join("") +".jpg",
           sources: [{ src: playSrc }],
         };
         clearTimeout(trackedTimeout);
@@ -80,7 +80,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
         if ("mediaSession" in navigator) {
           navigator.mediaSession.metadata = new MediaMetadata({
             title: name,
-            artwork: [{ src: posterUrl }],
+            artwork: [{ src: "/assets/poster/" + sn.toLowerCase().split("-").filter(Boolean).join("")+".jpg", }],
           });
         }
       }

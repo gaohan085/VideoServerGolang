@@ -23,8 +23,8 @@ var distContent embed.FS
 // main usage -ffmpeg -pro
 
 func Parseflag() {
-	usage := flag.String("usage", "dev", "Web server usage, can be 'pro' 'dev' or 'ffmpeg'. Default: dev")
-	file := flag.String("file", "local", "Where to get file information, can be 'local' or 'remote'. Default: local")
+	usage := flag.String("usage", "dev", "Web server usage, can be 'pro' 'dev' or 'ffmpeg'. Usage is to determine log output way. When usage set to dev, log will output to Console, log write to log file while set to pro. Default: dev")
+	file := flag.String("file", "local", "Where to get file information, can be 'local' or 'remote'.File command is to determine where to get video file and poster. Default: local")
 
 	flag.Parse()
 
@@ -42,7 +42,6 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	usage := os.Getenv("USAGE")
 	engine := html.NewFileSystem(http.FS(distContent), ".html")
 
 	app := fiber.New(
@@ -56,13 +55,9 @@ func main() {
 
 	app.Use(pprof.New())
 
+	usage := os.Getenv("USAGE")
 	LoggerRegister(app, usage)
-
-	switch usage {
-	case "ffmpeg":
-	default:
-		SetRoutes(app)
-	}
+	registerRoutes(app)
 
 	log.Fatal(app.Listen("127.0.0.1:3000", fiber.ListenConfig{EnablePrefork: true, DisableStartupMessage: false}))
 }

@@ -4,14 +4,17 @@ import React from "react";
 import { IoCheckmarkSharp, IoCloseSharp } from "react-icons/io5";
 import useBoundStore from "../../lib/zustand-store.ts";
 import Spinner from "../spinner.tsx";
-import type { DirElement } from "../types.d.ts";
+import type { RespElement } from "../types.d.ts";
 import styles from "./rename-element.module.scss";
+import { useSWRConfig } from "swr";
 
-const InteractiveTsRenameComponent = (props: DirElement) => {
-  const { currentPath, name } = props;
-  const { unSetRenameElem, mutate } = useBoundStore(
+const InteractiveTsRenameComponent = ({elem, cwd}: Readonly<{elem: RespElement, cwd: string}>) => {
+  const { name } = elem;
+  const { unSetRenameElem} = useBoundStore(
     (state) => state,
   );
+
+  const { mutate } = useSWRConfig();
 
   const form = useForm({
     defaultValues: {
@@ -22,9 +25,9 @@ const InteractiveTsRenameComponent = (props: DirElement) => {
       unSetRenameElem();
       newName !== name &&
         void axios
-          .post("/api/rename", { ...props, newName })
+          .post("/api/rename", {currentPath: cwd, name, newName})
           .then(() => {
-            void mutate!(`/api/${currentPath}`);
+            void mutate!(`/api${cwd}`);
           })
           .catch(() => {
             return;

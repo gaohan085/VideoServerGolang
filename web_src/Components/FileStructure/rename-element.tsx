@@ -2,8 +2,9 @@ import axios from "axios";
 import React  from "react";
 import { FcCancel, FcCheckmark } from "react-icons/fc";
 import useBoundStore from "../../lib/zustand-store.ts";
-import type { DirElement } from "../types.d.ts";
+import type { FolderElementClass } from "../types.d.ts";
 import styles from "./rename-element.module.scss";
+import { useSWRConfig } from "swr";
 
 interface RenameElements extends HTMLFormControlsCollection {
   name: HTMLInputElement;
@@ -14,7 +15,7 @@ interface RenameForm extends HTMLFormElement {
 }
 
 const RenameComponent  = (props: {
-  readonly elem: DirElement;
+  readonly elem: FolderElementClass;
   readonly handleSubmit: React.SubmitEventHandler<RenameForm>;
   readonly handleCancelRename: React.MouseEventHandler;
 }) => {
@@ -44,18 +45,19 @@ const RenameComponent  = (props: {
   );
 };
 
-const InteractiveRenameComponent  = (props: Readonly<DirElement>) => {
-  const { currentPath, name } = props;
-  const { unSetRenameElem, mutate } = useBoundStore(state => state);
+const InteractiveRenameComponent  = ({elem}: Readonly<{elem: FolderElementClass}>) => {
+  const { cwd, name } = elem;
+  const { unSetRenameElem } = useBoundStore(state => state);
+  const { mutate } = useSWRConfig();
   const handleSubmit: React.SubmitEventHandler<RenameForm> = (e) => {
     e.preventDefault();
     const newName = e.currentTarget.elements.name.value;
     unSetRenameElem();
     newName !== name &&
       void axios
-        .post("/api/rename", { ...props, newName })
+        .post("/api/rename", {currentPath: cwd, name, newName})
         .then(() => {
-          void mutate!(`/api/${currentPath}`);
+          void mutate!(`/api/${cwd}`);
         })
         .catch(() => {
           return;
@@ -68,7 +70,7 @@ const InteractiveRenameComponent  = (props: Readonly<DirElement>) => {
 
   return (
     <RenameComponent
-      elem={props}
+      elem={elem}
       handleCancelRename={handleCancelRename}
       handleSubmit={handleSubmit}
     />

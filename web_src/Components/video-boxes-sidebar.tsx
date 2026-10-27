@@ -15,7 +15,6 @@ const VideoWithPoster = (props: Readonly<VideoInfo>) => {
       sn: sn,
       name: title,
       playSrc: playSrc,
-      posterUrl: posterUrl,
     });
   };
   const isPlaying = currentPlayingVideo.playSrc === playSrc;

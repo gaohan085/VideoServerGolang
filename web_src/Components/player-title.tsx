@@ -8,6 +8,9 @@ import useSWR from "swr";
 import useStore from "../lib/zustand-store.ts";
 import styles from "./player-title.module.scss";
 import Spinner from "./spinner.tsx";
+import { ErrorBoundary } from "react-error-boundary";
+import { mutate } from "swr";
+import axios from "axios";
 
 type QueryInfoBySN = {
   statusCode: number;
@@ -80,7 +83,13 @@ const Actors: React.FC<{
 };
 
 const VideoInfo = ({ sn }: Readonly<{ sn: string }>) => {
-  const { data } = useSWR<QueryInfoBySN>(`/api/query/sn/${sn}`);
+  const { data } = useSWR<QueryInfoBySN>(`/api/query/sn/${sn.toLowerCase()}`);
+  const { statusCode } = data!;
+
+  useSWR(statusCode === 404 ? `/api/refresh/sn/${sn.toLowerCase()}` :"", (url:string)=> axios.post(url).then(res => res.data), {
+    onSuccess: ()=> mutate(`/api/query/sn/${sn.toLowerCase()}`)
+  });
+
   const {
     title,
     releaseDate,
@@ -176,7 +185,9 @@ const InfoPreserveLayer = () => {
             </div>
           }
         >
-          <VideoInfo sn={sn} />
+          <ErrorBoundary fallback={<>{"Get Video Info Failed"}</>} onError={err => console.log(err.message)}>
+            <VideoInfo sn={sn} />
+          </ErrorBoundary>
         </Suspense>
       )}
       {!sn && !name && (

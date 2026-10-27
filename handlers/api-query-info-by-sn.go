@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"go-fiber-react-ts/database"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v3"
@@ -63,12 +65,15 @@ func (v *VideoBySn) MapDbData(dbvideo *database.VideoDetailedInfo) {
 如果需要服务端查询视频信息，Post请求 "/api/refresh/:sn"
 */
 func ApiQueryVideoInfoBySN(c fiber.Ctx) error {
-	video := &database.VideoDetailedInfo{SN: c.Params("sn")}
+	video := &database.VideoDetailedInfo{SN: strings.ToLower(c.Params("sn"))}
 	videoBySn := &VideoBySn{}
 
 	if err := video.Query(); err != nil {
 		if errors.Is(err, database.ErrVideoNotFound) {
-			return fiber.NewError(fiber.StatusNotFound, err.Error())
+			return c.Status(fiber.StatusNotFound).JSON(&RespBody{
+				StatusCode: fiber.StatusNotFound,
+				Data:       fmt.Sprintf("Video information for %s not found.", video.SN),
+			})
 		}
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
