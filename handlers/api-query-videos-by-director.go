@@ -21,9 +21,10 @@ func ApiQueryVideoByDirector(c fiber.Ctx) error {
 	videosBrief := []VideoBriefInfo{}
 	for _, video := range videos {
 		videoBrief := VideoBriefInfo{}
-		videoBrief.MapDbData(&video)
-
-		videosBrief = append(videosBrief, videoBrief)
+		if video.IsVideoFileExist() {
+			videoBrief.MapDbData(&video)
+			videosBrief = append(videosBrief, videoBrief)
+		}
 	}
 
 	return c.Status(fiber.StatusOK).JSON(

@@ -4,7 +4,7 @@ import { AnimatePresence, m } from "motion/react";
 import { Fragment, lazy } from "react";
 import useSWR from "swr";
 import sortElements from "../../lib/sort-elements-by-name.ts";
-import type { DirectoryProp, DirElement } from "../types.js";
+import type { DirElement, RespElement } from "../types.js";
 
 const LazyFileElement = lazy(() => import("./file-element.tsx"));
 const LazyFolderElement = lazy(() => import("./folder-element.tsx"));
@@ -13,14 +13,13 @@ const Container = ({
   elem,
   isOpen,
 }: Readonly<{
-  elem: Pick<DirElement, "name" | "currentPath">;
+  elem: Pick<DirElement, "name" | "cwd">;
   isOpen: boolean;
 }>) => {
-  const { data } = useSWR<{ statusCode: number; data: DirectoryProp }>(
+  const { cwd } = elem;
+  const { data } = useSWR<{ code: number; data: RespElement[] }>(
     isOpen
-      ? elem.currentPath === ""
-        ? `/api/${elem.name}`
-        : `/api/${elem.currentPath}/${elem.name}`
+      ? `/api${cwd}`
       : null,
   );
 
@@ -34,11 +33,11 @@ const Container = ({
           transition={{ duration: 0.3, ease: "easeInOut" }}
           id="container"
         >
-          {data?.data.childElements
+          {data!.data
             .sort((a, b) => sortElements(a, b))
             .map((elem, index) => (
               <Fragment key={index}>
-                {!!elem.isFile && (
+                {elem.type === "file" && (
                   <m.div
                     initial={{ opacity: 0, paddingLeft: "10px" }}
                     animate={{ opacity: 1, paddingLeft: "0px" }}
@@ -47,10 +46,10 @@ const Container = ({
                     id="file-element-animator"
                     key={index}
                   >
-                    <LazyFileElement elem={elem} />
+                    <LazyFileElement elem={elem} cwd={cwd} />
                   </m.div>
                 )}
-                {!!elem.isFolder && (
+                {elem.type === "directory" && (
                   <m.div
                     initial={{ opacity: 0, paddingLeft: "10px" }}
                     animate={{ opacity: 1, paddingLeft: "0px" }}
@@ -59,7 +58,7 @@ const Container = ({
                     id="folder-element-animator"
                     key={index}
                   >
-                    <LazyFolderElement elem={elem} />
+                    <LazyFolderElement elem={elem} cwd={cwd} />
                   </m.div>
                 )}
               </Fragment>

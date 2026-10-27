@@ -1,8 +1,7 @@
 "use client";
 
-import { lazy, useEffect } from "react";
+import { lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { useSWRConfig } from "swr";
 import useBoundStore from "../../lib/zustand-store.ts";
 import styles from "./file-system-sidebar.module.scss";
 
@@ -23,7 +22,7 @@ const FileSysSideBar = (
       <div onClick={handleClick} onContextMenu={handleCtxMenu}>
         {!!isSidebarActive && (
           <div className={styles["file-system"]}>
-            <LazyContainer elem={{ name: "", currentPath: "" }} isOpen />
+            <LazyContainer elem={{ name: "", cwd: "/" }} isOpen />
           </div>
         )}
       </div>
@@ -33,16 +32,9 @@ const FileSysSideBar = (
 
 const InteractiveFileSysSideBar = () => {
   const {
-    setMutate,
     setIsClicked,
     isSidebarActive,
   } = useBoundStore((state) => state);
-
-  const { mutate } = useSWRConfig();
-  useEffect(()=>{
-    setMutate(mutate);
-  }, [mutate, setMutate]);
-
 
   const handleClick: React.MouseEventHandler = () => {
     setIsClicked(true);
@@ -52,7 +44,7 @@ const InteractiveFileSysSideBar = () => {
   };
 
   return (
-    <ErrorBoundary fallback={<LazyErrElement />}>
+    <ErrorBoundary fallback={<LazyErrElement />} onError={e => console.log(e)}>
       <FileSysSideBar
         handleClick={handleClick}
         handleCtxMenu={handleCtxMenu}

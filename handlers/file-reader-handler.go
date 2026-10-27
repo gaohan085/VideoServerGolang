@@ -77,6 +77,11 @@ func (d *DirChildElem) MapDBData() error {
 	return nil
 }
 
+/*
+	@Deprecated
+
+Reason: Migrate to use nginx as file reader
+*/
 func ApiFileReaderHandler(c fiber.Ctx) error {
 	path, err := url.QueryUnescape(c.Params("*"))
 	if err != nil {

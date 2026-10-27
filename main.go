@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"errors"
 	"flag"
 	"log"
 	"net/http"
@@ -10,12 +9,12 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/pprof"
+	"github.com/gofiber/fiber/v3/middleware/proxy"
 	"github.com/gofiber/template/html/v3"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
 
 	"go-fiber-react-ts/database"
-	"go-fiber-react-ts/handlers"
 )
 
 //go:embed dist/*
@@ -24,8 +23,8 @@ var distContent embed.FS
 // main usage -ffmpeg -pro
 
 func Parseflag() {
-	usage := flag.String("usage", "dev", "Web server usage, can be 'pro' 'dev' or 'ffmpeg'. Default: dev")
-	file := flag.String("file", "local", "Where to get file information, can be 'local' or 'remote'. Default: local")
+	usage := flag.String("usage", "dev", "Web server usage, can be 'pro' 'dev' or 'ffmpeg'. Usage is to determine log output way. When usage set to dev, log will output to Console, log write to log file while set to pro. Default: dev")
+	file := flag.String("file", "local", "Where to get file information, can be 'local' or 'remote'.File command is to determine where to get video file and poster. Default: local")
 
 	flag.Parse()
 
@@ -36,41 +35,29 @@ func Parseflag() {
 func main() {
 	Parseflag()
 	database.PgxConnDatabase()
+	database.SetRedisClient()
+	proxy.WithSecurityPolicy(proxy.SecurityPolicy{AllowPrivateIPs: true})
 
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	usage := os.Getenv("USAGE")
 	engine := html.NewFileSystem(http.FS(distContent), ".html")
 
 	app := fiber.New(
 		fiber.Config{
 			Views: engine, ServerHeader: "Fiber",
-			ErrorHandler: func(ctx fiber.Ctx, err error) error {
-				if e, ok := errors.AsType[*fiber.Error](err); ok {
-					return ctx.Status(e.Code).JSON(&handlers.RespBody{
-						StatusCode: e.Code,
-						Data:       e.Error(),
-					})
-				}
-				return nil
-			}, AppName: "Go Fiber React TypeScript",
-			ProxyHeader: fiber.HeaderXForwardedFor,
+			ErrorHandler: fiber.DefaultErrorHandler,
+			AppName:      "Go Fiber React TypeScript",
+			ProxyHeader:  fiber.HeaderXForwardedFor,
 		},
 	)
 
 	app.Use(pprof.New())
 
+	usage := os.Getenv("USAGE")
 	LoggerRegister(app, usage)
-
-	switch usage {
-	case "ffmpeg":
-	case "dev":
-		SetRoutes(app)
-	default:
-		SetRoutes(app)
-	}
+	registerRoutes(app)
 
 	log.Fatal(app.Listen("127.0.0.1:3000", fiber.ListenConfig{EnablePrefork: true, DisableStartupMessage: false}))
 }

@@ -44,7 +44,9 @@ func (t *Tag) Query() error {
 type Actor struct {
 	ID   int
 	Name string `json:"actorName"`
-	Sex  string `json:"sex"`
+
+	// Sex must be "male" or "female"
+	Sex string `json:"sex"`
 }
 
 func (ac *Actor) Create() error {
@@ -489,26 +491,15 @@ func (v *VideoDetailedInfo) GetDetailInfo() error {
 				v.Tags = append(v.Tags, Tag{Name: ss.Text()})
 			})
 		case "演員:":
-			namelist, sexlist := []string{}, []string{}
 			s.Find("div>span.value>a").Each(func(ii int, ss *goquery.Selection) {
-				namelist = append(namelist, ss.Text())
-			})
-			s.Find("div>span.value>strong").Each(func(ii int, ss *goquery.Selection) {
-				if ss.Text() == "♀" {
-					sexlist = append(sexlist, "female")
-				}
-				if ss.Text() == "♂" {
-					sexlist = append(sexlist, "male")
+				_, hasClass := ss.Attr("class")
+
+				if hasClass {
+					v.Actors = append(v.Actors, Actor{Name: ss.Text(), Sex: "female"})
+				} else {
+					v.Actors = append(v.Actors, Actor{Name: ss.Text(), Sex: "male"})
 				}
 			})
-			for index, sex := range sexlist {
-				if sex == "male" {
-					v.Actors = append(v.Actors, Actor{Name: namelist[index], Sex: "male"})
-				}
-				if sex == "female" {
-					v.Actors = append(v.Actors, Actor{Name: namelist[index], Sex: "female"})
-				}
-			}
 		}
 	})
 
@@ -520,6 +511,24 @@ func (v *VideoDetailedInfo) IsVideoFileExist() bool { //TODO test
 
 	_, err := os.Stat(os.Getenv("ROOT_DIR") + videoFilePath)
 	return !errors.Is(err, os.ErrNotExist)
+}
+
+type Status string
+
+const (
+	StatusPending Status = "pending"
+	StatusSuccess Status = "success"
+	StatusFailed  Status = "failed"
+)
+
+func (v *VideoDetailedInfo) SetGetInfoProcessStatus(status Status) error {
+	return Rdb0.Set(Ctx, v.SN, string(status), 0).Err()
+}
+
+func (v *VideoDetailedInfo) GetInfoProcessStatus() (Status, error) {
+	status, err := Rdb0.Get(Ctx, v.SN).Result()
+
+	return Status(status), err
 }
 
 func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
@@ -551,9 +560,7 @@ func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if video.IsVideoFileExist() {
-			videos = append(videos, *video)
-		}
+		videos = append(videos, *video)
 	}
 
 	return videos, nil
@@ -588,9 +595,7 @@ func QueryVideoByActor(name string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if video.IsVideoFileExist() {
-			videos = append(videos, *video)
-		}
+		videos = append(videos, *video)
 	}
 	return videos, nil
 }
@@ -622,9 +627,7 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if video.IsVideoFileExist() {
-			videos = append(videos, *video)
-		}
+		videos = append(videos, *video)
 	}
 	return videos, nil
 }
@@ -656,9 +659,7 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if video.IsVideoFileExist() {
-			videos = append(videos, *video)
-		}
+		videos = append(videos, *video)
 	}
 	return videos, nil
 }
@@ -690,9 +691,7 @@ func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if video.IsVideoFileExist() {
-			videos = append(videos, *video)
-		}
+		videos = append(videos, *video)
 	}
 	return videos, nil
 }

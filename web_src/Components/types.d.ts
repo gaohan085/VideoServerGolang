@@ -1,26 +1,33 @@
 import type { useState } from "react";
 import type useSWR from "swr";
+import type { FolderElementClass } from "./FileStructure/container-element.tsx";
+
 
 type InterfaceMutateFunc = ReturnType<
   typeof useSWR<{ statusCode: number; data: DirectoryProp } | Error>
 >["mutate"];
 
-type DirElement = {
-  name: string;
+type RespElement = {
+  name: string
+  type: "file" | "directory",
+  mtime: string,
+  size: number,
+};
+
+type DirElement = RespElement & {
   sn: string;
   isFile: boolean;
   isFolder: boolean;
   isVideo: boolean;
   extName: string;
   playSrc: string;
-  currentPath: string; // relative path
-  posterUrl: string;
+  cwd: string
 };
 
 type DirectoryProp = {
-  parentFolder: string; // relative path
-  currentPath: string; // relative path
-  childElements: DirElement[];
+  /** cwd 必须包含末尾斜杠，如果为根目录则为 "/" */
+  cwd: string
+  childElements: FolderElement[];
 };
 
 type UseStateReturnType<T> = ReturnType<typeof useState<T>>;
@@ -47,3 +54,5 @@ interface VideoStatus {
 }
 
 type VideoCvQueue = VideoStatus[];
+
+type FolderElementClass = FolderElementClass;

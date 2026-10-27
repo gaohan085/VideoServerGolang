@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"go-fiber-react-ts/handlers"
 	"net/url"
 	"os"
@@ -12,7 +13,7 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/proxy"
 )
 
-func SetRoutes(app *fiber.App) {
+func registerRoutes(app *fiber.App) {
 	app.Use("/api/ws", func(c fiber.Ctx) error {
 		if websocket.IsWebSocketUpgrade(c) {
 			c.Locals("allowed", true)
@@ -24,25 +25,42 @@ func SetRoutes(app *fiber.App) {
 	app.Get("/api/ws", handlers.Wshandler)
 
 	api := app.Group("/api")
+	api.Get("/diskusage", handlers.ApiDiskUsageHandler)
+	api.Post("/delete", handlers.ApiDeleteHandler)
+	api.Post("/rename", handlers.ApiRenameHandler)
+	api.Get("/version", handlers.ApiAppVersionHandler)
+	api.Post("/convert", handlers.ApiConvertHandler)
+	api.Post("/refresh/:sn<regex([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,}>", handlers.ApiRefreshVideoInfoBySN)
+
+	query := api.Group("/query")
+	query.Get("/sn/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>", handlers.ApiQueryVideoInfoBySN)
+	query.Get("/tag/:tag", handlers.ApiQueryVideoByTag)
+	query.Get("/director/:director", handlers.ApiQueryVideoByDirector)
+	query.Get("/publisher/:publisher", handlers.ApiQueryVideoByPublisher)
+	query.Get("/series/:series", handlers.ApiQueryVideoBySeries)
+	query.Get("/actor/:name", handlers.ApiGetVideosByActress)
+
 	switch os.Getenv("FileLocation") {
 	case "local":
 		app.Get("/assets*", static.New("./assets/"))
+		api.Get("/*", func(c fiber.Ctx) error {
+			path, err := url.QueryUnescape(c.Params("*"))
+			if err != nil {
+				return err
+			}
+			addr := "http://localhost/video/" + path + "/"
+			if err := proxy.Do(c, addr); err != nil {
+				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+			}
 
-		api.Get("/diskusage", handlers.ApiDiskUsageHandler)
-		api.Post("/delete", handlers.ApiDeleteHandler)
-		api.Post("/rename", handlers.ApiRenameHandler)
-		api.Get("/version", handlers.ApiAppVersionHandler)
-		api.Post("/convert", handlers.ApiConvertHandler)
+			var result json.RawMessage
+			json.Unmarshal(c.Response().Body(), &result)
 
-		query := api.Group("/query")
-		query.Get("/sn/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>", handlers.ApiQueryVideoInfoBySN)
-		query.Get("/tag/:tag", handlers.ApiQueryVideoByTag)
-		query.Get("/director/:director", handlers.ApiQueryVideoByDirector)
-		query.Get("/publisher/:publisher", handlers.ApiQueryVideoByPublisher)
-		query.Get("/series/:series", handlers.ApiQueryVideoBySeries)
-		query.Get("/actor/:name", handlers.ApiGetVideosByActress)
-
-		api.Get("/*", handlers.ApiFileReaderHandler)
+			return c.Status(fiber.StatusOK).JSON(&handlers.RespBody{
+				StatusCode: fiber.StatusOK,
+				Data:       result,
+			})
+		})
 	default:
 		app.Get("/assets/*", func(c fiber.Ctx) error {
 			path, err := url.QueryUnescape(c.Params("*"))
@@ -50,7 +68,7 @@ func SetRoutes(app *fiber.App) {
 				return err
 			}
 
-			return proxy.Do(c, "http://192.168.1.199/assets/"+path)
+			return proxy.Do(c, "http://192.168.1.31/assets/"+path)
 		})
 
 		api.Get("/*", func(c fiber.Ctx) error {
@@ -59,9 +77,19 @@ func SetRoutes(app *fiber.App) {
 				return err
 			}
 
-			return proxy.Do(c, "http://192.168.1.199/api/"+path)
-		})
+			addr := "http://192.168.1.31/video/" + path + "/"
+			if err := proxy.Do(c, addr); err != nil {
+				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+			}
 
+			var result json.RawMessage
+			json.Unmarshal(c.Response().Body(), &result)
+
+			return c.Status(fiber.StatusOK).JSON(&handlers.RespBody{
+				StatusCode: fiber.StatusOK,
+				Data:       result,
+			})
+		})
 	}
 
 	app.Use("/dist", static.New("dist", static.Config{
