@@ -30,6 +30,7 @@ export default defineConfig({
     manifest: true,
     outDir: "./dist",
     assetsDir: "assets",
+    sourcemap: true,
     rolldownOptions: {
       output: {
         assetFileNames: (chunkinfo) => {
@@ -39,7 +40,6 @@ export default defineConfig({
         entryFileNames:"js/[hash:10].js",
         hashCharacters: "hex",
         cleanDir: true,
-        sourcemap:true,
       },
       checks: {
         moduleLevelDirective: false
