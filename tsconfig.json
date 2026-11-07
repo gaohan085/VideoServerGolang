@@ -20,6 +20,7 @@
     "isolatedModules": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
+    "types": ["vite/client", "node"]
   },
   "files": [
     "web_src/App.tsx"

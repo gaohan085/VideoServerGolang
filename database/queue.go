@@ -1,7 +1,10 @@
 package database
 
 import (
+	"context"
 	"errors"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var ErrVideoConverting = errors.New("video is converting, cannot delete")
@@ -12,8 +15,8 @@ type VideoQueue struct {
 	VideoNeedConvert []VideoConvert
 }
 
-func (qu *VideoQueue) Query() error {
-	queue, err := GetAllVideoNeedConvert()
+func (qu *VideoQueue) Query(pool *pgxpool.Pool, ctx context.Context) error {
+	queue, err := GetAllVideoNeedConvert(pool, ctx)
 	if err != nil {
 		return err
 	}
@@ -21,21 +24,21 @@ func (qu *VideoQueue) Query() error {
 	return nil
 }
 
-func (qu *VideoQueue) Join(v *VideoConvert) error {
+func (qu *VideoQueue) Join(v *VideoConvert, pool *pgxpool.Pool, ctx context.Context) error {
 	v.Status = "pending"
-	v.Create()
+	v.Create(pool, ctx)
 	return nil
 }
 
-func (qu *VideoQueue) LeaveQueue(v *VideoConvert) error {
-	if err := v.Query(); err != nil {
+func (qu *VideoQueue) LeaveQueue(v *VideoConvert, pool *pgxpool.Pool, ctx context.Context) error {
+	if err := v.Query(pool, ctx); err != nil {
 		return err
 	}
 	if v.Status == "converting" {
 		return ErrVideoConverting
 	}
 
-	return v.Delete()
+	return v.Delete(pool, ctx)
 }
 
 func (qu *VideoQueue) VideoNeedConvertedInQueue() (err error) { // DONE ✔test
@@ -70,10 +73,10 @@ func (qu *VideoQueue) GetNextConvertVideo() (video *VideoConvert, err error) { /
 	return nil, ErrNoVideoToConvert
 }
 
-func StartConvert() error {
+func StartConvert(pool *pgxpool.Pool, ctx context.Context) error {
 	queue := VideoQueue{}
 
-	if err := queue.Query(); err != nil {
+	if err := queue.Query(pool, ctx); err != nil {
 		return err
 	}
 
@@ -95,12 +98,12 @@ func StartConvert() error {
 		go func() error {
 
 			chDone, chInter := make(chan int, 1024), make(chan int, 1024)
-			if err := video.UpdateDuration(); err != nil {
+			if err := video.UpdateDuration(pool, ctx); err != nil {
 				return err
 			}
 
-			go video.ConvertOnFFmpegServer(chInter, chDone)
-			go video.ReadProgress(chInter, chDone)
+			go video.ConvertOnFFmpegServer(chInter, chDone, pool, ctx)
+			go video.ReadProgress(chInter, chDone, pool, ctx)
 
 			return nil
 		}()

@@ -2,6 +2,7 @@ package database
 
 import (
 	"bufio"
+	"context"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -14,9 +15,9 @@ import (
 
 func TestVideoConvertCRUD(t *testing.T) {
 	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.199:5432/video_server_pgx_test")
-	PgxConnDatabase()
+	pool, _ := PgxConnDatabase()
 	t.Run("创建表", func(t *testing.T) {
-		err := CreateVideoConvertRecordTable()
+		err := CreateVideoConvertRecordTable(pool, context.Background())
 
 		assert.Nil(t, err)
 	})
@@ -33,11 +34,11 @@ func TestVideoConvertCRUD(t *testing.T) {
 			Downloaded: false,
 		}
 
-		assert.Nil(t, vc.Create())
+		assert.Nil(t, vc.Create(pool, context.Background()))
 
 		vcq := &VideoConvert{}
 		vcq.PlaySource = vc.PlaySource
-		assert.Nil(t, vcq.Query())
+		assert.Nil(t, vcq.Query(pool, context.Background()))
 		assert.Equal(t, vc, vcq)
 
 	})
@@ -54,14 +55,14 @@ func TestVideoConvertCRUD(t *testing.T) {
 			Downloaded: false,
 		}
 
-		assert.Nil(t, vc.Create())
+		assert.Nil(t, vc.Create(pool, context.Background()))
 
 		vc.Progress = 0.99
 
-		assert.Nil(t, vc.Update())
+		assert.Nil(t, vc.Update(pool, context.Background()))
 
 		vcq := &VideoConvert{PlaySource: vc.PlaySource}
-		assert.Nil(t, vcq.Query())
+		assert.Nil(t, vcq.Query(pool, context.Background()))
 
 		assert.Equal(t, vc.Progress, vcq.Progress)
 	})
@@ -73,16 +74,16 @@ func TestVideoConvertCRUD(t *testing.T) {
 	}
 
 	t.Run("获取Duration", func(t *testing.T) {
-		assert.Nil(t, video.Create())
+		assert.Nil(t, video.Create(pool, context.Background()))
 
 		// nginx 服务运行中测试能通过
-		assert.Nil(t, video.UpdateDuration())
+		assert.Nil(t, video.UpdateDuration(pool, context.Background()))
 		assert.Equal(t, 596.961814, video.Duration)
 
 	})
 
 	t.Run("删除表", func(t *testing.T) {
-		assert.Nil(t, DROPVideoConvertRecordTable())
+		assert.Nil(t, DROPVideoConvertRecordTable(pool, context.Background()))
 	})
 
 	t.SkipNow()

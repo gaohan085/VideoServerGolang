@@ -129,8 +129,25 @@
         }
       }
     </style>
+    {{- if .isProduction -}}
+      {{- range .Chunk.JsFile -}}
+        <script type="module" src="dist/{{.}}"></script>
+      {{- end -}}
+      {{- range .Chunk.CssFile -}}
+      <link rel="stylesheet" crossorigin href="/dist/{{.}}">
+      {{- end -}}
+    {{- else -}}
+    <script type="module">
+      import RefreshRuntime from "http://localhost:5173/@react-refresh";
+      RefreshRuntime.injectIntoGlobalHook(window);
+      window.$RefreshReg$ = () => {};
+      window.$RefreshSig$ = () => (type) => type;
+      window.__vite_plugin_react_preamble_installed__ = true;
+    </script>
+    <script type="module" src="http://localhost:5173/@vite/client"></script>
+    <script type="module" src="http://localhost:5173/index.tsx"></script>
+    {{- end -}}
   </head>
-
   <body>
     <div id="layout" class="layout">
       <div class="main" id="main"><!--InnerReact--></div>

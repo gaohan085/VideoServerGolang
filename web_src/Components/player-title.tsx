@@ -1,19 +1,19 @@
 "use client";
 
 import { Link } from "@tanstack/react-router";
+import axios from "axios";
 import React, { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { FaHashtag, FaLink } from "react-icons/fa";
 import { PiGenderFemaleBold, PiGenderMaleBold } from "react-icons/pi";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 import useStore from "../lib/zustand-store.ts";
 import styles from "./player-title.module.scss";
 import Spinner from "./spinner.tsx";
-import { ErrorBoundary } from "react-error-boundary";
-import { mutate } from "swr";
-import axios from "axios";
 
 type QueryInfoBySN = {
-  statusCode: number;
+  code: number;
   data: VideoDetail;
 };
 
@@ -82,13 +82,19 @@ const Actors: React.FC<{
   );
 };
 
-const VideoInfo = ({ sn }: Readonly<{ sn: string }>) => {
-  const { data } = useSWR<QueryInfoBySN>(`/api/query/sn/${sn.toLowerCase()}`);
-  const { statusCode } = data!;
-
-  useSWR(statusCode === 404 ? `/api/refresh/sn/${sn.toLowerCase()}` :"", (url:string)=> axios.post(url).then(res => res.data), {
-    onSuccess: ()=> mutate(`/api/query/sn/${sn.toLowerCase()}`)
-  });
+const VideoInfo = ({ sn, playSrc }: Readonly<{ sn: string, playSrc: string }>) => {
+  const { trigger } = useSWRMutation(`/api/refresh/sn/`, (url, {arg}:{arg:{sn:string}}) => axios.post(url+arg.sn.toLowerCase()).then(res => res.data));
+  const { data } = useSWR<QueryInfoBySN>(
+    `/api/query/sn/${sn.toLowerCase()}?playsrc=${playSrc}`,
+    async (url: string) => axios.get(url).then(res => res.data).catch(async (error) => {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        await trigger({sn});
+        return axios.get(url).then(res => res.data);
+      }
+    }), {
+      suspense: true,
+      shouldRetryOnError: false,
+    });
 
   const {
     title,
@@ -103,92 +109,94 @@ const VideoInfo = ({ sn }: Readonly<{ sn: string }>) => {
     director,
   } = data!.data;
 
-  return (
-    <div className={styles["video-info"]}>
-      <h4>{`${sn.toLocaleUpperCase()} ${title}`}</h4>
-      <div className="info">
-        {!!title && (
-          <>
-            <div>
-              <strong>{"发售日期:"}</strong>
-              {`${new Date(releaseDate).toLocaleDateString("zh-CN")}`}
-            </div>
-            <div>
-              <strong>{"时长:"}</strong>
-              {`${duration}min`}
-            </div>
-            <div>
-              <strong>{"导演:"}</strong>
-              <Link
-                className="link"
-                to="/queryvideos"
-                search={{ director }}
-              >{`${director}`}</Link>
-            </div>
-            <div>
-              <strong>{"发行商:"}</strong>
-              <Link
-                className="link"
-                to="/queryvideos"
-                search={{ publisher }}
-              >{`${publisher}`}</Link>
-            </div>
-            {!!series && (
-              <div>
-                <strong>{"系列:"}</strong>
-                <Link
-                  className="link"
-                  to="/queryvideos"
-                  search={{ series }}
-                >{`${series}`}</Link>
-              </div>
+  return (<>
+    {!!data &&
+        <div className={styles["video-info"]}>
+          <h4>{`${sn.toLocaleUpperCase()} ${title}`}</h4>
+          <div className="info">
+            {!!title && (
+              <>
+                <div>
+                  <strong>{"发售日期:"}</strong>
+                  {`${new Date(releaseDate).toLocaleDateString("zh-CN")}`}
+                </div>
+                <div>
+                  <strong>{"时长:"}</strong>
+                  {`${duration}min`}
+                </div>
+                <div>
+                  <strong>{"导演:"}</strong>
+                  <Link
+                    className="link"
+                    to="/queryvideos"
+                    search={{ director }}
+                  >{`${director}`}</Link>
+                </div>
+                <div>
+                  <strong>{"发行商:"}</strong>
+                  <Link
+                    className="link"
+                    to="/queryvideos"
+                    search={{ publisher }}
+                  >{`${publisher}`}</Link>
+                </div>
+                {!!series && (
+                  <div>
+                    <strong>{"系列:"}</strong>
+                    <Link
+                      className="link"
+                      to="/queryvideos"
+                      search={{ series }}
+                    >{`${series}`}</Link>
+                  </div>
+                )}
+                <div>
+                  <strong>{"评分:"}</strong>
+                  {`${rank}`}
+                </div>
+                <Tags tags={tags} />
+                <Actors actors={actors} />
+                <div>
+                  <strong>{"外部链接:"}</strong>
+                  <span>
+                    <FaLink />
+                  </span>
+                  <a
+                    href={sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="link"
+                  >
+                    {"JavDB"}
+                  </a>
+                </div>
+              </>
             )}
-            <div>
-              <strong>{"评分:"}</strong>
-              {`${rank}`}
-            </div>
-            <Tags tags={tags} />
-            <Actors actors={actors} />
-            <div>
-              <strong>{"外部链接:"}</strong>
-              <span>
-                <FaLink />
-              </span>
-              <a
-                href={sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="link"
-              >
-                {"JavDB"}
-              </a>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+          </div>
+        </div>}
+  </>
   );
 };
 
 const InfoPreserveLayer = () => {
   const {
-    currentPlayingVideo: { sn, name },
+    currentPlayingVideo: { sn, name, playSrc },
   } = useStore((state) => state);
 
   return (
     <>
       {!!sn && (
-        <Suspense
-          fallback={
-            <div className={styles.loader}>
-              <Spinner fontSize={24} />
-            </div>
-          }
-        >
-          <ErrorBoundary fallback={<>{"Get Video Info Failed"}</>} onError={err => console.log(err.message)}>
-            <VideoInfo sn={sn} />
-          </ErrorBoundary>
-        </Suspense>
+        <ErrorBoundary fallback={<>{"Get Video Info Failed"}</>}>
+          <Suspense
+            fallback={
+              <div className={styles.loader}>
+                <Spinner fontSize={24} />
+              </div>
+            }
+          >
+            <VideoInfo sn={sn} playSrc={playSrc} />
+          </Suspense>
+        </ErrorBoundary>
       )}
       {!sn && !name && (
         <div className={styles["video-info"]}>

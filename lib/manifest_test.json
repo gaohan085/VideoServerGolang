@@ -1,0 +1,379 @@
+{
+  "../node_modules/.pnpm/plyr@3.7.8/node_modules/plyr/dist/plyr.svg": {
+    "file": "2b26a8bddc.svg",
+    "src": "../node_modules/.pnpm/plyr@3.7.8/node_modules/plyr/dist/plyr.svg"
+  },
+  "Components/FileStructure/container-element.tsx": {
+    "file": "js/6baec2adcc.js",
+    "name": "container-element",
+    "src": "Components/FileStructure/container-element.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "index.html",
+      "_3f38ea8c01.js",
+      "_6f884bcb3b.js",
+      "_b626b621ab.js"
+    ],
+    "dynamicImports": [
+      "Components/FileStructure/file-element.tsx",
+      "Components/FileStructure/folder-element.tsx"
+    ]
+  },
+  "Components/FileStructure/error-element.tsx": {
+    "file": "js/c65c56cdca.js",
+    "name": "error-element",
+    "src": "Components/FileStructure/error-element.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_887d2ba79f.js",
+      "_3f38ea8c01.js"
+    ],
+    "css": [
+      "css/325f1b6b0d.css"
+    ]
+  },
+  "Components/FileStructure/file-element.tsx": {
+    "file": "js/4d62ea289e.js",
+    "name": "file-element",
+    "src": "Components/FileStructure/file-element.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_887d2ba79f.js",
+      "index.html",
+      "_1408270a16.js",
+      "_3f38ea8c01.js"
+    ],
+    "css": [
+      "css/55d772c2b0.css"
+    ]
+  },
+  "Components/FileStructure/file-system-sidebar.tsx": {
+    "file": "js/8b453e0610.js",
+    "name": "file-system-sidebar",
+    "src": "Components/FileStructure/file-system-sidebar.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "_4cd3e924dc.js",
+      "index.html",
+      "_3f38ea8c01.js"
+    ],
+    "dynamicImports": [
+      "Components/FileStructure/error-element.tsx",
+      "Components/FileStructure/container-element.tsx"
+    ],
+    "css": [
+      "css/e70064681f.css"
+    ]
+  },
+  "Components/FileStructure/folder-element.tsx": {
+    "file": "js/2e0e9ccdf2.js",
+    "name": "folder-element",
+    "src": "Components/FileStructure/folder-element.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "_4cd3e924dc.js",
+      "_887d2ba79f.js",
+      "index.html",
+      "_1408270a16.js",
+      "_3f38ea8c01.js"
+    ],
+    "dynamicImports": [
+      "Components/FileStructure/error-element.tsx",
+      "Components/FileStructure/container-element.tsx"
+    ],
+    "css": [
+      "css/9d775b736b.css"
+    ]
+  },
+  "Components/player-title.tsx": {
+    "file": "js/8140bb9a1e.js",
+    "name": "player-title",
+    "src": "Components/player-title.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "index.html",
+      "_b645579b95.js",
+      "_5cd56a6933.js",
+      "_1d1d048d14.js",
+      "_652aa5ac6d.js",
+      "_4cd3e924dc.js",
+      "_3f38ea8c01.js"
+    ],
+    "css": [
+      "css/e9da79e056.css"
+    ]
+  },
+  "Components/player.tsx": {
+    "file": "js/d859c99fee.js",
+    "name": "player",
+    "src": "Components/player.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "index.html",
+      "_3f38ea8c01.js"
+    ],
+    "dynamicImports": [
+      "Components/player-title.tsx"
+    ],
+    "css": [
+      "css/787f0ec617.css"
+    ],
+    "assets": [
+      "2b26a8bddc.svg"
+    ]
+  },
+  "Components/sidebar.tsx": {
+    "file": "js/4c3e23d349.js",
+    "name": "sidebar",
+    "src": "Components/sidebar.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "_887d2ba79f.js",
+      "index.html",
+      "_3f38ea8c01.js"
+    ],
+    "css": [
+      "css/b93f381560.css"
+    ]
+  },
+  "Components/video-boxes-sidebar.tsx": {
+    "file": "js/19bcb7092a.js",
+    "name": "video-boxes-sidebar",
+    "src": "Components/video-boxes-sidebar.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "index.html",
+      "_1d1d048d14.js",
+      "_3f38ea8c01.js"
+    ],
+    "css": [
+      "css/c109234426.css"
+    ]
+  },
+  "Components/websocket.tsx": {
+    "file": "js/30f2721c8f.js",
+    "name": "websocket",
+    "src": "Components/websocket.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "index.html",
+      "_3f38ea8c01.js"
+    ]
+  },
+  "_1408270a16.js": {
+    "file": "js/1408270a16.js",
+    "name": "rename-element-tanstack-form",
+    "imports": [
+      "_172b2687b6.js",
+      "_3f38ea8c01.js",
+      "_b645579b95.js",
+      "_17b667a3b1.js",
+      "index.html",
+      "_5cd56a6933.js",
+      "_652aa5ac6d.js"
+    ],
+    "css": [
+      "css/ddf8b17ecd.css"
+    ]
+  },
+  "_172b2687b6.js": {
+    "file": "js/172b2687b6.js",
+    "name": "rolldown-runtime"
+  },
+  "_17b667a3b1.js": {
+    "file": "js/17b667a3b1.js",
+    "name": "with-selector",
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "_354b484976.js"
+    ]
+  },
+  "_1d1d048d14.js": {
+    "file": "js/1d1d048d14.js",
+    "name": "pi",
+    "imports": [
+      "_5cd56a6933.js"
+    ]
+  },
+  "_354b484976.js": {
+    "file": "js/354b484976.js",
+    "name": "shim",
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js"
+    ]
+  },
+  "_3f38ea8c01.js": {
+    "file": "js/3f38ea8c01.js",
+    "name": "jsx-runtime",
+    "imports": [
+      "_172b2687b6.js"
+    ]
+  },
+  "_4635e07c0d.js": {
+    "file": "js/4635e07c0d.js",
+    "name": "useSelector",
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "_17b667a3b1.js"
+    ]
+  },
+  "_4cd3e924dc.js": {
+    "file": "js/4cd3e924dc.js",
+    "name": "react-error-boundary.esm",
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js"
+    ]
+  },
+  "_5cd56a6933.js": {
+    "file": "js/5cd56a6933.js",
+    "name": "iconBase",
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js"
+    ]
+  },
+  "_652aa5ac6d.js": {
+    "file": "js/652aa5ac6d.js",
+    "name": "_internal",
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js"
+    ]
+  },
+  "_6f884bcb3b.js": {
+    "file": "js/6f884bcb3b.js",
+    "name": "VisualElement"
+  },
+  "_887d2ba79f.js": {
+    "file": "js/887d2ba79f.js",
+    "name": "fc",
+    "imports": [
+      "_5cd56a6933.js"
+    ]
+  },
+  "_b626b621ab.js": {
+    "file": "js/b626b621ab.js",
+    "name": "is-svg-component",
+    "imports": [
+      "_6f884bcb3b.js"
+    ]
+  },
+  "_b645579b95.js": {
+    "file": "js/b645579b95.js",
+    "name": "react",
+    "imports": [
+      "_172b2687b6.js"
+    ]
+  },
+  "_ddf8b17ecd.css": {
+    "file": "css/ddf8b17ecd.css",
+    "src": "_ddf8b17ecd.css"
+  },
+  "assets/Roboto-Regular.ttf": {
+    "file": "477819cace.ttf",
+    "src": "assets/Roboto-Regular.ttf"
+  },
+  "assets/favicon.ico": {
+    "file": "bb753a63a2.ico",
+    "src": "assets/favicon.ico"
+  },
+  "index.html": {
+    "file": "js/10063f51c6.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "_4635e07c0d.js",
+      "_3f38ea8c01.js",
+      "_6f884bcb3b.js",
+      "_354b484976.js",
+      "_652aa5ac6d.js",
+      "_887d2ba79f.js"
+    ],
+    "dynamicImports": [
+      "Components/player.tsx",
+      "Components/websocket.tsx",
+      "Components/sidebar.tsx",
+      "routes/index.tsx?tsr-split=component",
+      "routes/queryvideos.tsx?tsr-split=errorComponent",
+      "routes/queryvideos.tsx?tsr-split=component",
+      "motionFeatures.ts"
+    ],
+    "css": [
+      "css/57f315c3c6.css"
+    ],
+    "assets": [
+      "bb753a63a2.ico"
+    ]
+  },
+  "motionFeatures.ts": {
+    "file": "js/e73a01aea8.js",
+    "name": "motionFeatures",
+    "src": "motionFeatures.ts",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "_6f884bcb3b.js",
+      "_b626b621ab.js",
+      "_b645579b95.js"
+    ]
+  },
+  "routes/index.tsx?tsr-split=component": {
+    "file": "js/4c27a84351.js",
+    "name": "routes",
+    "src": "routes/index.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "_b645579b95.js",
+      "index.html",
+      "_3f38ea8c01.js"
+    ],
+    "dynamicImports": [
+      "Components/FileStructure/file-system-sidebar.tsx"
+    ]
+  },
+  "routes/queryvideos.tsx?tsr-split=component": {
+    "file": "js/fd7f3c33f2.js",
+    "name": "queryvideos",
+    "src": "routes/queryvideos.tsx?tsr-split=component",
+    "isDynamicEntry": true,
+    "imports": [
+      "_172b2687b6.js",
+      "index.html",
+      "_b645579b95.js",
+      "_3f38ea8c01.js"
+    ],
+    "dynamicImports": [
+      "Components/video-boxes-sidebar.tsx"
+    ]
+  },
+  "routes/queryvideos.tsx?tsr-split=errorComponent": {
+    "file": "js/af8c282b9d.js",
+    "name": "queryvideos",
+    "src": "routes/queryvideos.tsx?tsr-split=errorComponent",
+    "isDynamicEntry": true,
+    "imports": [
+      "_3f38ea8c01.js"
+    ]
+  }
+}

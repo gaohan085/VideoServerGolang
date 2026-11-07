@@ -2,25 +2,18 @@ package database
 
 import (
 	"context"
-	"log"
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var PgxPool *pgxpool.Pool
-var Ctx = context.Background()
-
-func PgxConnDatabase() error {
+func PgxConnDatabase() (*pgxpool.Pool, error) {
 	url := os.Getenv("PGX_CONN")
 	conn, err := pgxpool.New(context.Background(), url)
 	if err != nil {
-		log.Panic(err.Error())
+		return nil, err
 	}
-
-	PgxPool = conn
-	CreateVideoInfoTable()
-	CreateVideoConvertRecordTable()
-	CreateVideoDetailedInfoTable()
-	return nil
+	CreateVideoConvertRecordTable(conn, context.Background())
+	CreateVideoDetailedInfoTable(conn, context.Background())
+	return conn, nil
 }

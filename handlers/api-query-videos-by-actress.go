@@ -2,21 +2,28 @@ package handlers
 
 import (
 	"go-fiber-react-ts/database"
-	"net/url"
+	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v3"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // @router /api/query/actor/:name
-func ApiGetVideosByActress(c fiber.Ctx) error {
-	encodeURIname := c.Params("name")
-	actressName, err := url.QueryUnescape(encodeURIname)
-	if err != nil {
-		return err
+func ApiGetVideosByActress(c *gin.Context) {
+	pool := c.MustGet("PgxPool").(*pgxpool.Pool)
+	name := c.Param("actor")
+	if name == "" {
+		c.JSON(http.StatusNotFound, gin.H{
+			"code": http.StatusNotFound,
+			"data": "Please provide actor name.",
+		})
+		return
 	}
-	videos, err := database.QueryVideoByActor(actressName)
+	videos, err := database.QueryVideoByActor(name, pool, c)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		c.Error(err)
+		return
 	}
 
 	videosBrief := []VideoBriefInfo{}
@@ -27,10 +34,8 @@ func ApiGetVideosByActress(c fiber.Ctx) error {
 			videosBrief = append(videosBrief, videoBrief)
 		}
 	}
-	return c.Status(fiber.StatusOK).JSON(
-		&RespBody{
-			StatusCode: fiber.StatusOK,
-			Data:       videosBrief,
-		},
-	)
+	c.JSON(http.StatusOK, gin.H{
+		"code": fiber.StatusOK,
+		"data": videosBrief,
+	})
 }

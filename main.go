@@ -1,63 +1,186 @@
 package main
 
 import (
+	"bytes"
 	"embed"
-	"flag"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
+	"fmt"
+	"go-fiber-react-ts/database"
+	"go-fiber-react-ts/handlers"
+	"go-fiber-react-ts/lib"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
-	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/middleware/pprof"
-	"github.com/gofiber/fiber/v3/middleware/proxy"
-	"github.com/gofiber/template/html/v3"
-	"github.com/joho/godotenv"
-	_ "github.com/joho/godotenv/autoload"
-
-	"go-fiber-react-ts/database"
+	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
+	"github.com/shirou/gopsutil/v3/disk"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-//go:embed dist/*
-var distContent embed.FS
+//go:embed all:web_src/*
+var htmlContent embed.FS
 
-// main usage -ffmpeg -pro
+const (
+	EnvDev        = "dev"
+	EnvProduction = "production"
+)
 
-func Parseflag() {
-	usage := flag.String("usage", "dev", "Web server usage, can be 'pro' 'dev' or 'ffmpeg'. Usage is to determine log output way. When usage set to dev, log will output to Console, log write to log file while set to pro. Default: dev")
-	file := flag.String("file", "local", "Where to get file information, can be 'local' or 'remote'.File command is to determine where to get video file and poster. Default: local")
+func IsProduction() bool {
+	return os.Getenv("APP_ENV") == EnvProduction
+}
 
-	flag.Parse()
+func PrintBanner() {
+	fmt.Println(`
+   _____ _____ _   _
+  / ____|_   _| \ | |
+ | |  __  | | |  \| |
+ | | |_ | | | | . ' |
+ | |__| |_| |_| |\  |
+  \_____|_____|_| \_|
 
-	os.Setenv("USAGE", *usage)
-	os.Setenv("FileLocation", *file)
+	`)
+	fmt.Printf("VERSION: %s\n", lib.Version)
+	fmt.Printf("Environment: %s\n", os.Getenv("APP_ENV"))
+}
+
+func PgxDbMiddleware(pool *pgxpool.Pool) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ctx.Set("PgxPool", pool)
+		ctx.Next()
+	}
+}
+
+func RedisMiddleware(clients []*redis.Client) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ctx.Set("redis0", clients[0])
+		ctx.Set("redis1", clients[1])
+		ctx.Set("redis2", clients[2])
+	}
+}
+
+func ErrHandlerMiddleware() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		ctx.Next()
+
+		if len(ctx.Errors) > 0 {
+			err := ctx.Errors.Last().Err
+
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"code": http.StatusInternalServerError,
+				"data": err.Error(),
+			})
+		}
+	}
 }
 
 func main() {
-	Parseflag()
-	database.PgxConnDatabase()
-	database.SetRedisClient()
-	proxy.WithSecurityPolicy(proxy.SecurityPolicy{AllowPrivateIPs: true})
+	PrintBanner()
 
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
+	switch {
+	case IsProduction():
+		gin.DisableConsoleColor()
+		gin.DefaultWriter = &lumberjack.Logger{
+			Filename:   "access.log",
+			MaxSize:    100,
+			MaxBackups: 3,
+			MaxAge:     28,
+		}
+		gin.SetMode(gin.ReleaseMode)
 	}
 
-	engine := html.NewFileSystem(http.FS(distContent), ".html")
+	router := gin.Default()
 
-	app := fiber.New(
-		fiber.Config{
-			Views: engine, ServerHeader: "Fiber",
-			ErrorHandler: fiber.DefaultErrorHandler,
-			AppName:      "Go Fiber React TypeScript",
-			ProxyHeader:  fiber.HeaderXForwardedFor,
-		},
-	)
+	pgxpool, err := database.PgxConnDatabase()
+	if err != nil {
+		log.Fatal(err)
+	}
+	redisClients := database.SetRedisClient()
+	router.Use(PgxDbMiddleware(pgxpool))
+	router.Use(RedisMiddleware(redisClients))
+	router.Use(ErrHandlerMiddleware())
 
-	app.Use(pprof.New())
+	router.Static("/assets", "./assets")
+	subFS, err := fs.Sub(htmlContent, "web_src/dist")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	usage := os.Getenv("USAGE")
-	LoggerRegister(app, usage)
-	registerRoutes(app)
+	{
+		api := router.Group("/api")
+		api.GET("/ws", handlers.WebsocketHandler)
+		api.GET("/diskusage", handlers.ApiDiskUsageHandler)
+		api.POST("/delete", handlers.ApiDeleteHandler)
+		api.POST("/rename", handlers.ApiRenameHandler)
+		api.GET("/version", handlers.ApiAppVersionHandler)
+		api.POST("/convert", handlers.ApiConvertHandler)
+		api.POST("/refresh/sn/:sn", handlers.ApiRefreshVideoInfoBySN)
+		{
+			query := api.Group("/query")
+			query.GET("/sn/:sn", handlers.ApiQueryVideoInfoBySN)
+			query.GET("/tag/:tag", handlers.ApiQueryVideoByTag)
+			query.GET("/director/:director", handlers.ApiQueryVideoByDirector)
+			query.GET("/publisher/:publisher", handlers.ApiQueryVideoByPublisher)
+			query.GET("/series/:series", handlers.ApiQueryVideoBySeries)
+			query.GET("/actor/:actor", handlers.ApiGetVideosByActress)
+		}
+	}
+	router.StaticFS("/dist", http.FS(subFS))
+	router.LoadHTMLFS(http.FS(htmlContent), "web_src/*.html")
+	router.NoRoute(func(ctx *gin.Context) {
+		path := ctx.Request.URL.Path
+		switch {
+		case strings.HasPrefix(path, "/api/"):
+			data, err := lib.ProxyDo(ctx, "http://localhost/video/"+strings.TrimPrefix(path, "/api/"))
+			if err != nil {
+				ctx.Error(err)
+				return
+			}
+			var result jsontext.Value
+			if err := json.Unmarshal(data, &result); err != nil {
+				ctx.Error(err)
+				return
+			}
+			ctx.JSON(http.StatusOK, gin.H{
+				"code": http.StatusOK,
+				"data": result,
+			})
 
-	log.Fatal(app.Listen("127.0.0.1:3000", fiber.ListenConfig{EnablePrefork: true, DisableStartupMessage: false}))
+		default:
+			cwd, err := os.Getwd()
+			if err != nil {
+				ctx.Error(err)
+				return
+			}
+			usage, err := disk.Usage(cwd)
+			if err != nil {
+				ctx.Error(err)
+				return
+			}
+			freedisk := float64(usage.Free) / (1024 * 1024 * 1024)
+			manifest, err := htmlContent.ReadFile("web_src/dist/.vite/manifest.json")
+			if err != nil {
+				ctx.Error(err)
+				return
+			}
+			chunk, err := lib.GetInjectChunk(bytes.NewReader(manifest))
+			if err != nil {
+				ctx.Error(err)
+				return
+			}
+
+			ctx.HTML(http.StatusOK, "index.html", gin.H{
+				"isProduction": IsProduction(),
+				"Version":      lib.Version,
+				"Freedisk":     fmt.Sprintf("%.2f", freedisk) + "GB",
+				"Chunk":        &chunk,
+			})
+		}
+	})
+
+	http.ListenAndServe(":3000", router)
 }

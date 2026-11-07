@@ -12,7 +12,6 @@ go-fiber-react-ts
 **/*.png
 .editorconfig
 .idea/
-/**/assets/
 *.sh
 log/
 *.mp4

@@ -1,17 +1,21 @@
 package handlers
 
 import (
+	"fmt"
 	"go-fiber-react-ts/database"
+	"net/http"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v3"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
 )
 
 /*
-	@Route /api/refresh/:sn<regex(([0-9]|[a-z]|[A-Z]){2,}-[0-9]{3,})>
+	@Route /api/refresh/:sn
 	@Method POST
 
 接受Post请求刷新SN对应视频信息
@@ -26,37 +30,50 @@ import (
 
 如果redis记录为空或者流程信息不为pending, 则重新获取视频信息
 */
-func ApiRefreshVideoInfoBySN(c fiber.Ctx) error {
-	video := &database.VideoDetailedInfo{SN: strings.ToLower(c.Params("sn"))}
-	status, err := video.GetInfoProcessStatus()
+func ApiRefreshVideoInfoBySN(c *gin.Context) {
+	redis0 := c.MustGet("redis0").(*redis.Client)
+	pool := c.MustGet("PgxPool").(*pgxpool.Pool)
+	video := &database.VideoDetailedInfo{SN: strings.ToLower(c.Param("sn"))}
+	status, err := video.GetInfoProcessStatus(redis0, c)
 	wg := sync.WaitGroup{}
 
 	canStartGetInfoProcess := (err == redis.Nil || status != database.StatusPending)
 
 	if canStartGetInfoProcess {
 		wg.Go(func() {
-			video.SetGetInfoProcessStatus(database.StatusPending)
-			if err := video.GetDetailInfo(); err != nil {
-				video.SetGetInfoProcessStatus(database.StatusFailed)
+			video.SetGetInfoProcessStatus(database.StatusPending, redis0, c.Copy())
+			if err := video.Create(pool, c.Copy()); err != nil {
+				fmt.Println(err.Error())
+				video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
 				return
 			}
-			video.SetGetInfoProcessStatus(database.StatusSuccess)
+			if err := video.GetSourceUrl(pool, c.Copy()); err != nil {
+				fmt.Println(err.Error())
+				video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
+				return
+			}
+			if err := video.GetDetailInfo(pool, c.Copy()); err != nil {
+				fmt.Println(err.Error())
+				video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
+				return
+			}
+			video.SetGetInfoProcessStatus(database.StatusSuccess, redis0, c.Copy())
 
-			video.DownloadPoster()
+			video.DownloadPoster(pool, c.Copy())
 		})
 	}
 	wg.Wait()
 	for status == database.StatusPending {
 		time.Sleep(300 * time.Millisecond)
 
-		status, _ := video.GetInfoProcessStatus()
+		status, _ := video.GetInfoProcessStatus(redis0, c)
 		if status != database.StatusPending {
 			break
 		}
 	}
 
-	return c.Status(fiber.StatusOK).JSON(&RespBody{
-		StatusCode: fiber.StatusOK,
-		Data:       "Done for refreshing Video info. Please Use '/api/query/sn/:sn to get new video info.",
+	c.JSON(http.StatusOK, gin.H{
+		"code": fiber.StatusOK,
+		"data": "Done for refreshing Video info. Please Use '/api/query/sn/:sn to get new video info.",
 	})
 }

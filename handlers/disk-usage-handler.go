@@ -1,24 +1,27 @@
 package handlers
 
 import (
+	"net/http"
 	"os"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gin-gonic/gin"
 	"github.com/shirou/gopsutil/v3/disk"
 )
 
-func ApiDiskUsageHandler(c fiber.Ctx) error {
+func ApiDiskUsageHandler(c *gin.Context) {
 	dir, err := os.Getwd()
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		c.Error(err)
+		return
 	}
 	useageState, err := disk.Usage(dir)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		c.Error(err)
+		return
 	}
 
-	return c.Status(fiber.StatusOK).JSON(&RespBody{
-		StatusCode: 200,
-		Data:       useageState,
+	c.JSON(http.StatusOK, gin.H{
+		"code": http.StatusOK,
+		"data": useageState,
 	})
 }

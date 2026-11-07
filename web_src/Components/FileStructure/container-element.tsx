@@ -5,6 +5,7 @@ import { Fragment, lazy } from "react";
 import useSWR from "swr";
 import sortElements from "../../lib/sort-elements-by-name.ts";
 import type { DirElement, RespElement } from "../types.js";
+import fetcher from "../../lib/fetcher.ts";
 
 const LazyFileElement = lazy(() => import("./file-element.tsx"));
 const LazyFolderElement = lazy(() => import("./folder-element.tsx"));
@@ -21,6 +22,8 @@ const Container = ({
     isOpen
       ? `/api${cwd}`
       : null,
+    fetcher,
+    {suspense: true}
   );
 
   return (

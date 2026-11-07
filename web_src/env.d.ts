@@ -1,4 +1,4 @@
-/// <reference types="@rsbuild/core/types" />
+/// <reference types="vite/client" />
 
 type OrientationLockType =
   | "any"
@@ -19,4 +19,9 @@ type CSSModuleClasses = Readonly<Record<string, stringq>>;
 declare module "*.module.scss" {
   const Classes: CSSModuleClasses;
   export default Classes;
+}
+
+declare module '*.svg' {
+  const content: React.FC<React.SVGProps<SVGElement>>;
+  export default content;
 }
