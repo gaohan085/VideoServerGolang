@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"go-fiber-react-ts/lib"
@@ -13,6 +14,16 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	fiberlog "github.com/gofiber/fiber/v3/log"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
+)
+
+var (
+	ErrVideoNotFound        = errors.New("video info not found")
+	ErrQueryVideoFail       = errors.New("query remote video fail")
+	ErrQueryVideoUrlFail    = errors.New("query video source url fail")
+	ErrQueryVideoPosterFail = errors.New("query video poster fail")
+	ErrGetVideoSource       = errors.New("get video source url fail")
 )
 
 type Tag struct {
@@ -20,8 +31,8 @@ type Tag struct {
 	Name string `json:"tag"`
 }
 
-func (t *Tag) Create() error {
-	return PgxPool.QueryRow(Ctx, `
+func (t *Tag) Create(pool *pgxpool.Pool, ctx context.Context) error {
+	return pool.QueryRow(ctx, `
 		INSERT INTO tags (
 			name
 		)
@@ -33,8 +44,8 @@ func (t *Tag) Create() error {
 	`, t.Name).Scan(&t.ID)
 }
 
-func (t *Tag) Query() error {
-	return PgxPool.QueryRow(Ctx, `
+func (t *Tag) Query(pool *pgxpool.Pool, ctx context.Context) error {
+	return pool.QueryRow(ctx, `
 		SELECT id, name
 		FROM tags
 		WHERE name = $1 OR id = $2;
@@ -49,8 +60,8 @@ type Actor struct {
 	Sex string `json:"sex"`
 }
 
-func (ac *Actor) Create() error {
-	return PgxPool.QueryRow(Ctx, `
+func (ac *Actor) Create(pool *pgxpool.Pool, ctx context.Context) error {
+	return pool.QueryRow(ctx, `
 		INSERT INTO actors (
 			name, sex
 		)
@@ -62,8 +73,8 @@ func (ac *Actor) Create() error {
 	`, ac.Name, ac.Sex).Scan(&ac.ID)
 }
 
-func (ac *Actor) Query() error {
-	return PgxPool.QueryRow(Ctx, `
+func (ac *Actor) Query(pool *pgxpool.Pool, ctx context.Context) error {
+	return pool.QueryRow(ctx, `
 		SELECT id, name, sex
 		FROM actors
 		WHERE id = $1 OR name = $2;
@@ -88,7 +99,7 @@ type VideoDetailedInfo struct {
 	Actors         []Actor
 }
 
-func CreateVideoDetailedInfoTable() error {
+func CreateVideoDetailedInfoTable(pool *pgxpool.Pool, ctx context.Context) error {
 	batch := &pgx.Batch{}
 
 	batch.Queue(
@@ -141,18 +152,18 @@ func CreateVideoDetailedInfoTable() error {
 		);`,
 	)
 
-	_, err := PgxPool.SendBatch(Ctx, batch).Exec()
+	_, err := pool.SendBatch(ctx, batch).Exec()
 	return err
 }
 
-func DROPVideoDetailsTable() error {
-	_, err := PgxPool.Exec(Ctx,
+func DROPVideoDetailsTable(pool *pgxpool.Pool, ctx context.Context) error {
+	_, err := pool.Exec(ctx,
 		`DROP TABLE IF EXISTS video_details, tags, actors, video_tags, video_actors CASCADE;`,
 	)
 	return err
 }
 
-func (v *VideoDetailedInfo) Create() error { //TODO Test
+func (v *VideoDetailedInfo) Create(pool *pgxpool.Pool, ctx context.Context) error { //TODO Test
 	queryVideoCreate := `
 		INSERT INTO video_details (
 			sn,
@@ -174,7 +185,7 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 		RETURNING id;
 	`
 
-	if err := PgxPool.QueryRow(Ctx, queryVideoCreate,
+	if err := pool.QueryRow(ctx, queryVideoCreate,
 		v.SN,
 		v.Title,
 		v.ReleaseDate,
@@ -192,9 +203,9 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 	}
 
 	for _, tag := range v.Tags {
-		tag.Create()
+		tag.Create(pool, ctx)
 
-		_, err := PgxPool.Exec(Ctx, `
+		_, err := pool.Exec(ctx, `
 			INSERT INTO video_tags (
 			video_id, tag_id
 			)
@@ -207,9 +218,9 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 	}
 
 	for _, actor := range v.Actors {
-		actor.Create()
+		actor.Create(pool, ctx)
 
-		_, err := PgxPool.Exec(Ctx,
+		_, err := pool.Exec(ctx,
 			`
 			INSERT INTO video_actors (
 			video_id, actor_id
@@ -227,8 +238,8 @@ func (v *VideoDetailedInfo) Create() error { //TODO Test
 	return nil
 }
 
-func (v *VideoDetailedInfo) Query() error {
-	if err := PgxPool.QueryRow(Ctx, `
+func (v *VideoDetailedInfo) Query(pool *pgxpool.Pool, ctx context.Context) error {
+	if err := pool.QueryRow(ctx, `
 		SELECT
 			id,
 			sn,
@@ -266,7 +277,7 @@ func (v *VideoDetailedInfo) Query() error {
 		return err
 	}
 
-	tagRows, err := PgxPool.Query(Ctx, `
+	tagRows, err := pool.Query(ctx, `
 		SELECT t.name
 		FROM tags t
 		JOIN video_tags vt ON t.id = vt.tag_id
@@ -283,7 +294,7 @@ func (v *VideoDetailedInfo) Query() error {
 		v.Tags = append(v.Tags, tag)
 	}
 
-	actorRows, err := PgxPool.Query(Ctx, `
+	actorRows, err := pool.Query(ctx, `
 		SELECT a.name, a.sex
 		FROM actors a
 		JOIN video_actors va ON a.id = va.actor_id
@@ -303,8 +314,8 @@ func (v *VideoDetailedInfo) Query() error {
 	return nil
 }
 
-func (v *VideoDetailedInfo) Update() error {
-	if err := PgxPool.QueryRow(Ctx, `
+func (v *VideoDetailedInfo) Update(pool *pgxpool.Pool, ctx context.Context) error {
+	if err := pool.QueryRow(ctx, `
 		UPDATE video_details
 		SET
 			title = $1,
@@ -339,9 +350,9 @@ func (v *VideoDetailedInfo) Update() error {
 	}
 
 	for _, tag := range v.Tags {
-		tag.Create()
+		tag.Create(pool, ctx)
 
-		_, err := PgxPool.Exec(Ctx, `
+		_, err := pool.Exec(ctx, `
 			INSERT INTO video_tags (
 			video_id, tag_id
 			)
@@ -354,9 +365,9 @@ func (v *VideoDetailedInfo) Update() error {
 	}
 
 	for _, actor := range v.Actors {
-		actor.Create()
+		actor.Create(pool, ctx)
 
-		_, err := PgxPool.Exec(Ctx,
+		_, err := pool.Exec(ctx,
 			`
 			INSERT INTO video_actors (
 			video_id, actor_id
@@ -374,9 +385,9 @@ func (v *VideoDetailedInfo) Update() error {
 	return nil
 }
 
-func (v *VideoDetailedInfo) Delete() error {
+func (v *VideoDetailedInfo) Delete(pool *pgxpool.Pool, ctx context.Context) error {
 	if v.ID == 0 && v.SN != "" {
-		if err := v.Query(); err != nil {
+		if err := v.Query(pool, ctx); err != nil {
 			return err
 		}
 	}
@@ -386,11 +397,11 @@ func (v *VideoDetailedInfo) Delete() error {
 	batch.Queue(`DELETE FROM video_actors WHERE video_id = $1`, v.ID)
 	batch.Queue(`DELETE FROM video_details WHERE id = $1`, v.ID)
 
-	_, err := PgxPool.SendBatch(Ctx, batch).Exec()
+	_, err := pool.SendBatch(ctx, batch).Exec()
 	return err
 }
 
-func (v *VideoDetailedInfo) DownloadPoster() error {
+func (v *VideoDetailedInfo) DownloadPoster(pool *pgxpool.Pool, ctx context.Context) error {
 	v.PosterUrl = lib.GetPosterLinkFromSN(v.SN)
 	v.PosterFileName = fmt.Sprintf("%s%s.jpg", strings.Split(v.SN, "-")[0], strings.Split(v.SN, "-")[1])
 
@@ -422,10 +433,10 @@ func (v *VideoDetailedInfo) DownloadPoster() error {
 	//将res.body 写入文件
 	io.Copy(file, res.Body)
 
-	return v.Update()
+	return v.Update(pool, ctx)
 }
 
-func (v *VideoDetailedInfo) GetSourceUrl() error {
+func (v *VideoDetailedInfo) GetSourceUrl(pool *pgxpool.Pool, ctx context.Context) error {
 	fiberlog.Info(fmt.Sprintf("Getting Video '%s' source url.", v.SN))
 
 	url := "https://javdb.com/search?q=" + v.SN + "&f=all"
@@ -448,10 +459,10 @@ func (v *VideoDetailedInfo) GetSourceUrl() error {
 	valSrc, _ := selection.Attr("href")
 	v.SourceUrl = "https://javdb.com" + valSrc
 
-	return v.Update()
+	return v.Update(pool, ctx)
 }
 
-func (v *VideoDetailedInfo) GetDetailInfo() error {
+func (v *VideoDetailedInfo) GetDetailInfo(pool *pgxpool.Pool, ctx context.Context) error {
 	res, err := lib.DoHttpProxyRequest(v.SourceUrl)
 	if err != nil {
 		return err
@@ -503,11 +514,11 @@ func (v *VideoDetailedInfo) GetDetailInfo() error {
 		}
 	})
 
-	return v.Update()
+	return v.Update(pool, ctx)
 }
 
 func (v *VideoDetailedInfo) IsVideoFileExist() bool { //TODO test
-	videoFilePath := v.PlaySource[len(os.Getenv("NGINX_SERVE_ADDRESS")):]
+	videoFilePath := strings.TrimPrefix(v.PlaySource, "/video/")
 
 	_, err := os.Stat(os.Getenv("ROOT_DIR") + videoFilePath)
 	return !errors.Is(err, os.ErrNotExist)
@@ -521,25 +532,25 @@ const (
 	StatusFailed  Status = "failed"
 )
 
-func (v *VideoDetailedInfo) SetGetInfoProcessStatus(status Status) error {
-	return Rdb0.Set(Ctx, v.SN, string(status), 0).Err()
+func (v *VideoDetailedInfo) SetGetInfoProcessStatus(status Status, rdb *redis.Client, ctx context.Context) error {
+	return rdb.Set(ctx, v.SN, string(status), 0).Err()
 }
 
-func (v *VideoDetailedInfo) GetInfoProcessStatus() (Status, error) {
-	status, err := Rdb0.Get(Ctx, v.SN).Result()
+func (v *VideoDetailedInfo) GetInfoProcessStatus(rdb *redis.Client, ctx context.Context) (Status, error) {
+	status, err := rdb.Get(ctx, v.SN).Result()
 
 	return Status(status), err
 }
 
-func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
+func QueryVideosByTag(name string, pool *pgxpool.Pool, ctx context.Context) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 
 	tag := &Tag{Name: name}
-	if err := tag.Query(); err != nil {
+	if err := tag.Query(pool, ctx); err != nil {
 		return nil, err
 	}
 
-	rows, err := PgxPool.Query(Ctx, `
+	rows, err := pool.Query(ctx, `
 		SELECT video.id
 		FROM video_details video
 		JOIN video_tags vt ON video.id = vt.video_id
@@ -556,7 +567,7 @@ func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if err := video.Query(); err != nil {
+		if err := video.Query(pool, ctx); err != nil {
 			return nil, err
 		}
 
@@ -566,15 +577,15 @@ func QueryVideosByTag(name string) ([]VideoDetailedInfo, error) {
 	return videos, nil
 }
 
-func QueryVideoByActor(name string) ([]VideoDetailedInfo, error) {
+func QueryVideoByActor(name string, pool *pgxpool.Pool, ctx context.Context) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
 
 	actor := &Actor{Name: name}
-	if err := actor.Query(); err != nil {
+	if err := actor.Query(pool, ctx); err != nil {
 		return nil, err
 	}
 
-	rows, err := PgxPool.Query(Ctx, `
+	rows, err := pool.Query(ctx, `
 		SELECT video.id
 		FROM video_details video
 		JOIN video_actors va ON video.id = va.video_id
@@ -591,7 +602,7 @@ func QueryVideoByActor(name string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if err := video.Query(); err != nil {
+		if err := video.Query(pool, ctx); err != nil {
 			return nil, err
 		}
 
@@ -600,9 +611,9 @@ func QueryVideoByActor(name string) ([]VideoDetailedInfo, error) {
 	return videos, nil
 }
 
-func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
+func QueryVideosByDirector(director string, pool *pgxpool.Pool, ctx context.Context) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
-	rows, err := PgxPool.Query(Ctx, `
+	rows, err := pool.Query(ctx, `
 		SELECT
 			id
 		FROM
@@ -623,7 +634,7 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if err := video.Query(); err != nil {
+		if err := video.Query(pool, ctx); err != nil {
 			return nil, err
 		}
 
@@ -632,9 +643,9 @@ func QueryVideosByDirector(director string) ([]VideoDetailedInfo, error) {
 	return videos, nil
 }
 
-func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
+func QueryVideosByPublisher(publisher string, pool *pgxpool.Pool, ctx context.Context) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
-	rows, err := PgxPool.Query(Ctx, `
+	rows, err := pool.Query(ctx, `
 		SELECT
 			id
 		FROM
@@ -655,7 +666,7 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if err := video.Query(); err != nil {
+		if err := video.Query(pool, ctx); err != nil {
 			return nil, err
 		}
 
@@ -664,9 +675,9 @@ func QueryVideosByPublisher(publisher string) ([]VideoDetailedInfo, error) {
 	return videos, nil
 }
 
-func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
+func QueryVideosBySeries(serial string, pool *pgxpool.Pool, ctx context.Context) ([]VideoDetailedInfo, error) {
 	videos := []VideoDetailedInfo{}
-	rows, err := PgxPool.Query(Ctx, `
+	rows, err := pool.Query(ctx, `
 		SELECT
 			id
 		FROM
@@ -687,7 +698,7 @@ func QueryVideosBySeries(serial string) ([]VideoDetailedInfo, error) {
 			return nil, err
 		}
 
-		if err := video.Query(); err != nil {
+		if err := video.Query(pool, ctx); err != nil {
 			return nil, err
 		}
 

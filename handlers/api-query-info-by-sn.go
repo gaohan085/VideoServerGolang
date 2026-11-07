@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"errors"
-	"fmt"
 	"go-fiber-react-ts/database"
+	"net/http"
 	"strings"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v3"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type VideoBySn struct {
@@ -60,30 +62,40 @@ func (v *VideoBySn) MapDbData(dbvideo *database.VideoDetailedInfo) {
 
 从数据库查询SN码对应视频信息，如果查询为空则返回404。
 
-	Notes:
+	Notes:接受Body为{playsrc: string}的请求，用于更新video的play source.
 
-如果需要服务端查询视频信息，Post请求 "/api/refresh/:sn"
+如果需要服务端查询视频信息，Post请求 "/api/refresh/:sn?playsrc=...."
 */
-func ApiQueryVideoInfoBySN(c fiber.Ctx) error {
-	video := &database.VideoDetailedInfo{SN: strings.ToLower(c.Params("sn"))}
+func ApiQueryVideoInfoBySN(c *gin.Context) {
+	pool := c.MustGet("PgxPool").(*pgxpool.Pool)
+	video := &database.VideoDetailedInfo{SN: strings.ToLower(c.Param("sn"))}
 	videoBySn := &VideoBySn{}
 
-	if err := video.Query(); err != nil {
+	playSrc := c.Query("playsrc")
+
+	if err := video.Query(pool, c); err != nil {
 		if errors.Is(err, database.ErrVideoNotFound) {
-			return c.Status(fiber.StatusNotFound).JSON(&RespBody{
-				StatusCode: fiber.StatusNotFound,
-				Data:       fmt.Sprintf("Video information for %s not found.", video.SN),
+			c.JSON(http.StatusNotFound, gin.H{
+				"code": http.StatusNotFound,
+				"data": err.Error(),
 			})
 		}
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if playSrc != video.PlaySource {
+		video.PlaySource = playSrc
+
+		if err := video.Update(pool, c); err != nil {
+			c.Error(err)
+			return
+		}
 	}
 
 	videoBySn.MapDbData(video)
 
-	return c.Status(fiber.StatusOK).JSON(
-		&RespBody{
-			StatusCode: fiber.StatusOK,
-			Data:       videoBySn,
-		},
-	)
+	c.JSON(http.StatusOK, gin.H{
+		"code": fiber.StatusOK,
+		"data": videoBySn,
+	})
 }

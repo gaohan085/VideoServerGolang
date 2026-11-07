@@ -2,8 +2,8 @@
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import icon from "../assets/favicon.ico";
-import "../assets/Roboto-Regular.ttf";
+import icon from "./assets/favicon.ico";
+import "./assets/Roboto-Regular.ttf";
 import App from "./App.tsx";
 
 const head = document.querySelector("head");

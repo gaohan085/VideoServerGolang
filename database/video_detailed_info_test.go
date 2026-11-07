@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"testing"
@@ -14,10 +15,10 @@ import (
 func TestCreateReturnID(t *testing.T) {
 	t.Setenv("PGX_CONN", "postgres://gaohan:gh961004@192.168.1.30:5432/video_server_pgx_test")
 	t.Setenv("HTTP_PROXY", "http://192.168.1.197:10809")
-	PgxConnDatabase()
+	pool, _ := PgxConnDatabase()
 
 	t.Run("测试创建视频详细信息表", func(t *testing.T) {
-		err := CreateVideoDetailedInfoTable()
+		err := CreateVideoDetailedInfoTable(pool, context.Background())
 
 		assert.Nil(t, err)
 	})
@@ -25,7 +26,7 @@ func TestCreateReturnID(t *testing.T) {
 	t.Run("测试查询不存在的视频记录返回错误", func(t *testing.T) {
 		video := VideoDetailedInfo{SN: faker.Username()}
 
-		err := video.Query()
+		err := video.Query(pool, context.Background())
 
 		assert.True(t, errors.Is(ErrVideoNotFound, err))
 	})
@@ -33,7 +34,7 @@ func TestCreateReturnID(t *testing.T) {
 	t.Run("保存tag到数据库成功后tag.id不为空", func(t *testing.T) {
 		tag := Tag{Name: faker.Username()}
 
-		err := tag.Create()
+		err := tag.Create(pool, context.Background())
 
 		assert.Nil(t, err)
 		assert.NotEqual(t, 0, tag.ID)
@@ -45,7 +46,7 @@ func TestCreateReturnID(t *testing.T) {
 			Sex:  "male",
 		}
 
-		assert.Nil(t, actor.Create())
+		assert.Nil(t, actor.Create(pool, context.Background()))
 
 		assert.NotEqual(t, 0, actor.ID)
 	})
@@ -66,16 +67,16 @@ func TestCreateReturnID(t *testing.T) {
 
 	t.Run("保存视频详细信息", func(t *testing.T) {
 
-		assert.Nil(t, info.Create())
+		assert.Nil(t, info.Create(pool, context.Background()))
 	})
 
 	t.Run("测试Update更新记录", func(t *testing.T) {
 		info.Duration = 154
-		assert.Nil(t, info.Update())
+		assert.Nil(t, info.Update(pool, context.Background()))
 
 		t.Run("测试更新后从数据库读取", func(t *testing.T) {
 			videoQ := VideoDetailedInfo{ID: info.ID}
-			assert.Nil(t, videoQ.Query())
+			assert.Nil(t, videoQ.Query(pool, context.Background()))
 			assert.Equal(t, 154, videoQ.Duration)
 			assert.Equal(t, info, videoQ)
 		})
@@ -85,7 +86,7 @@ func TestCreateReturnID(t *testing.T) {
 		video := &VideoDetailedInfo{}
 		video.SN = info.SN
 
-		assert.Nil(t, video.Query())
+		assert.Nil(t, video.Query(pool, context.Background()))
 
 		assert.Equal(t, &info, video)
 	})
@@ -94,7 +95,7 @@ func TestCreateReturnID(t *testing.T) {
 		video := &VideoDetailedInfo{}
 		video.ID = info.ID
 
-		assert.Nil(t, video.Query())
+		assert.Nil(t, video.Query(pool, context.Background()))
 
 		assert.Equal(t, &info, video)
 	})
@@ -113,9 +114,9 @@ func TestCreateReturnID(t *testing.T) {
 			Series:      "aaaa",
 		}
 
-		info2.Create()
+		info2.Create(pool, context.Background())
 
-		videos, err := QueryVideosByTag("戲劇")
+		videos, err := QueryVideosByTag("戲劇", pool, context.Background())
 
 		assert.Nil(t, err)
 		assert.Len(t, videos, 2)
@@ -124,7 +125,7 @@ func TestCreateReturnID(t *testing.T) {
 	})
 
 	t.Run("使用演员名称查找视频", func(t *testing.T) {
-		videos, err := QueryVideoByActor("MINAMO")
+		videos, err := QueryVideoByActor("MINAMO", pool, context.Background())
 
 		assert.Nil(t, err)
 		assert.Len(t, videos, 2, "查询结果包含2条视频信息")
@@ -133,15 +134,15 @@ func TestCreateReturnID(t *testing.T) {
 	t.Run("测试下载Poster", func(t *testing.T) {
 		video := VideoDetailedInfo{SN: "SONE-001"}
 
-		assert.Nil(t, video.Create())
+		assert.Nil(t, video.Create(pool, context.Background()))
 
-		err := video.DownloadPoster()
+		err := video.DownloadPoster(pool, context.Background())
 		assert.Nil(t, err)
 
 		t.Run("下载Poster完成后能从数据库查询", func(t *testing.T) {
 			videoQ := VideoDetailedInfo{ID: video.ID}
 
-			assert.Nil(t, videoQ.Query())
+			assert.Nil(t, videoQ.Query(pool, context.Background()))
 			assert.Equal(t, video, videoQ)
 		})
 	})
@@ -174,14 +175,14 @@ func TestCreateReturnID(t *testing.T) {
 		for _, test := range testEx {
 			t.Run(fmt.Sprintf("测试获取%s源信息\n", test.SerialNum), func(t *testing.T) {
 				video := &VideoDetailedInfo{SN: test.SerialNum}
-				assert.Nil(t, video.Create())
-				assert.Nil(t, video.GetSourceUrl())
+				assert.Nil(t, video.Create(pool, context.Background()))
+				assert.Nil(t, video.GetSourceUrl(pool, context.Background()))
 				assert.Equal(t, test.SourceUrl, video.SourceUrl)
 
 				t.Run("从数据查询数据", func(t *testing.T) {
 					videoQ := &VideoDetailedInfo{SN: test.SerialNum}
 
-					assert.Nil(t, videoQ.Query())
+					assert.Nil(t, videoQ.Query(pool, context.Background()))
 					assert.Equal(t, test.SourceUrl, videoQ.SourceUrl)
 				})
 			})
@@ -222,9 +223,9 @@ func TestCreateReturnID(t *testing.T) {
 		for _, detail := range details {
 			video := &VideoDetailedInfo{SN: detail.SN}
 
-			assert.Nil(t, video.Create())
-			assert.Nil(t, video.GetSourceUrl())
-			assert.Nil(t, video.GetDetailInfo())
+			assert.Nil(t, video.Create(pool, context.Background()))
+			assert.Nil(t, video.GetSourceUrl(pool, context.Background()))
+			assert.Nil(t, video.GetDetailInfo(pool, context.Background()))
 			assert.Equal(t, detail.Title, video.Title)
 			assert.Equal(t, detail.ReleaseDate, video.ReleaseDate)
 			assert.Equal(t, detail.Duration, video.Duration)
@@ -239,7 +240,7 @@ func TestCreateReturnID(t *testing.T) {
 			t.Run(fmt.Sprintf("从数据库查询%s", detail.SN), func(t *testing.T) {
 				videoQ := &VideoDetailedInfo{SN: detail.SN}
 
-				assert.Nil(t, videoQ.Query())
+				assert.Nil(t, videoQ.Query(pool, context.Background()))
 				assert.Equal(t, detail.Title, videoQ.Title)
 				assert.Equal(t, detail.ReleaseDate, videoQ.ReleaseDate)
 				assert.Equal(t, detail.Duration, videoQ.Duration)
@@ -255,7 +256,7 @@ func TestCreateReturnID(t *testing.T) {
 	})
 
 	t.Run("删除表", func(t *testing.T) {
-		assert.Nil(t, DROPVideoDetailsTable())
+		assert.Nil(t, DROPVideoDetailsTable(pool, context.Background()))
 	})
 }
 
@@ -264,17 +265,15 @@ func Test_SetGetVideoDetailStatus(t *testing.T) {
 	t.Setenv("REDIS_USRNAME", "gaohan")
 	t.Setenv("REDIS_PASSWD", "gh961004")
 
-	t.Run("初始化redis 数据库链接", func(t *testing.T) {
-		SetRedisClient()
-	})
+	rdb := SetRedisClient()[0]
 
 	t.Run("测试向redis写入数据", func(t *testing.T) {
 		video := &VideoDetailedInfo{SN: "SONE-001"}
 
-		err := video.SetGetInfoProcessStatus(StatusFailed)
+		err := video.SetGetInfoProcessStatus(StatusFailed, rdb, context.Background())
 		assert.Nil(t, err)
 
-		status, err := video.GetInfoProcessStatus()
+		status, err := video.GetInfoProcessStatus(rdb, context.Background())
 
 		assert.Equal(t, StatusFailed, status)
 		assert.Nil(t, err)
@@ -283,7 +282,7 @@ func Test_SetGetVideoDetailStatus(t *testing.T) {
 	t.Run("测试读取不存在的数据key", func(t *testing.T) {
 		video := &VideoDetailedInfo{SN: "SONE-002"}
 
-		_, err := video.GetInfoProcessStatus()
+		_, err := video.GetInfoProcessStatus(rdb, context.Background())
 
 		assert.NotNil(t, err)
 		assert.Equal(t, redis.Nil, err)

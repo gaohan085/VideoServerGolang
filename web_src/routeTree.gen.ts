@@ -8,40 +8,40 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as QueryvideosRouteImport } from './routes/queryvideos'
+import { Route as rootRouteImport } from "./routes/__root"
+import { Route as IndexRouteImport } from "./routes/index"
+import { Route as QueryvideosRouteImport } from "./routes/queryvideos"
 
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
 } as any)
 const QueryvideosRoute = QueryvideosRouteImport.update({
-  id: '/queryvideos',
-  path: '/queryvideos',
+  id: "/queryvideos",
+  path: "/queryvideos",
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/queryvideos': typeof QueryvideosRoute
+  "/": typeof IndexRoute
+  "/queryvideos": typeof QueryvideosRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/queryvideos': typeof QueryvideosRoute
+  "/": typeof IndexRoute
+  "/queryvideos": typeof QueryvideosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/queryvideos': typeof QueryvideosRoute
+  "/": typeof IndexRoute
+  "/queryvideos": typeof QueryvideosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/queryvideos'
+  fullPaths: "/" | "/queryvideos"
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/queryvideos'
-  id: '__root__' | '/' | '/queryvideos'
+  to: "/" | "/queryvideos"
+  id: "__root__" | "/" | "/queryvideos"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -49,19 +49,19 @@ export interface RootRouteChildren {
   QueryvideosRoute: typeof QueryvideosRoute
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
+    "/": {
+      id: "/"
+      path: "/"
+      fullPath: "/"
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/queryvideos': {
-      id: '/queryvideos'
-      path: '/queryvideos'
-      fullPath: '/queryvideos'
+    "/queryvideos": {
+      id: "/queryvideos"
+      path: "/queryvideos"
+      fullPath: "/queryvideos"
       preLoaderRoute: typeof QueryvideosRouteImport
       parentRoute: typeof rootRouteImport
     }

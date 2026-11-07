@@ -2,6 +2,7 @@ package database
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"go-fiber-react-ts/lib"
 	"os"
@@ -12,6 +13,7 @@ import (
 	"time"
 
 	fiberlog "github.com/gofiber/fiber/v3/log"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type VideoConvert struct {
@@ -25,7 +27,7 @@ type VideoConvert struct {
 	Downloaded bool    `json:"downloaded"`
 }
 
-func CreateVideoConvertRecordTable() error { //TODO test
+func CreateVideoConvertRecordTable(pool *pgxpool.Pool, ctx context.Context) error { //TODO test
 	query := `
 		CREATE TABLE IF NOT EXISTS video_converts (
 			id SERIAL PRIMARY KEY,
@@ -40,26 +42,26 @@ func CreateVideoConvertRecordTable() error { //TODO test
 		);
 	`
 
-	_, err := PgxPool.Exec(Ctx, query)
+	_, err := pool.Exec(ctx, query)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func DROPVideoConvertRecordTable() error {
+func DROPVideoConvertRecordTable(pool *pgxpool.Pool, ctx context.Context) error {
 	query := `
 		DROP TABLE IF EXISTS
 			video_converts;
 	`
-	_, err := PgxPool.Exec(Ctx, query)
+	_, err := pool.Exec(ctx, query)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (v *VideoConvert) Create() error {
+func (v *VideoConvert) Create(pool *pgxpool.Pool, ctx context.Context) error {
 	query := `
 		INSERT INTO video_converts (
 			filename,
@@ -75,7 +77,7 @@ func (v *VideoConvert) Create() error {
 			($1,$2,$3,$4,$5,$6,$7,$8)
 		ON CONFLICT (play_source) DO UPDATE SET play_source = EXCLUDED.play_source;
 	`
-	_, err := PgxPool.Exec(Ctx, query,
+	_, err := pool.Exec(ctx, query,
 		v.FileName,
 		v.Path,
 		v.Status,
@@ -88,7 +90,7 @@ func (v *VideoConvert) Create() error {
 	return err
 }
 
-func (v *VideoConvert) Update() error {
+func (v *VideoConvert) Update(pool *pgxpool.Pool, ctx context.Context) error {
 	query := `
 		UPDATE
 			video_converts
@@ -103,7 +105,7 @@ func (v *VideoConvert) Update() error {
 		WHERE
 			play_source = $8
 	`
-	_, err := PgxPool.Exec(Ctx, query,
+	_, err := pool.Exec(ctx, query,
 		v.FileName,
 		v.Path,
 		v.Status,
@@ -123,7 +125,7 @@ func (v *VideoConvert) Update() error {
 //	videoconvert := &VideoConvert{}
 //	videoconvert.Playsource = "somes_string_play_source"
 //	videoconvert.Query()
-func (v *VideoConvert) Query() error {
+func (v *VideoConvert) Query(pool *pgxpool.Pool, ctx context.Context) error {
 	query := `
 		SELECT
 			filename,
@@ -140,7 +142,7 @@ func (v *VideoConvert) Query() error {
 			play_source = $1;
 	`
 
-	return PgxPool.QueryRow(Ctx, query, v.PlaySource).Scan(
+	return pool.QueryRow(ctx, query, v.PlaySource).Scan(
 		&v.FileName,
 		&v.Path,
 		&v.Status,
@@ -152,7 +154,7 @@ func (v *VideoConvert) Query() error {
 	)
 }
 
-func (v *VideoConvert) UpdateDuration() error { //DONE TEST
+func (v *VideoConvert) UpdateDuration(pool *pgxpool.Pool, ctx context.Context) error { //DONE TEST
 	// omit flag '-sexagesimal' then script can generate duration in seconds
 	var script = fmt.Sprintf(`ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 %s`, v.PlaySource)
 
@@ -186,11 +188,11 @@ func (v *VideoConvert) UpdateDuration() error { //DONE TEST
 	}
 
 	fiberlog.Info(fmt.Sprintf("Get video duration %s", v.FileName))
-	return v.Update()
+	return v.Update(pool, ctx)
 }
 
 // This function should only execute in ffmpeg server
-func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- int) error {
+func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- int, pool *pgxpool.Pool, ctx context.Context) error {
 	v.OutputName = lib.GetFilenameWithoutExt(v.FileName) + "_cvt.mp4"
 	var script = fmt.Sprintf(`
 	rm -f ffreport.log &&
@@ -206,7 +208,7 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 	}
 
 	v.Status = "converting"
-	v.Update()
+	v.Update(pool, ctx)
 	fiberlog.Info(fmt.Sprintf("Start converting video %s", v.FileName))
 
 	if err := cmd.Wait(); err != nil {
@@ -223,7 +225,7 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 }
 
 // This function should only execute in ffmpeg server
-func (v *VideoConvert) ReadProgress(chInter <-chan int, chDone <-chan int) error {
+func (v *VideoConvert) ReadProgress(chInter <-chan int, chDone <-chan int, pool *pgxpool.Pool, ctx context.Context) error {
 	script := `cat ffreport.log | tail -n 12`
 
 	for {
@@ -231,7 +233,7 @@ func (v *VideoConvert) ReadProgress(chInter <-chan int, chDone <-chan int) error
 		case <-chDone:
 			v.Progress = 1
 			v.Status = "done"
-			return v.Update()
+			return v.Update(pool, ctx)
 		case <-chInter:
 			return nil
 		default:
@@ -248,7 +250,7 @@ func (v *VideoConvert) ReadProgress(chInter <-chan int, chDone <-chan int) error
 				if regexp.MustCompile(`(out_time_us=)[\d]{5,}`).MatchString(scanner.Text()) {
 					outTimeInus, _ := strconv.ParseFloat(regexp.MustCompile(`[\d]{5,}`).FindString(scanner.Text()), 64)
 					v.Progress = (outTimeInus / 1000000) / v.Duration
-					v.Update()
+					v.Update(pool, ctx)
 				}
 			}
 
@@ -258,7 +260,7 @@ func (v *VideoConvert) ReadProgress(chInter <-chan int, chDone <-chan int) error
 	}
 }
 
-func (v *VideoConvert) DownloadConverted() error {
+func (v *VideoConvert) DownloadConverted(pool *pgxpool.Pool, ctx context.Context) error {
 	fiberlog.Info("Downloading Converted Video " + v.FileName)
 	downloadLink := os.Getenv("FFMPEG_DOWNLOAD_ADDR")
 	rootDir := os.Getenv("ROOT_DIR")
@@ -280,23 +282,23 @@ func (v *VideoConvert) DownloadConverted() error {
 	if cmd.ProcessState.Success() {
 		v.Downloaded = true
 		fiberlog.Info(fmt.Sprintf("Finish download video %s", v.OutputName))
-		return v.Update()
+		return v.Update(pool, ctx)
 	}
 
 	return nil
 }
 
-func (v *VideoConvert) Delete() error {
-	_, err := PgxPool.Exec(Ctx, `
+func (v *VideoConvert) Delete(pool *pgxpool.Pool, ctx context.Context) error {
+	_, err := pool.Exec(ctx, `
 		DELETE FROM video_converts
 		WHERE play_source = $1;
 	`, v.PlaySource)
 	return err
 }
 
-func GetAllVideoNeedConvert() ([]VideoConvert, error) {
+func GetAllVideoNeedConvert(pool *pgxpool.Pool, ctx context.Context) ([]VideoConvert, error) {
 	videos := []VideoConvert{}
-	rows, err := PgxPool.Query(Ctx, `
+	rows, err := pool.Query(ctx, `
 		SELECT
 			filename,
 			path,
@@ -335,7 +337,7 @@ func GetAllVideoNeedConvert() ([]VideoConvert, error) {
 	return videos, nil
 }
 
-func GetVideoNeedDownload() (*VideoConvert, error) {
+func GetVideoNeedDownload(pool *pgxpool.Pool, ctx context.Context) (*VideoConvert, error) {
 	video := VideoConvert{}
 
 	query := `
@@ -356,7 +358,7 @@ func GetVideoNeedDownload() (*VideoConvert, error) {
 		LIMIT 1;
 	`
 
-	if err := PgxPool.QueryRow(Ctx, query, "done", false).Scan(
+	if err := pool.QueryRow(ctx, query, "done", false).Scan(
 		&video.FileName,
 		&video.Path,
 		&video.Status,

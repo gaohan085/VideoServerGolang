@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"log"
 	"os"
 
@@ -8,13 +9,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var (
-	Rdb0 *redis.Client
-	Rdb1 *redis.Client
-	Rdb2 *redis.Client
-)
-
-func SetRedisClient() {
+func SetRedisClient() []*redis.Client {
 	RedisAddr := os.Getenv("REDIS_ADDR")
 	RedisUsrname := os.Getenv("REDIS_USRNAME")
 	RedisPasswd := os.Getenv("REDIS_PASSWD")
@@ -40,18 +35,16 @@ func SetRedisClient() {
 		DB:       2,
 	})
 
-	if err := rdb0.Ping(Ctx).Err(); err != nil {
+	if err := rdb0.Ping(context.Background()).Err(); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := rdb1.Ping(Ctx).Err(); err != nil {
+	if err := rdb1.Ping(context.Background()).Err(); err != nil {
 		log.Fatal(err)
 	}
-	if err := rdb2.Ping(Ctx).Err(); err != nil {
+	if err := rdb2.Ping(context.Background()).Err(); err != nil {
 		log.Fatal(err)
 	}
 
-	Rdb0 = rdb0
-	Rdb1 = rdb1
-	Rdb2 = rdb2
+	return []*redis.Client{rdb0, rdb1, rdb2}
 }

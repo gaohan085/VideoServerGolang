@@ -1,6 +1,7 @@
 import { FcDataProtection, FcSearch } from "react-icons/fc";
 import useSWR from "swr";
 import styles from "./status-bar.module.scss";
+import fetcher from "../lib/fetcher.ts";
 
 type DiskSpace = {
   path: string;

@@ -1,38 +1,42 @@
 package handlers
 
 import (
+	"net/http"
 	"os"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/gin-gonic/gin"
 )
 
 type DelBody struct {
-	Path string `json:"path"`
-	Name string `json:"name"`
+	Path string `json:"path" form:"name,default="`
+	Name string `json:"name" form:"name,default="`
 }
 
-func ApiDeleteHandler(c fiber.Ctx) error {
+func ApiDeleteHandler(c *gin.Context) {
 	var fileinfo DelBody
 
 	rootDir := os.Getenv("ROOT_DIR")
 
-	if err := c.Bind().Body(&fileinfo); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	if err := c.ShouldBind(&fileinfo); err != nil {
+		c.Error(err)
+		return
 	}
 
 	if fileinfo.Name == "" || fileinfo.Path == "" {
-		return c.Status(fiber.StatusForbidden).JSON(&RespBody{
-			StatusCode: fiber.StatusForbidden,
-			Data:       "Please Provide PATH And NAME To Delete!",
+		c.JSON(http.StatusForbidden, gin.H{
+			"code": http.StatusForbidden,
+			"data": "Please Provide PATH And NAME To Delete!",
 		})
+		return
 	}
 
 	if err := os.RemoveAll(rootDir + fileinfo.Path + fileinfo.Name); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		c.Error(err)
+		return
 	}
 
-	return c.Status(fiber.StatusOK).JSON(&RespBody{
-		StatusCode: 200,
-		Data:       "Delete Compeleted! Please mutate data!",
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"data": "Delete Compeleted! Please mutate data!",
 	})
 }

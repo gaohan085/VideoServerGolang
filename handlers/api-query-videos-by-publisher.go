@@ -2,20 +2,26 @@ package handlers
 
 import (
 	"go-fiber-react-ts/database"
+	"net/http"
 	"net/url"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v3"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func ApiQueryVideoByPublisher(c fiber.Ctx) error {
-	publisher, err := url.QueryUnescape(c.Params("publisher"))
+func ApiQueryVideoByPublisher(c *gin.Context) {
+	pool := c.MustGet("PgxPool").(*pgxpool.Pool)
+	publisher, err := url.QueryUnescape(c.Param("publisher"))
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		c.Error(err)
+		return
 	}
 
-	videos, err := database.QueryVideosByPublisher(publisher)
+	videos, err := database.QueryVideosByPublisher(publisher, pool, c)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		c.Error(err)
+		return
 	}
 
 	videosBrief := []VideoBriefInfo{}
@@ -26,10 +32,8 @@ func ApiQueryVideoByPublisher(c fiber.Ctx) error {
 			videosBrief = append(videosBrief, videoBrief)
 		}
 	}
-	return c.Status(fiber.StatusOK).JSON(
-		&RespBody{
-			StatusCode: fiber.StatusOK,
-			Data:       videosBrief,
-		},
-	)
+	c.JSON(http.StatusOK, gin.H{
+		"code": fiber.StatusOK,
+		"data": videosBrief,
+	})
 }

@@ -2,9 +2,12 @@ package handlers
 
 import (
 	"go-fiber-react-ts/database"
+	"net/http"
 	"net/url"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v3"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type VideoBriefInfo struct {
@@ -26,14 +29,17 @@ func (v *VideoBriefInfo) MapDbData(dbvideo *database.VideoDetailedInfo) {
 
 }
 
-func ApiQueryVideoByTag(c fiber.Ctx) error {
-	tag, err := url.QueryUnescape(c.Params("tag"))
+func ApiQueryVideoByTag(c *gin.Context) {
+	pool := c.MustGet("PgxPool").(*pgxpool.Pool)
+	tag, err := url.QueryUnescape(c.Param("tag"))
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		c.Error(err)
+		return
 	}
-	videos, err := database.QueryVideosByTag(tag)
+	videos, err := database.QueryVideosByTag(tag, pool, c)
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		c.Error(err)
+		return
 	}
 
 	videosBrief := []VideoBriefInfo{}
@@ -44,10 +50,8 @@ func ApiQueryVideoByTag(c fiber.Ctx) error {
 			videosBrief = append(videosBrief, videoBrief)
 		}
 	}
-	return c.Status(fiber.StatusOK).JSON(
-		&RespBody{
-			StatusCode: fiber.StatusOK,
-			Data:       videosBrief,
-		},
-	)
+	c.JSON(http.StatusOK, gin.H{
+		"code": fiber.StatusOK,
+		"data": videosBrief,
+	})
 }

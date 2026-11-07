@@ -31,7 +31,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
     seekTime: 5,
     blankVideo: "",
     keyboard: { focused: false, global: true },
-    loadSprite: false,
+    loadSprite: true,
     iconUrl: plyrSvg,
   });
 
