@@ -39,30 +39,39 @@ func ApiRefreshVideoInfoBySN(c *gin.Context) {
 
 	canStartGetInfoProcess := (err == redis.Nil || status != database.StatusPending)
 
+	ctx := c.Request.Context()
 	if canStartGetInfoProcess {
 		wg.Go(func() {
-			video.SetGetInfoProcessStatus(database.StatusPending, redis0, c.Copy())
-			if err := video.Create(pool, c.Copy()); err != nil {
-				fmt.Println(err.Error())
-				video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
-				return
+			for {
+				select {
+				case <-ctx.Done():
+					video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
+					return
+				default:
+					video.SetGetInfoProcessStatus(database.StatusPending, redis0, c.Copy())
+					if err := video.Create(pool, c.Copy()); err != nil {
+						fmt.Println(err.Error())
+						video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
+						return
+					}
+					if err := video.GetSourceUrl(pool, c.Copy()); err != nil {
+						fmt.Println(err.Error())
+						video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
+						return
+					}
+					if err := video.GetDetailInfo(pool, c.Copy()); err != nil {
+						fmt.Println(err.Error())
+						video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
+						return
+					}
+					video.SetGetInfoProcessStatus(database.StatusSuccess, redis0, c.Copy())
+					video.DownloadPoster(pool, c.Copy())
+					return
+				}
 			}
-			if err := video.GetSourceUrl(pool, c.Copy()); err != nil {
-				fmt.Println(err.Error())
-				video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
-				return
-			}
-			if err := video.GetDetailInfo(pool, c.Copy()); err != nil {
-				fmt.Println(err.Error())
-				video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
-				return
-			}
-			video.SetGetInfoProcessStatus(database.StatusSuccess, redis0, c.Copy())
-
-			video.DownloadPoster(pool, c.Copy())
 		})
+		wg.Wait()
 	}
-	wg.Wait()
 	for status == database.StatusPending {
 		time.Sleep(300 * time.Millisecond)
 

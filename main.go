@@ -124,7 +124,7 @@ func main() {
 			query.GET("/sn/:sn", handlers.ApiQueryVideoInfoBySN)
 			query.GET("/tag/:tag", handlers.ApiQueryVideoByTag)
 			query.GET("/director/:director", handlers.ApiQueryVideoByDirector)
-			query.GET("/publisher/:publisher", handlers.ApiQueryVideoByPublisher)
+			query.GET("/publisher/*publisher", handlers.ApiQueryVideoByPublisher)
 			query.GET("/series/:series", handlers.ApiQueryVideoBySeries)
 			query.GET("/actor/:actor", handlers.ApiGetVideosByActress)
 		}
