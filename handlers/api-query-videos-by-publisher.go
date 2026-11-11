@@ -4,6 +4,7 @@ import (
 	"go-fiber-react-ts/database"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gofiber/fiber/v3"
@@ -12,13 +13,14 @@ import (
 
 func ApiQueryVideoByPublisher(c *gin.Context) {
 	pool := c.MustGet("PgxPool").(*pgxpool.Pool)
+
 	publisher, err := url.QueryUnescape(c.Param("publisher"))
 	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	videos, err := database.QueryVideosByPublisher(publisher, pool, c)
+	videos, err := database.QueryVideosByPublisher(strings.TrimPrefix(publisher, "/"), pool, c)
 	if err != nil {
 		c.Error(err)
 		return

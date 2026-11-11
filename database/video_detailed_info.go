@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
-	fiberlog "github.com/gofiber/fiber/v3/log"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
@@ -423,7 +422,6 @@ func (v *VideoDetailedInfo) DownloadPoster(pool *pgxpool.Pool, ctx context.Conte
 	}
 	defer file.Close()
 
-	fiberlog.Info("Downloading Video " + v.SN + " Poster.")
 	res, err := lib.DoHttpProxyRequest(v.PosterUrl)
 	if err != nil {
 		return err
@@ -437,8 +435,6 @@ func (v *VideoDetailedInfo) DownloadPoster(pool *pgxpool.Pool, ctx context.Conte
 }
 
 func (v *VideoDetailedInfo) GetSourceUrl(pool *pgxpool.Pool, ctx context.Context) error {
-	fiberlog.Info(fmt.Sprintf("Getting Video '%s' source url.", v.SN))
-
 	url := "https://javdb.com/search?q=" + v.SN + "&f=all"
 	res, err := lib.DoHttpProxyRequest(url)
 	if err != nil {
