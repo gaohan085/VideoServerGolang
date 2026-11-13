@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"go-fiber-react-ts/database"
 	"net/http"
 	"strings"
@@ -9,7 +8,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gofiber/fiber/v3"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
 )
@@ -50,17 +48,14 @@ func ApiRefreshVideoInfoBySN(c *gin.Context) {
 				default:
 					video.SetGetInfoProcessStatus(database.StatusPending, redis0, c.Copy())
 					if err := video.Create(pool, c.Copy()); err != nil {
-						fmt.Println(err.Error())
 						video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
 						return
 					}
 					if err := video.GetSourceUrl(pool, c.Copy()); err != nil {
-						fmt.Println(err.Error())
 						video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
 						return
 					}
 					if err := video.GetDetailInfo(pool, c.Copy()); err != nil {
-						fmt.Println(err.Error())
 						video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
 						return
 					}
@@ -82,7 +77,7 @@ func ApiRefreshVideoInfoBySN(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"code": fiber.StatusOK,
+		"code": http.StatusOK,
 		"data": "Done for refreshing Video info. Please Use '/api/query/sn/:sn to get new video info.",
 	})
 }

@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gofiber/fiber/v3"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -35,7 +34,7 @@ func ApiQueryVideoByPublisher(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"code": fiber.StatusOK,
+		"code": http.StatusOK,
 		"data": videosBrief,
 	})
 }

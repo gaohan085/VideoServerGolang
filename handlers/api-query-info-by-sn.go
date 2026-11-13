@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gofiber/fiber/v3"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -95,7 +94,7 @@ func ApiQueryVideoInfoBySN(c *gin.Context) {
 	videoBySn.MapDbData(video)
 
 	c.JSON(http.StatusOK, gin.H{
-		"code": fiber.StatusOK,
+		"code": http.StatusOK,
 		"data": videoBySn,
 	})
 }
