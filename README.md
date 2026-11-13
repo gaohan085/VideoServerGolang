@@ -1,28 +1,22 @@
-# [Golang](https://go.dev/) Video Server Writen in [fiber framework](https://gofiber.io/) with [React](https://react.dev/)
+## Simple tool for play mp4 file locally
 
-## 👉[Release Page](https://github.com/gaohan085/VideoServerGolang/tags)
 
-## 👉 Build Yourself
+#### Special thanks to the open source dependencies menthoned below
+Front-end build dependencies
 
-### 👉 requirement [Nodejs](https://nodejs.org/) [Go](https://go.dev/) [FFMPEG](https://ffmpeg.org/)
+1. [`react`](https://react.dev/) for user interactive
+2. [`typescript`](https://www.typescriptlang.org/) for type linting
+3. [`plyr`](https://github.com/sampotts/plyr) for html video player
+4. [`tanstack-router`](https://tanstack.com/router/latest) for front-end page routing
+5. [`tanstack-form`](https://tanstack.com/form/latest) for front-end form submit
+6. [`swr`](https://vercel.com/oss/swr) for front-end data fetch
+7. [`zustand`](https://zustand.docs.pmnd.rs/) for frond-end status management
+8. [`axios`](https://axios.rest/) for front-end fetcher
+9. [`zod`](https://zod.dev/) for data validating
+10. [`react-icons`](https://react-icons.github.io/react-icons/) for icons
 
-```bash
-make && make build
-```
+Back-end build dependencies
 
-#### Usage
-
-```bash
-videoserver-0.7.0.1-linux-amd64 -usage=ffmpeg # As ffmpeg server in production mode
-```
-
-```bash
-videoserver-0.7.0.1-linux-amd64 -usage=pro # As main video server in production mode
-```
-
-```bash
-videoserver-0.7.0.1-linux-amd64 -usage=dev -file=remote # As main video server in development mode and get file information from remote server
-```
-```bash
-videoserver-0.7.0.1-linux-amd64 -usage=dev -file=local # As main video server in development mode and get file information from local path
-```
+1. [`gin-gonic`](https://gin-gonic.com/) for http server
+2. [`go-query`](https://github.com/PuerkitoBio/goquery) for parse html dom
+3. [`pgx/v5`](https://github.com/jackc/pgx) for database operation

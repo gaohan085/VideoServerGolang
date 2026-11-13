@@ -36,7 +36,7 @@ func ApiDeleteHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
+		"code": http.StatusOK,
 		"data": "Delete Compeleted! Please mutate data!",
 	})
 }

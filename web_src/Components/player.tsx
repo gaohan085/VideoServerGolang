@@ -72,7 +72,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
         plyr.stop();
         plyr.source = {
           type: "video",
-          poster:"/assets/poster/" + sn.toLowerCase().split("-").filter(Boolean).join("") +".jpg",
+          poster:"/assets/poster/" + sn.toUpperCase().split("-").filter(Boolean).join("") +".jpg",
           sources: [{ src: playSrc }],
         };
         clearTimeout(trackedTimeout);

@@ -1,17 +1,19 @@
 import { create, type StateCreator } from "zustand";
-import { devtools, subscribeWithSelector } from "zustand/middleware";
+import { devtools, subscribeWithSelector, persist } from "zustand/middleware";
 import type { RespElement, VideoCvQueue } from "../Components/types.d.ts";
 
 type PlayingVideoStore = {
-  currentPlayingVideo: {playSrc: string, sn: string, name: string};
-  setVideoPlaying: (
-    video: {playSrc: string, sn: string, name: string},
-  ) => void;
+  currentPlayingVideo: { playSrc: string; sn: string; name: string };
+  setVideoPlaying: (video: {
+    playSrc: string;
+    sn: string;
+    name: string;
+  }) => void;
   unSetVideoPlaying: () => void;
 };
 
 const createPlayingVideoStore: StateCreator<PlayingVideoStore> = (set) => ({
-  currentPlayingVideo: { name: "", sn: "", playSrc: ""},
+  currentPlayingVideo: { name: "", sn: "", playSrc: "" },
   setVideoPlaying: (video) => set(() => ({ currentPlayingVideo: video })),
   unSetVideoPlaying: () => set(() => ({})),
 });
@@ -30,35 +32,40 @@ const createSidebarStatusStore: StateCreator<SidebarStatus> = (set) => ({
     set((state) => ({ isSidebarActive: !state.isSidebarActive })),
 });
 
-
 type SelectedElemStore = {
   openFolderPath: string;
-  rClickElem: RespElement &{path: string};
-  renameElem: RespElement&{path: string};
+  rClickElem: RespElement & { path: string };
+  renameElem: RespElement & { path: string };
 
   setOpenFolderPath: (path: string) => void;
   unSetOpenFolderPath: () => void;
 
-  setRClickElem: (elem: RespElement&{path: string}) => void;
+  setRClickElem: (elem: RespElement & { path: string }) => void;
   unSetRClickElem: () => void;
 
-  setRenameElem: (elem: RespElement&{path: string}) => void;
+  setRenameElem: (elem: RespElement & { path: string }) => void;
   unSetRenameElem: () => void;
 };
 
 const createSelectElemStore: StateCreator<SelectedElemStore> = (set) => ({
   openFolderPath: "",
-  rClickElem: {name:"", type:"file", mtime:"", size:0, path:""},
-  renameElem: {name:"", type:"file", mtime:"", size:0, path:""},
+  rClickElem: { name: "", type: "file", mtime: "", size: 0, path: "" },
+  renameElem: { name: "", type: "file", mtime: "", size: 0, path: "" },
 
   setOpenFolderPath: (path) => set(() => ({ openFolderPath: path })),
   unSetOpenFolderPath: () => set(() => ({ openFolderPath: "/" })),
 
   setRClickElem: (elem) => set(() => ({ rClickElem: elem })),
-  unSetRClickElem: () => set(() => ({ rClickElem: {name:"", type:"file", mtime:"", size:0, path:""}, })),
+  unSetRClickElem: () =>
+    set(() => ({
+      rClickElem: { name: "", type: "file", mtime: "", size: 0, path: "" },
+    })),
 
   setRenameElem: (elem) => set(() => ({ renameElem: elem })),
-  unSetRenameElem: () => set(() => ({ renameElem: {name:"", type:"file", mtime:"", size:0, path:""}, })),
+  unSetRenameElem: () =>
+    set(() => ({
+      renameElem: { name: "", type: "file", mtime: "", size: 0, path: "" },
+    })),
 });
 
 interface ClickedStore {
@@ -109,14 +116,19 @@ const useBoundStore = create<
     VideoCVQueueStore
 >()(
   devtools(
-    subscribeWithSelector((...a) => ({
-      ...createPlayingVideoStore(...a),
-      ...createSidebarStatusStore(...a),
-      ...createClickedStore(...a),
-      ...createRClickPosition(...a),
-      ...createSelectElemStore(...a),
-      ...createVideoCVQueueStore(...a),
-    })),
+    persist(
+      subscribeWithSelector((...a) => ({
+        ...createPlayingVideoStore(...a),
+        ...createSidebarStatusStore(...a),
+        ...createClickedStore(...a),
+        ...createRClickPosition(...a),
+        ...createSelectElemStore(...a),
+        ...createVideoCVQueueStore(...a),
+      })),
+      {
+        name:"zustand-storage"
+      }
+    ),
   ),
 );
 

@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gofiber/fiber/v3"
 )
 
 type RenameStruct struct {
@@ -28,7 +27,7 @@ func ApiRenameHandler(c *gin.Context) {
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{
-			"code": fiber.StatusOK,
+			"code": http.StatusOK,
 			"data": "ok",
 		})
 		return
@@ -40,7 +39,7 @@ func ApiRenameHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"code": fiber.StatusOK,
+		"code": http.StatusOK,
 		"data": "ok",
 	})
 }

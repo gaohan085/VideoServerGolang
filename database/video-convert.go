@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	fiberlog "github.com/gofiber/fiber/v3/log"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -187,7 +186,6 @@ func (v *VideoConvert) UpdateDuration(pool *pgxpool.Pool, ctx context.Context) e
 		return err
 	}
 
-	fiberlog.Info(fmt.Sprintf("Get video duration %s", v.FileName))
 	return v.Update(pool, ctx)
 }
 
@@ -209,7 +207,6 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 
 	v.Status = "converting"
 	v.Update(pool, ctx)
-	fiberlog.Info(fmt.Sprintf("Start converting video %s", v.FileName))
 
 	if err := cmd.Wait(); err != nil {
 		chInter <- 0
@@ -218,7 +215,6 @@ func (v *VideoConvert) ConvertOnFFmpegServer(chInter chan<- int, chDone chan<- i
 
 	if cmd.ProcessState.Success() {
 		chDone <- 0
-		fiberlog.Info(fmt.Sprintf("Finish converting video %s", v.FileName))
 		return nil
 	}
 	return nil
@@ -261,7 +257,6 @@ func (v *VideoConvert) ReadProgress(chInter <-chan int, chDone <-chan int, pool 
 }
 
 func (v *VideoConvert) DownloadConverted(pool *pgxpool.Pool, ctx context.Context) error {
-	fiberlog.Info("Downloading Converted Video " + v.FileName)
 	downloadLink := os.Getenv("FFMPEG_DOWNLOAD_ADDR")
 	rootDir := os.Getenv("ROOT_DIR")
 	var script = fmt.Sprintf(`wget -nc %s -P %s%s/`, downloadLink+v.OutputName, rootDir, v.Path)
@@ -273,15 +268,12 @@ func (v *VideoConvert) DownloadConverted(pool *pgxpool.Pool, ctx context.Context
 		return err
 	}
 
-	fiberlog.Info(fmt.Sprintf("Downloading video %s from %s", v.OutputName, downloadLink+v.OutputName))
-
 	if err := cmd.Wait(); err != nil {
 		return err
 	}
 
 	if cmd.ProcessState.Success() {
 		v.Downloaded = true
-		fiberlog.Info(fmt.Sprintf("Finish download video %s", v.OutputName))
 		return v.Update(pool, ctx)
 	}
 
