@@ -80,7 +80,7 @@ const InteractiveFolderElement = ({ elem , cwd }: Readonly<{elem: RespElement, c
     setIsClicked(true);
     if (!isRename) {
       if (!isOpen) {
-        setOpenFolderPath(properties.cwd + properties.name);
+        setOpenFolderPath(properties.cwd + properties.name + "/");
       }
       if (isOpen) {
         setOpenFolderPath(properties.cwd);
