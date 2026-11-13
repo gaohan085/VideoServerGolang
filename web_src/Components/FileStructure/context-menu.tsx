@@ -9,12 +9,13 @@ import {
   FcProcess,
   FcServices,
   FcStart,
+  FcSynchronize,
 } from "react-icons/fc";
+import { useSWRConfig } from "swr";
 import { FsElementProptertiesClass } from "../../lib/element-properties.ts";
 import isVideo from "../../lib/is-video.ts";
 import useBoundStore from "../../lib/zustand-store.ts";
 import styles from "./context-menu.module.scss";
-import { useSWRConfig } from "swr";
 
 const PlayVideo = () => {
   return (
@@ -60,6 +61,17 @@ const ProcessVideo = () => {
   );
 };
 
+const RefreshVideoInfo = () => {
+  return (
+    <a>
+      <span>
+        <FcSynchronize />
+      </span>
+      {"刷新视频信息"}
+    </a>
+  );
+};
+
 const Delete = ({ isFile }: Readonly<{ isFile: boolean }>) => {
   return (
     <a>
@@ -95,7 +107,7 @@ const DeleteConfirm = (props: {
     <div
       className={styles["ctx-dialog"]}
       style={{ top: position.pageY, left: position.pageX }}
-      onContextMenu={ (e) => e.preventDefault()}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <p>{`确认删除${elem.isFile ? "文件" : "文件夹"} "${elem.name}"`}</p>
 
@@ -118,6 +130,7 @@ const CtxMenu = (
     handleConverVideo?: React.MouseEventHandler;
     handleDelete: React.MouseEventHandler;
     handlePlayVideo: React.MouseEventHandler;
+    handleRefreshVideoInfo: React.MouseEventHandler;
     position: { pageX: number; pageY: number };
     handleRename: React.MouseEventHandler;
   }>,
@@ -132,23 +145,30 @@ const CtxMenu = (
     handlePlayVideo,
     position,
     handleRename,
+    handleRefreshVideoInfo,
   } = props;
 
   const layer = properties.cwd.split("/").filter(Boolean).length;
-  const rClickFolderisOpen = openFolderPath.split("/").filter(Boolean)[layer] === properties.name;
+  const rClickFolderisOpen =
+    openFolderPath.split("/").filter(Boolean)[layer] === properties.name;
 
   return (
     <div
       className={styles.ctx}
       style={{ top: position.pageY, left: position.pageX }}
-      onContextMenu={ (e) => e.preventDefault()}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <ul>
         {/* First list */}
         {!!properties.isFile && properties.isVideo && (
-          <li onClick={handlePlayVideo}>
-            <PlayVideo />
-          </li>
+          <>
+            <li onClick={handlePlayVideo}>
+              <PlayVideo />
+            </li>
+            <li onClick={handleRefreshVideoInfo}>
+              <RefreshVideoInfo />
+            </li>
+          </>
         )}
 
         {!!properties.isFolder && !rClickFolderisOpen && (
@@ -200,7 +220,10 @@ const InteractiveCtxMenu = () => {
 
   const { mutate } = useSWRConfig();
 
-  const properties = new FsElementProptertiesClass({...rClickElem}, rClickElem.path);
+  const properties = new FsElementProptertiesClass(
+    { ...rClickElem },
+    rClickElem.path,
+  );
 
   const handleOpenFolder: React.MouseEventHandler = () => {
     setOpenFolderPath(rClickElem && rClickElem.path + "/" + rClickElem.name);
@@ -216,7 +239,11 @@ const InteractiveCtxMenu = () => {
   };
 
   const handlePlayVideo: React.MouseEventHandler = () => {
-    setVideoPlaying({playSrc:properties.playSrc, name:properties.playSrc, sn:properties.sn,});
+    setVideoPlaying({
+      playSrc: properties.playSrc,
+      name: properties.playSrc,
+      sn: properties.sn,
+    });
     setIsClicked(true);
   };
 
@@ -226,11 +253,14 @@ const InteractiveCtxMenu = () => {
   };
 
   const handleConfirmDel: React.MouseEventHandler = () => {
-    void axios.post("/api/delete", rClickElem).then(() => {
-      const { path } = rClickElem!;
-      void mutate!(`/api${path}`);
-      setIsClicked(true);
-    }).catch();
+    void axios
+      .post("/api/delete", rClickElem)
+      .then(() => {
+        const { path } = rClickElem!;
+        void mutate!(`/api${path}`);
+        setIsClicked(true);
+      })
+      .catch();
   };
 
   const handleConvertVideo: React.MouseEventHandler = () => {
@@ -247,6 +277,17 @@ const InteractiveCtxMenu = () => {
     setRenameElem(rClickElem);
   };
 
+  const handleRefreshVideoInfo: React.MouseEventHandler = () => {
+    const { sn, playSrc } = new FsElementProptertiesClass(
+      rClickElem,
+      openFolderPath,
+    );
+    void axios.post(`/api/refresh/sn/${sn}`).then(() => {
+      void mutate(`/api/query/sn/${sn.toLowerCase()}?playsrc=${playSrc}`);
+    });
+    setIsClicked(true);
+  };
+
   return (
     <>
       {!delConfirm && (
@@ -258,6 +299,7 @@ const InteractiveCtxMenu = () => {
           handleOpenFolder={handleOpenFolder}
           handlePlayVideo={handlePlayVideo}
           handleRename={handleRename}
+          handleRefreshVideoInfo={handleRefreshVideoInfo}
           openFolderPath={openFolderPath}
           position={position!}
         />
