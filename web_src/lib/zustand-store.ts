@@ -126,8 +126,12 @@ const useBoundStore = create<
         ...createVideoCVQueueStore(...a),
       })),
       {
-        name:"zustand-storage"
-      }
+        name: "zustand-storage",
+        partialize: (state) => ({
+          isSidebarActive: state.isSidebarActive,
+          openFolderPath: state.openFolderPath,
+        }),
+      },
     ),
   ),
 );
