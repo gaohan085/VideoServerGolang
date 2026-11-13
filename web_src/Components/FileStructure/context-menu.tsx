@@ -149,8 +149,7 @@ const CtxMenu = (
   } = props;
 
   const layer = properties.cwd.split("/").filter(Boolean).length;
-  const rClickFolderisOpen =
-    openFolderPath.split("/").filter(Boolean)[layer] === properties.name;
+  const rClickFolderisOpen = openFolderPath.split("/").filter(Boolean)[layer] === properties.name;
 
   return (
     <div
@@ -220,10 +219,7 @@ const InteractiveCtxMenu = () => {
 
   const { mutate } = useSWRConfig();
 
-  const properties = new FsElementProptertiesClass(
-    { ...rClickElem },
-    rClickElem.path,
-  );
+  const properties = new FsElementProptertiesClass({ ...rClickElem }, rClickElem.path);
 
   const handleOpenFolder: React.MouseEventHandler = () => {
     setOpenFolderPath(rClickElem && rClickElem.path + "/" + rClickElem.name);
@@ -278,10 +274,7 @@ const InteractiveCtxMenu = () => {
   };
 
   const handleRefreshVideoInfo: React.MouseEventHandler = () => {
-    const { sn, playSrc } = new FsElementProptertiesClass(
-      rClickElem,
-      openFolderPath,
-    );
+    const { sn, playSrc } = properties;
     void axios.post(`/api/refresh/sn/${sn}`).then(() => {
       void mutate(`/api/query/sn/${sn.toLowerCase()}?playsrc=${playSrc}`);
     });

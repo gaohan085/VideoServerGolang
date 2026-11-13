@@ -402,7 +402,7 @@ func (v *VideoDetailedInfo) Delete(pool *pgxpool.Pool, ctx context.Context) erro
 
 func (v *VideoDetailedInfo) DownloadPoster(pool *pgxpool.Pool, ctx context.Context) error {
 	v.PosterUrl = lib.GetPosterLinkFromSN(v.SN)
-	v.PosterFileName = fmt.Sprintf("%s%s.jpg", strings.Split(v.SN, "-")[0], strings.Split(v.SN, "-")[1])
+	v.PosterFileName = fmt.Sprintf("%s%s.jpg", strings.ToLower(strings.Split(v.SN, "-")[0]), strings.ToLower(strings.Split(v.SN, "-")[1]))
 
 	//获取当前路径
 	cwd, err := os.Getwd()
@@ -478,7 +478,7 @@ func (v *VideoDetailedInfo) GetDetailInfo(pool *pgxpool.Pool, ctx context.Contex
 	detailedInfoSelection.Each(func(i int, s *goquery.Selection) {
 		switch s.Find("div > strong").Text() {
 		case "番號:":
-			v.SN = s.Find("div>span").Text()
+			v.SN = strings.ToLower(s.Find("div>span").Text())
 		case "日期:":
 			v.ReleaseDate, err = time.Parse("2006-01-02", s.Find("div>span.value").Text())
 		case "時長:":
@@ -523,13 +523,13 @@ func (v *VideoDetailedInfo) IsVideoFileExist() bool { //TODO test
 type Status string
 
 const (
-	StatusPending Status = "pending"
 	StatusSuccess Status = "success"
+	StatusPending Status = "pending"
 	StatusFailed  Status = "failed"
 )
 
 func (v *VideoDetailedInfo) SetGetInfoProcessStatus(status Status, rdb *redis.Client, ctx context.Context) error {
-	return rdb.Set(ctx, v.SN, string(status), 0).Err()
+	return rdb.Set(ctx, v.SN, string(status), 1*time.Hour).Err()
 }
 
 func (v *VideoDetailedInfo) GetInfoProcessStatus(rdb *redis.Client, ctx context.Context) (Status, error) {

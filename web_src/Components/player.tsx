@@ -49,9 +49,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
   });
 
   plyr.on("enterfullscreen", () => {
-    if (
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)
-    ) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
       window.screen.orientation.unlock();
       void window.screen.orientation.lock("landscape");
     }
@@ -72,7 +70,7 @@ const mountPlyr = (node: HTMLElement): Plyr => {
         plyr.stop();
         plyr.source = {
           type: "video",
-          poster:"/assets/poster/" + sn.toUpperCase().split("-").filter(Boolean).join("") +".jpg",
+          poster: "/assets/poster/" + sn.toLowerCase().split("-").filter(Boolean).join("") + ".jpg",
           sources: [{ src: playSrc }],
         };
         clearTimeout(trackedTimeout);
@@ -80,7 +78,12 @@ const mountPlyr = (node: HTMLElement): Plyr => {
         if ("mediaSession" in navigator) {
           navigator.mediaSession.metadata = new MediaMetadata({
             title: name,
-            artwork: [{ src: "/assets/poster/" + sn.toLowerCase().split("-").filter(Boolean).join("")+".jpg", }],
+            artwork: [
+              {
+                src:
+                  "/assets/poster/" + sn.toLowerCase().split("-").filter(Boolean).join("") + ".jpg",
+              },
+            ],
           });
         }
       }
@@ -89,23 +92,15 @@ const mountPlyr = (node: HTMLElement): Plyr => {
 
   plyr.on("playing", (e) => {
     navigator.mediaSession.playbackState = "playing";
-    navigator.mediaSession.setActionHandler("pause", () =>
-      e.detail.plyr.pause(),
-    );
+    navigator.mediaSession.setActionHandler("pause", () => e.detail.plyr.pause());
   });
   plyr.on("pause", (e) => {
     navigator.mediaSession.playbackState = "paused";
-    navigator.mediaSession.setActionHandler("play", () =>
-      void e.detail.plyr.play(),
-    );
+    navigator.mediaSession.setActionHandler("play", () => void e.detail.plyr.play());
   });
 
-  navigator.mediaSession.setActionHandler("seekbackward", () =>
-    plyr.rewind(10),
-  );
-  navigator.mediaSession.setActionHandler("seekforward", () =>
-    plyr.forward(10),
-  );
+  navigator.mediaSession.setActionHandler("seekbackward", () => plyr.rewind(10));
+  navigator.mediaSession.setActionHandler("seekforward", () => plyr.forward(10));
 
   return plyr;
 };

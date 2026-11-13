@@ -59,8 +59,11 @@ func ApiRefreshVideoInfoBySN(c *gin.Context) {
 						video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
 						return
 					}
+					if err := video.DownloadPoster(pool, c.Copy()); err != nil {
+						video.SetGetInfoProcessStatus(database.StatusFailed, redis0, c.Copy())
+						return
+					}
 					video.SetGetInfoProcessStatus(database.StatusSuccess, redis0, c.Copy())
-					video.DownloadPoster(pool, c.Copy())
 					return
 				}
 			}

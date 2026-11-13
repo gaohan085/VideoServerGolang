@@ -267,8 +267,8 @@ func Test_SetGetVideoDetailStatus(t *testing.T) {
 
 	rdb := SetRedisClient()[0]
 
-	t.Run("测试向redis写入数据", func(t *testing.T) {
-		video := &VideoDetailedInfo{SN: "SONE-001"}
+	t.Run("测试向redis写入failed", func(t *testing.T) {
+		video := &VideoDetailedInfo{SN: "sone-001"}
 
 		err := video.SetGetInfoProcessStatus(StatusFailed, rdb, context.Background())
 		assert.Nil(t, err)
@@ -276,6 +276,28 @@ func Test_SetGetVideoDetailStatus(t *testing.T) {
 		status, err := video.GetInfoProcessStatus(rdb, context.Background())
 
 		assert.Equal(t, StatusFailed, status)
+		assert.Nil(t, err)
+	})
+	t.Run("测试向redis写入sucess", func(t *testing.T) {
+		video := &VideoDetailedInfo{SN: "sone-001"}
+
+		err := video.SetGetInfoProcessStatus(StatusSuccess, rdb, context.Background())
+		assert.Nil(t, err)
+
+		status, err := video.GetInfoProcessStatus(rdb, context.Background())
+
+		assert.Equal(t, StatusSuccess, status)
+		assert.Nil(t, err)
+	})
+	t.Run("测试向redis写入pending", func(t *testing.T) {
+		video := &VideoDetailedInfo{SN: "sone-001"}
+
+		err := video.SetGetInfoProcessStatus(StatusPending, rdb, context.Background())
+		assert.Nil(t, err)
+
+		status, err := video.GetInfoProcessStatus(rdb, context.Background())
+
+		assert.Equal(t, StatusPending, status)
 		assert.Nil(t, err)
 	})
 
