@@ -39,9 +39,10 @@ const App = () => {
   return (
     <SWRConfig
       value={{
-        refreshInterval: 120000,
+        revalidateIfStale: false,
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
         fetcher: fetcher,
-        revalidateOnFocus: true,
         suspense: true,
       }}
     >
